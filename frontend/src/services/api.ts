@@ -1,6 +1,113 @@
-import { Claim, NotificationItem, StatsKPI, UserSession } from '../types';
+import { Claim, NotificationItem, StatsKPI, UserSession, OfficialLandRecord } from '../types';
 
 const API_BASE = '/api';
+
+export async function sendFarmerOTP(mobile: string): Promise<{
+  success: boolean;
+  message: string;
+  mobile: string;
+  demo_otp?: string;
+  expires_in_seconds?: number;
+}> {
+  const res = await fetch(`${API_BASE}/auth/farmer/send-otp`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mobile })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: 'Failed to send OTP' }));
+    throw new Error(err.detail || 'Failed to send OTP');
+  }
+  return res.json();
+}
+
+export async function verifyFarmerOTP(mobile: string, otp: string): Promise<UserSession> {
+  const res = await fetch(`${API_BASE}/auth/farmer/verify-otp`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mobile, otp })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: 'Invalid OTP' }));
+    throw new Error(err.detail || 'Invalid OTP');
+  }
+  return res.json();
+}
+
+export async function sendInsurerOTP(companyId: string, mobile: string): Promise<{
+  success: boolean;
+  message: string;
+  company_id: string;
+  mobile: string;
+  demo_otp?: string;
+  expires_in_seconds?: number;
+}> {
+  const res = await fetch(`${API_BASE}/auth/insurer/send-otp`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ company_id: companyId, mobile })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: 'Failed to send officer OTP' }));
+    throw new Error(err.detail || 'Failed to send officer OTP');
+  }
+  return res.json();
+}
+
+export async function verifyInsurerOTP(companyId: string, mobile: string, otp: string): Promise<UserSession> {
+  const res = await fetch(`${API_BASE}/auth/insurer/verify-otp`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ company_id: companyId, mobile, otp })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: 'Invalid officer OTP' }));
+    throw new Error(err.detail || 'Invalid officer OTP');
+  }
+  return res.json();
+}
+
+export async function validateULPIN(ulpin: string): Promise<{
+  success: boolean;
+  valid: boolean;
+  message: string;
+  land?: OfficialLandRecord;
+}> {
+  const res = await fetch(`${API_BASE}/land/validate-ulpin`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ulpin })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: 'Failed to validate ULPIN' }));
+    throw new Error(err.detail || 'Failed to validate ULPIN');
+  }
+  return res.json();
+}
+
+export async function retrieveULPIN(params: {
+  full_name: string;
+  village: string;
+  taluk: string;
+  district: string;
+  survey_number?: string;
+}): Promise<{
+  success: boolean;
+  count: number;
+  records: OfficialLandRecord[];
+  message: string;
+}> {
+  const res = await fetch(`${API_BASE}/land/retrieve-ulpin`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params)
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: 'Failed to retrieve ULPIN' }));
+    throw new Error(err.detail || 'Failed to retrieve ULPIN');
+  }
+  return res.json();
+}
 
 export async function loginFarmer(mobile: string, otp: string = '1234', name?: string): Promise<UserSession> {
   const res = await fetch(`${API_BASE}/auth/farmer/login`, {

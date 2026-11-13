@@ -15,11 +15,16 @@ from pydantic import BaseModel
 from .models import (
     Claim, FarmerProfile, LandParcel, CropDetails, DisasterDetails,
     EvidencePhoto, SatelliteObservation, WeatherObservation, Notification,
-    ReviewActionPayload, CopilotQueryPayload, NewClaimPayload
+    ReviewActionPayload, CopilotQueryPayload, NewClaimPayload,
+    OfficialLandRecord, FarmerSendOTPPayload, FarmerVerifyOTPPayload,
+    InsurerSendOTPPayload, InsurerVerifyOTPPayload,
+    ValidateULPINPayload, RetrieveULPINPayload
 )
 from .database import (
-    CLAIMS_DB, NOTIFICATIONS_DB, get_all_claims, get_claim_by_id,
-    save_claim, add_notification, get_farmer_notifications, init_seed_data
+    CLAIMS_DB, NOTIFICATIONS_DB, OFFICIAL_LAND_RECORDS, get_all_claims, get_claim_by_id,
+    save_claim, add_notification, get_farmer_notifications, init_seed_data,
+    generate_otp_for, verify_otp_for, get_active_otp, validate_ulpin_db,
+    search_land_records, get_all_land_records
 )
 from .agents import execute_all_agents, answer_reviewer_copilot_question
 from .digipin import encode_digipin, decode_digipin
@@ -191,6 +196,234 @@ def insurance_login(payload: InsuranceLoginPayload):
         },
         "token": f"ins-token-{cid}"
     }
+
+# ==============================================================
+# ENHANCED ROLE-BASED OTP AUTHENTICATION
+# ==============================================================
+
+@app.post("/api/auth/farmer/send-otp")
+def farmer_send_otp(payload: FarmerSendOTPPayload):
+    """Generates and dispatches a secure verification OTP to farmer's mobile."""
+    clean_mob = payload.mobile.strip().replace(" ", "").replace("-", "")
+    if clean_mob.startswith("+91"):
+        clean_mob = clean_mob[3:]
+    
+    if len(clean_mob) != 10 or not clean_mob.isdigit():
+        raise HTTPException(status_code=400, detail="Please enter a valid 10-digit Indian mobile number.")
+
+    otp = generate_otp_for(f"FARMER:{clean_mob}")
+    masked_mobile = f"+91 XXXXXX{clean_mob[-4:]}"
+
+    return {
+        "success": True,
+        "message": f"Verification OTP sent successfully to {masked_mobile}",
+        "mobile": clean_mob,
+        "demo_otp": otp,  # Provided for immediate hackathon/reviewer testing convenience
+        "expires_in_seconds": 300
+    }
+
+@app.post("/api/auth/farmer/verify-otp")
+def farmer_verify_otp(payload: FarmerVerifyOTPPayload):
+    """Verifies submitted OTP and authenticates the farmer."""
+    clean_mob = payload.mobile.strip().replace(" ", "").replace("-", "")
+    if clean_mob.startswith("+91"):
+        clean_mob = clean_mob[3:]
+
+    key = f"FARMER:{clean_mob}"
+    res = verify_otp_for(key, payload.otp)
+    if not res["valid"]:
+        raise HTTPException(status_code=400, detail=res["reason"])
+
+    # Match farmer from database or land records
+    claims = get_all_claims()
+    matching_farmer = None
+    for c in claims:
+        if c.farmer.mobile == clean_mob:
+            matching_farmer = c.farmer
+            break
+
+    if not matching_farmer:
+        # Check if mobile exists in official land records
+        for land in OFFICIAL_LAND_RECORDS:
+            if land.mobile == clean_mob:
+                matching_farmer = FarmerProfile(
+                    id=land.farmer_id,
+                    name=land.farmer_name,
+                    mobile=clean_mob,
+                    state=land.state,
+                    district=land.district,
+                    village=land.village
+                )
+                break
+
+    if not matching_farmer:
+        fallback_name = "Ravi Kumar" if clean_mob == "9876543210" else f"Farmer {clean_mob[-4:]}"
+        matching_farmer = FarmerProfile(
+            id=f"farmer-{uuid.uuid4().hex[:6]}",
+            name=fallback_name,
+            mobile=clean_mob,
+            state="Karnataka",
+            district="Bengaluru Rural",
+            village="Devanahalli"
+        )
+
+    return {
+        "success": True,
+        "role": "farmer",
+        "user": matching_farmer.dict(),
+        "token": f"kisan-token-{clean_mob}"
+    }
+
+@app.post("/api/auth/insurer/send-otp")
+def insurer_send_otp(payload: InsurerSendOTPPayload):
+    """Generates and dispatches officer OTP for company adjudicator verification."""
+    cid = payload.company_id.strip().upper()
+    mob = payload.mobile.strip().replace(" ", "").replace("-", "")
+    if mob.startswith("+91"):
+        mob = mob[3:]
+
+    if len(cid) < 3:
+        raise HTTPException(status_code=400, detail="Invalid Company ID format (min 3 characters).")
+    if len(mob) != 10 or not mob.isdigit():
+        raise HTTPException(status_code=400, detail="Please enter a valid 10-digit authorized officer mobile number.")
+
+    key = f"INS:{cid}:{mob}"
+    otp = generate_otp_for(key)
+    masked_mob = f"+91 XXXXXX{mob[-4:]}"
+
+    return {
+        "success": True,
+        "message": f"Officer authorization OTP sent to {masked_mob} for {cid}",
+        "company_id": cid,
+        "mobile": mob,
+        "demo_otp": otp,  # Provided for immediate hackathon/reviewer testing convenience
+        "expires_in_seconds": 300
+    }
+
+@app.post("/api/auth/insurer/verify-otp")
+def insurer_verify_otp(payload: InsurerVerifyOTPPayload):
+    """Verifies insurer OTP and grants role-based access to Adjudication Console."""
+    cid = payload.company_id.strip().upper()
+    mob = payload.mobile.strip().replace(" ", "").replace("-", "")
+    if mob.startswith("+91"):
+        mob = mob[3:]
+
+    key = f"INS:{cid}:{mob}"
+    res = verify_otp_for(key, payload.otp)
+    if not res["valid"]:
+        raise HTTPException(status_code=400, detail=res["reason"])
+
+    is_ananya = "409" in cid or mob == "9812345678"
+    reviewer_name = "Ananya Sharma" if is_ananya else f"Adjudicator ({cid})"
+    reviewer_id = "REV-EMP-409" if is_ananya else f"REV-{cid}"
+
+    return {
+        "success": True,
+        "role": "insurance",
+        "user": {
+            "company_id": cid,
+            "reviewer_id": reviewer_id,
+            "company_name": "Agricultural Insurance Co. of India (PMFBY Hub)",
+            "name": reviewer_name,
+            "mobile": mob,
+            "title": "Senior Agronomist & Lead Adjudicator",
+            "department": "Crop Intelligence & Satellite Claims Verification Unit"
+        },
+        "token": f"ins-token-{cid}"
+    }
+
+# ==============================================================
+# AUTHORITATIVE ULPIN VALIDATION & RECOVERY ENDPOINTS
+# ==============================================================
+
+@app.post("/api/land/validate-ulpin")
+def api_validate_ulpin(payload: ValidateULPINPayload):
+    """
+    Validates a 14-character alphanumeric ULPIN (Unique Land Parcel Identification Number)
+    against the National Cadastral Land Registry database.
+    """
+    clean_ulpin = payload.ulpin.strip().replace(" ", "").replace("-", "").upper()
+    
+    # 1. Format validation: must be 14 alphanumeric characters
+    if len(clean_ulpin) != 14 or not clean_ulpin.isalnum():
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid ULPIN format. ULPIN must be exactly 14 alphanumeric characters adhering to National Bhu-Aadhaar standards (e.g. 29BLR125200102)."
+        )
+
+    # 2. Database validation against authoritative records
+    record = validate_ulpin_db(clean_ulpin)
+    if not record:
+        return {
+            "success": False,
+            "valid": False,
+            "message": f"No cadastral land record found for ULPIN '{clean_ulpin}'. Please check the 14-character code or use the 'Forgot ULPIN' retrieval tool."
+        }
+
+    return {
+        "success": True,
+        "valid": True,
+        "message": "ULPIN verified successfully against National Cadastral Registry.",
+        "land": record.dict()
+    }
+
+@app.post("/api/land/retrieve-ulpin")
+def api_retrieve_ulpin(payload: RetrieveULPINPayload):
+    """
+    Recovers farmer's ULPIN by searching the authoritative land records database
+    using mandatory parameters: Full Name, Village, Taluk, District
+    and optional parameter: Survey Number.
+    """
+    fn = payload.full_name.strip()
+    vill = payload.village.strip()
+    tal = payload.taluk.strip()
+    dist = payload.district.strip()
+    surv = payload.survey_number.strip() if payload.survey_number else None
+
+    # Mandatory field validation
+    if not fn or not vill or not tal or not dist:
+        raise HTTPException(
+            status_code=400,
+            detail="Full Name, Village, Taluk, and District are all mandatory fields for ULPIN retrieval."
+        )
+
+    matches = search_land_records(
+        full_name=fn,
+        village=vill,
+        taluk=tal,
+        district=dist,
+        survey_number=surv
+    )
+
+    if not matches:
+        return {
+            "success": False,
+            "count": 0,
+            "records": [],
+            "message": "No matching land record found. Please verify your details."
+        }
+
+    if len(matches) == 1:
+        return {
+            "success": True,
+            "count": 1,
+            "records": [matches[0].dict()],
+            "message": "ULPIN Retrieved Successfully!"
+        }
+
+    return {
+        "success": True,
+        "count": len(matches),
+        "records": [m.dict() for m in matches],
+        "message": f"Found {len(matches)} matching agricultural land parcels. Please select your parcel."
+    }
+
+@app.get("/api/land/records")
+def api_list_land_records():
+    """Lists all available official land records in database for demo inspection."""
+    recs = get_all_land_records()
+    return {"count": len(recs), "records": [r.dict() for r in recs]}
+
 
 @app.get("/api/stats")
 def get_dashboard_stats():

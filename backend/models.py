@@ -166,3 +166,51 @@ class NewClaimPayload(BaseModel):
     farmer_loss_estimate: float = 18000.0
     description: Optional[str] = "Field was submerged under 2 feet of water following cloudburst."
     photos: Optional[List[Dict[str, Any]]] = []
+    ulpin: Optional[str] = None
+
+class OfficialLandRecord(BaseModel):
+    ulpin: str
+    farmer_id: str
+    farmer_name: str
+    mobile: Optional[str] = None
+    state: str = "Karnataka"
+    district: str
+    taluk: str
+    village: str
+    survey_number: str
+    sub_division: Optional[str] = "2"
+    area_acres: float
+    land_type: str = "Agricultural - Wet/Irrigated"
+    digipin: str
+    latitude: float
+    longitude: float
+    polygon_coords: Optional[List[List[float]]] = None
+    soil_type: Optional[str] = "Red Sandy Loam"
+    cadastral_map_sheet: Optional[str] = "BLR-DEV-125"
+
+class FarmerSendOTPPayload(BaseModel):
+    mobile: str
+
+class FarmerVerifyOTPPayload(BaseModel):
+    mobile: str
+    otp: str
+
+class InsurerSendOTPPayload(BaseModel):
+    company_id: str
+    mobile: str
+
+class InsurerVerifyOTPPayload(BaseModel):
+    company_id: str
+    mobile: str
+    otp: str
+
+class ValidateULPINPayload(BaseModel):
+    ulpin: str
+
+class RetrieveULPINPayload(BaseModel):
+    full_name: str
+    village: str
+    taluk: str
+    district: str
+    survey_number: Optional[str] = None
+

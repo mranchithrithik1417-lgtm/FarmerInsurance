@@ -48,13 +48,15 @@ interface Props {
   onClose: () => void;
   onComplete: (data: any) => void;
   language?: 'en' | 'kn';
+  initialLandData?: any;
 }
 
 export const VoiceAssistantModal: React.FC<Props> = ({
   isOpen,
   onClose,
   onComplete,
-  language = 'en'
+  language = 'en',
+  initialLandData
 }) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isListening, setIsListening] = useState<boolean>(false);
@@ -432,6 +434,28 @@ export const VoiceAssistantModal: React.FC<Props> = ({
 
     fieldRecRef.current = controller;
   };
+
+  // Sync verified ULPIN land parcel details into form
+  useEffect(() => {
+    if (initialLandData) {
+      setFormData(prev => ({
+        ...prev,
+        farmerName: initialLandData.farmer_name || initialLandData.farmerName || prev.farmerName,
+        mobile: initialLandData.mobile || prev.mobile,
+        state: initialLandData.state || prev.state,
+        district: initialLandData.district || prev.district,
+        village: initialLandData.village || prev.village,
+        surveyNumber: initialLandData.survey_number || initialLandData.surveyNumber || prev.surveyNumber,
+        landParcelId: initialLandData.ulpin || initialLandData.land_parcel_id || prev.landParcelId,
+        digipin: initialLandData.digipin || prev.digipin,
+        landAreaAcres: initialLandData.area_acres || initialLandData.landAreaAcres || prev.landAreaAcres,
+        insuredAreaAcres: initialLandData.area_acres || initialLandData.insuredAreaAcres || prev.insuredAreaAcres,
+        latitude: initialLandData.latitude || prev.latitude,
+        longitude: initialLandData.longitude || prev.longitude,
+        polygonCoordinates: initialLandData.polygon_coords || initialLandData.polygonCoordinates || generateDefaultParcelCoordinates(initialLandData.latitude || prev.latitude, initialLandData.longitude || prev.longitude)
+      }));
+    }
+  }, [initialLandData, isOpen]);
 
   // Handle Interactive Land Plot Selector Change
   const handlePlotChange = (data: {

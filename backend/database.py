@@ -8,21 +8,27 @@ plus 6 additional realistic claims across diverse crops, disasters, and district
 
 import json
 import os
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from datetime import datetime
 from .models import (
     Claim, FarmerProfile, LandParcel, CropDetails, DisasterDetails,
-    EvidencePhoto, SatelliteObservation, WeatherObservation, Notification
+    EvidencePhoto, SatelliteObservation, WeatherObservation, Notification,
+    OfficialLandRecord
 )
 from .agents import execute_all_agents
 from .geospatial import generate_default_polygon
 from .digipin import encode_digipin
+import time
+import random
 
 DB_FILE = os.path.join(os.path.dirname(__file__), "kisanclaim_db.json")
 
 # In-memory stores
 CLAIMS_DB: Dict[str, Claim] = {}
 NOTIFICATIONS_DB: List[Notification] = []
+OFFICIAL_LAND_RECORDS: List[OfficialLandRecord] = []
+OTP_STORE: Dict[str, Dict[str, Any]] = {}
+
 
 def init_seed_data():
     """Populates realistic claims and initial state."""
@@ -389,6 +395,170 @@ def init_seed_data():
         )
     ]
 
+    global OFFICIAL_LAND_RECORDS
+    OFFICIAL_LAND_RECORDS = [
+        OfficialLandRecord(
+            ulpin="29BLR125200102",
+            farmer_id="farmer-ksn-1025",
+            farmer_name="Ravi Kumar",
+            mobile="9876543210",
+            state="Karnataka",
+            district="Bengaluru Rural",
+            taluk="Devanahalli",
+            village="Devanahalli",
+            survey_number="125/2",
+            sub_division="2",
+            area_acres=2.5,
+            land_type="Agricultural - Irrigated Ragi",
+            digipin="562C-8F29-KM",
+            latitude=13.2456,
+            longitude=77.7123,
+            polygon_coords=generate_default_polygon(13.2456, 77.7123),
+            soil_type="Red Sandy Loam",
+            cadastral_map_sheet="BLR-DEV-125"
+        ),
+        OfficialLandRecord(
+            ulpin="29BLR088100105",
+            farmer_id="farmer-ksn-1025",
+            farmer_name="Ravi Kumar",
+            mobile="9876543210",
+            state="Karnataka",
+            district="Bengaluru Rural",
+            taluk="Devanahalli",
+            village="Devanahalli",
+            survey_number="88/1",
+            sub_division="1",
+            area_acres=1.8,
+            land_type="Agricultural - Dry Land",
+            digipin="562C-8F31-KM",
+            latitude=13.2480,
+            longitude=77.7150,
+            polygon_coords=generate_default_polygon(13.2480, 77.7150),
+            soil_type="Red Clay Loam",
+            cadastral_map_sheet="BLR-DEV-088"
+        ),
+        OfficialLandRecord(
+            ulpin="29BEL048100108",
+            farmer_id="farmer-1088",
+            farmer_name="Suresh Patil",
+            mobile="9845123456",
+            state="Karnataka",
+            district="Belagavi",
+            taluk="Chikkodi",
+            village="Chikkodi",
+            survey_number="48/1A",
+            sub_division="1A",
+            area_acres=4.0,
+            land_type="Agricultural - Canal Irrigated Sugarcane",
+            digipin="591C-4312-BL",
+            latitude=16.4312,
+            longitude=74.5982,
+            polygon_coords=generate_default_polygon(16.4312, 74.5982),
+            soil_type="Deep Black Cotton Soil",
+            cadastral_map_sheet="BEL-CHK-048"
+        ),
+        OfficialLandRecord(
+            ulpin="29MDY210300104",
+            farmer_id="farmer-1042",
+            farmer_name="Ramesh Gowda",
+            mobile="9448765432",
+            state="Karnataka",
+            district="Mandya",
+            taluk="Maddur",
+            village="Maddur",
+            survey_number="210/3",
+            sub_division="3",
+            area_acres=3.0,
+            land_type="Agricultural - Paddy Wetland",
+            digipin="571C-2584-MD",
+            latitude=12.5841,
+            longitude=77.0429,
+            polygon_coords=generate_default_polygon(12.5841, 77.0429),
+            soil_type="Alluvial Loam",
+            cadastral_map_sheet="MDY-MDR-210"
+        ),
+        OfficialLandRecord(
+            ulpin="27NSK089400101",
+            farmer_id="farmer-1104",
+            farmer_name="Anita Devi",
+            mobile="9123456780",
+            state="Maharashtra",
+            district="Nashik",
+            taluk="Niphad",
+            village="Lasalgaon",
+            survey_number="89/4",
+            sub_division="4",
+            area_acres=2.0,
+            land_type="Agricultural - Horticulture (Onion)",
+            digipin="422C-2014-NS",
+            latitude=20.1432,
+            longitude=74.2251,
+            polygon_coords=generate_default_polygon(20.1432, 74.2251),
+            soil_type="Medium Black Soil",
+            cadastral_map_sheet="NSK-NPH-089"
+        ),
+        OfficialLandRecord(
+            ulpin="03LDH312100106",
+            farmer_id="farmer-1150",
+            farmer_name="Gurpreet Singh",
+            mobile="9814012345",
+            state="Punjab",
+            district="Ludhiana",
+            taluk="Khanna",
+            village="Khanna",
+            survey_number="312/1",
+            sub_division="1",
+            area_acres=5.0,
+            land_type="Agricultural - Tubewell Irrigated Wheat",
+            digipin="141C-3070-LD",
+            latitude=30.7046,
+            longitude=76.2163,
+            polygon_coords=generate_default_polygon(30.7046, 76.2163),
+            soil_type="Indo-Gangetic Alluvial",
+            cadastral_map_sheet="LDH-KHN-312"
+        ),
+        OfficialLandRecord(
+            ulpin="29RCH077200103",
+            farmer_id="farmer-1092",
+            farmer_name="Lakshmi Bai",
+            mobile="9740987654",
+            state="Karnataka",
+            district="Raichur",
+            taluk="Manvi",
+            village="Manvi",
+            survey_number="77/2B",
+            sub_division="2B",
+            area_acres=3.5,
+            land_type="Agricultural - Cotton Dryland",
+            digipin="584C-1599-RC",
+            latitude=15.9924,
+            longitude=77.0512,
+            polygon_coords=generate_default_polygon(15.9924, 77.0512),
+            soil_type="Black Cotton Soil",
+            cadastral_map_sheet="RCH-MNV-077"
+        ),
+        OfficialLandRecord(
+            ulpin="29BLR045100109",
+            farmer_id="farmer-ramesh-k",
+            farmer_name="Ramesh Kumar",
+            mobile="9876543219",
+            state="Karnataka",
+            district="Bengaluru Rural",
+            taluk="Devanahalli",
+            village="Devanahalli",
+            survey_number="45/1",
+            sub_division="1",
+            area_acres=3.2,
+            land_type="Agricultural - Mixed Crop",
+            digipin="562C-8F45-KM",
+            latitude=13.2510,
+            longitude=77.7180,
+            polygon_coords=generate_default_polygon(13.2510, 77.7180),
+            soil_type="Red Sandy Loam",
+            cadastral_map_sheet="BLR-DEV-045"
+        )
+    ]
+
 # Initialize seed on module import
 init_seed_data()
 
@@ -414,3 +584,86 @@ def add_notification(notif: Notification):
 
 def get_farmer_notifications(farmer_id: str) -> List[Notification]:
     return [n for n in NOTIFICATIONS_DB if n.farmer_id == farmer_id or farmer_id == "all"]
+
+def generate_otp_for(key: str, length: int = 4) -> str:
+    """Generates a random numeric OTP with 5-minute expiry."""
+    code = str(random.randint(1000, 9999))
+    expires_at = time.time() + 300.0  # 5 minutes
+    OTP_STORE[key] = {
+        "otp": code,
+        "expires_at": expires_at,
+        "created_at": time.time(),
+        "attempts": 0
+    }
+    return code
+
+def verify_otp_for(key: str, otp: str) -> Dict[str, Any]:
+    """Validates submitted OTP for key. Returns status dict."""
+    record = OTP_STORE.get(key)
+    if not record:
+        return {"valid": False, "reason": "No OTP was requested for this identifier. Please click 'Send OTP' first."}
+    
+    if time.time() > record["expires_at"]:
+        del OTP_STORE[key]
+        return {"valid": False, "reason": "OTP has expired (valid for 5 minutes). Please request a new OTP."}
+    
+    clean_submitted = str(otp).strip()
+    clean_expected = str(record["otp"]).strip()
+    
+    if clean_submitted != clean_expected:
+        record["attempts"] += 1
+        if record["attempts"] >= 5:
+            del OTP_STORE[key]
+            return {"valid": False, "reason": "Too many failed attempts. Please request a new OTP."}
+        return {"valid": False, "reason": "Invalid OTP. Please check and try again."}
+    
+    del OTP_STORE[key]
+    return {"valid": True, "reason": "OTP verified successfully."}
+
+def get_active_otp(key: str) -> Optional[str]:
+    rec = OTP_STORE.get(key)
+    if rec and time.time() <= rec["expires_at"]:
+        return rec["otp"]
+    return None
+
+def validate_ulpin_db(ulpin: str) -> Optional[OfficialLandRecord]:
+    clean = ulpin.strip().replace(" ", "").replace("-", "").upper()
+    for rec in OFFICIAL_LAND_RECORDS:
+        if rec.ulpin.upper() == clean:
+            return rec
+    return None
+
+def search_land_records(
+    full_name: str,
+    village: str,
+    taluk: str,
+    district: str,
+    survey_number: Optional[str] = None
+) -> List[OfficialLandRecord]:
+    name_clean = full_name.strip().lower()
+    vill_clean = village.strip().lower()
+    tal_clean = taluk.strip().lower()
+    dist_clean = district.strip().lower()
+    surv_clean = survey_number.strip().lower().replace(" ", "") if survey_number and survey_number.strip() else None
+
+    matches = []
+    for rec in OFFICIAL_LAND_RECORDS:
+        # Flexible substring and token matching
+        name_match = (name_clean in rec.farmer_name.lower()) or (rec.farmer_name.lower() in name_clean)
+        dist_match = (dist_clean in rec.district.lower()) or (rec.district.lower() in dist_clean)
+        tal_match = (tal_clean in rec.taluk.lower()) or (rec.taluk.lower() in tal_clean)
+        vill_match = (vill_clean in rec.village.lower()) or (rec.village.lower() in vill_clean)
+
+        if name_match and dist_match and tal_match and vill_match:
+            if surv_clean:
+                rec_surv = rec.survey_number.lower().replace(" ", "")
+                if surv_clean == rec_surv or surv_clean in rec_surv or rec_surv in surv_clean:
+                    matches.append(rec)
+            else:
+                matches.append(rec)
+
+    return matches
+
+def get_all_land_records() -> List[OfficialLandRecord]:
+    return OFFICIAL_LAND_RECORDS
+

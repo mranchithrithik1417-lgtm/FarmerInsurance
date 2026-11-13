@@ -26,6 +26,27 @@ export interface FarmerProfile {
   created_at?: string;
 }
 
+export interface OfficialLandRecord {
+  ulpin: string;
+  farmer_id: string;
+  farmer_name: string;
+  mobile?: string;
+  state: string;
+  district: string;
+  taluk: string;
+  village: string;
+  survey_number: string;
+  sub_division?: string;
+  area_acres: number;
+  land_type: string;
+  digipin: string;
+  latitude: number;
+  longitude: number;
+  polygon_coords?: number[][];
+  soil_type?: string;
+  cadastral_map_sheet?: string;
+}
+
 export interface LandParcel {
   id: string;
   survey_number: string;
