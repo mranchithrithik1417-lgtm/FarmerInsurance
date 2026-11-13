@@ -314,18 +314,18 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
       {/* ============================================================== */}
       {/* 1. TOP HEADER & NAVIGATION                                      */}
       {/* ============================================================== */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-slate-200">
         <button
           type="button"
           onClick={onBackToDashboard}
-          className="px-4 py-2 bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 hover:text-white rounded-xl text-xs font-bold flex items-center gap-2 border border-slate-700 shadow-md transition cursor-pointer"
+          className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-bold flex items-center gap-2 border border-slate-300 shadow-xs transition cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4 text-cyan-400" />
+          <ArrowLeft className="w-4 h-4 text-emerald-700" />
           <span>{b('Back to Land Identification', 'ಭೂಮಿ ಗುರುತಿಸುವಿಕೆಗೆ ಹಿಂತಿರುಗಿ', language)}</span>
         </button>
 
-        <div className="flex items-center gap-2 text-xs font-mono text-cyan-300 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-800/60">
-          <ShieldCheck className="w-4 h-4 text-cyan-400" />
+        <div className="flex items-center gap-2 text-xs font-mono text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+          <ShieldCheck className="w-4 h-4 text-emerald-700" />
           <span>{b('Official Cadastral Recovery Gateway', 'ಅಧಿಕೃತ ಭೂ ಕಂದಾಯ ಮರುಪಡೆಯುವಿಕೆ ಗೇಟ್‌ವೇ', language)}</span>
         </div>
       </div>
@@ -333,31 +333,31 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
       {/* ============================================================== */}
       {/* VOICE GUIDANCE ASSISTANT BANNER                                */}
       {/* ============================================================== */}
-      <div className="bg-slate-900/80 border border-slate-800 backdrop-blur-xl rounded-3xl p-4 sm:p-5 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white border-2 border-emerald-600/30 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="relative flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-600 to-blue-600 text-white shadow-md shadow-cyan-950/50 shrink-0">
+          <div className="relative flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-700 text-white shadow-xs shrink-0">
             <span className="text-2xl">🌾</span>
             {isSpeaking && (
               <span className="absolute -top-1 -right-1 flex h-4 w-4">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-4 w-4 bg-cyan-500 border-2 border-slate-900"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white"></span>
               </span>
             )}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                 {language === 'kn' ? 'ಧ್ವನಿ ಮಾರ್ಗದರ್ಶನ ಸಹಾಯಕ' : 'Voice Guidance Assistant'}
               </span>
               <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
                 isSpeaking 
-                  ? 'bg-cyan-950/80 text-cyan-300 border-cyan-700 animate-pulse'
-                  : 'bg-slate-800/80 text-slate-400 border-slate-700'
+                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300 animate-pulse'
+                  : 'bg-slate-100 text-slate-600 border-slate-200'
               }`}>
                 {isSpeaking ? (language === 'kn' ? 'ಮಾತನಾಡುತ್ತಿದೆ (Speaking)' : 'Speaking...') : (language === 'kn' ? 'ಸಿದ್ಧವಾಗಿದೆ (Ready)' : 'Ready')}
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5 max-w-xl font-medium">
+            <p className="text-xs text-slate-600 mt-0.5 max-w-xl font-medium">
               {matchedRecords.length > 0 
                 ? (language === 'kn' ? resultsPromptKn : resultsPromptEn)
                 : (language === 'kn' ? forgotIntroPromptKn : forgotIntroPromptEn)
@@ -370,19 +370,19 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
           <button
             type="button"
             onClick={toggleSpeak}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer shadow-md ${
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer shadow-xs ${
               isSpeaking
-                ? 'bg-cyan-950 text-cyan-300 border-2 border-cyan-500 animate-pulse'
-                : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white'
+                ? 'bg-emerald-100 text-emerald-900 border-2 border-emerald-600 animate-pulse'
+                : 'bg-emerald-700 hover:bg-emerald-800 text-white'
             }`}
             title={isSpeaking ? 'Click to Stop Speaking' : 'Click to Listen to Guidance'}
           >
             {isSpeaking ? (
               <>
                 <div className="flex items-center gap-0.5 h-3">
-                  <span className="w-1 h-3 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                  <span className="w-1 h-4 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                  <span className="w-1 h-2 bg-cyan-400 rounded-full animate-bounce"></span>
+                  <span className="w-1 h-3 bg-emerald-700 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                  <span className="w-1 h-4 bg-emerald-700 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                  <span className="w-1 h-2 bg-emerald-700 rounded-full animate-bounce"></span>
                 </div>
                 <span>{language === 'kn' ? 'ನಿಲ್ಲಿಸಿ (Stop)' : 'Stop Speaking'}</span>
               </>
@@ -402,25 +402,25 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
             }}
             className={`p-2.5 rounded-xl border text-xs font-bold transition cursor-pointer ${
               voiceEnabled
-                ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
-                : 'bg-red-950/60 text-red-400 border-red-800/60'
+                ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
+                : 'bg-red-50 text-red-700 border-red-200'
             }`}
             title={voiceEnabled ? 'Mute Voice' : 'Unmute Voice'}
           >
-            {voiceEnabled ? <Volume2 className="w-4 h-4 text-cyan-400" /> : <VolumeX className="w-4 h-4 text-red-400" />}
+            {voiceEnabled ? <Volume2 className="w-4 h-4 text-emerald-700" /> : <VolumeX className="w-4 h-4 text-red-600" />}
           </button>
         </div>
       </div>
 
       {/* Main Titles */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
-          <span className="p-2.5 bg-cyan-950/60 text-cyan-400 rounded-2xl border border-cyan-800/60 text-xl shadow-md">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+          <span className="p-2.5 bg-emerald-50 text-emerald-800 rounded-2xl border border-emerald-200 text-xl">
             🔍
           </span>
           <span>{b('Recover Your ULPIN', 'ನಿಮ್ಮ ULPIN ಮರುಪಡೆಯಿರಿ', language)}</span>
         </h1>
-        <p className="text-sm text-slate-300 mt-1">
+        <p className="text-sm text-slate-600 mt-1">
           {b(
             'Enter your personal and agricultural land details to retrieve your ULPIN from official Bhoomi and State Land Records.',
             'ಅಧಿಕೃತ ಭೂಮಿ ಮತ್ತು ರಾಜ್ಯ ಭೂ ದಾಖಲೆಗಳಿಂದ ನಿಮ್ಮ ULPIN ಪಡೆಯಲು ವೈಯಕ್ತಿಕ ಮತ್ತು ಕೃಷಿ ಭೂಮಿಯ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.',
@@ -430,26 +430,26 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
       </div>
 
       {/* Demo Presets Bar with Voice Fill */}
-      <div className="p-3.5 bg-slate-900/80 border border-slate-800 backdrop-blur-xl rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-md">
+      <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-slate-300 font-semibold flex items-center gap-1.5 mr-1">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+          <span className="text-xs text-slate-600 font-semibold flex items-center gap-1.5 mr-1">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
             <span>{b('Quick Presets & Voice:', 'ತ್ವರಿತ ಮಾದರಿ & ಧ್ವನಿ:', language)}</span>
           </span>
           <button
             type="button"
             onClick={() => loadPreset({ fn: 'Ravi Kumar', dist: 'Bengaluru Rural', tal: 'Devanahalli', vill: 'Devanahalli', surv: '125/2' })}
-            className="px-2.5 py-1 bg-slate-800/80 hover:bg-slate-750 text-cyan-300 text-xs font-mono rounded-lg border border-slate-700/80 transition cursor-pointer flex items-center gap-1"
+            className="px-2.5 py-1 bg-white hover:bg-emerald-50 text-emerald-800 text-xs font-mono rounded-lg border border-slate-200 transition cursor-pointer flex items-center gap-1"
           >
-            <Mic className="w-3 h-3 text-cyan-400" />
+            <Mic className="w-3 h-3 text-emerald-600" />
             <span>{b('Ravi Kumar (125/2)', 'ರವಿ ಕುಮಾರ್ (125/2)', language)}</span>
           </button>
           <button
             type="button"
             onClick={() => loadPreset({ fn: 'Suresh Gowda', dist: 'Belagavi', tal: 'Bailhongal', vill: 'Sampgaon', surv: '48/1A' })}
-            className="px-2.5 py-1 bg-slate-800/80 hover:bg-slate-750 text-cyan-300 text-xs font-mono rounded-lg border border-slate-700/80 transition cursor-pointer flex items-center gap-1"
+            className="px-2.5 py-1 bg-white hover:bg-emerald-50 text-emerald-800 text-xs font-mono rounded-lg border border-slate-200 transition cursor-pointer flex items-center gap-1"
           >
-            <Mic className="w-3 h-3 text-cyan-400" />
+            <Mic className="w-3 h-3 text-emerald-600" />
             <span>{b('Suresh Gowda (48/1A)', 'ಸುರೇಶ್ ಗೌಡ (48/1A)', language)}</span>
           </button>
         </div>
@@ -458,14 +458,14 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
         <button
           type="button"
           onClick={() => startFieldListening('all')}
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-md ${
+          className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs ${
             listeningField === 'all'
               ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
-              : 'bg-slate-800 hover:bg-slate-750 text-cyan-300 border border-cyan-800/60'
+              : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300'
           }`}
           title="Speak all details at once"
         >
-          {listeningField === 'all' ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5 text-cyan-400" />}
+          {listeningField === 'all' ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5 text-emerald-700" />}
           <span>
             {listeningField === 'all' 
               ? (language === 'kn' ? 'ಕೇಳಿಸಿಕೊಳ್ಳಲಾಗುತ್ತಿದೆ...' : 'Listening...')
@@ -476,10 +476,10 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
 
       {/* Real-time Voice Transcript / Parsing feedback */}
       {(listeningField || spokenTranscript || lastParsedSummary) && (
-        <div className="p-3 bg-slate-950/80 border border-cyan-900/60 rounded-2xl text-xs flex items-center justify-between gap-2 animate-fadeIn shadow-md">
+        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs flex items-center justify-between gap-2 animate-fadeIn">
           <div className="flex items-center gap-2 truncate">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping shrink-0" />
-            <span className="text-slate-300 truncate font-medium">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-ping shrink-0" />
+            <span className="text-slate-800 truncate font-medium">
               {listeningField
                 ? (spokenTranscript 
                     ? `🎙️ "${spokenTranscript}"` 
@@ -499,7 +499,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                 }
                 setListeningField(null);
               }}
-              className="text-xs text-red-400 font-bold hover:underline shrink-0"
+              className="text-xs text-red-700 font-bold hover:underline shrink-0"
             >
               {language === 'kn' ? 'ಮುಗಿಸಿ' : 'Stop'}
             </button>
@@ -510,16 +510,16 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
       {/* ============================================================== */}
       {/* 2. RECOVERY FORM CARD                                          */}
       {/* ============================================================== */}
-      <div className="bg-slate-900/80 border border-slate-800 backdrop-blur-xl rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
         <form onSubmit={handleFetchULPIN} className="space-y-5">
           {/* Row 1: Full Name (Mandatory) */}
           <div>
-            <label htmlFor="recovery-full-name" className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between mb-1.5">
+            <label htmlFor="recovery-full-name" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between mb-1.5">
               <span className="flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-cyan-400" />
+                <User className="w-3.5 h-3.5 text-emerald-700" />
                 <span>{b('1. Full Name (As per Land Records)', '1. ಪೂರ್ಣ ಹೆಸರು (ಭೂ ದಾಖಲೆಗಳ ಪ್ರಕಾರ)', language)}</span>
               </span>
-              <span className="text-[10px] text-cyan-300 font-mono font-bold bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800/60">
+              <span className="text-[10px] text-emerald-800 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                 {b('MANDATORY *', 'ಕಡ್ಡಾಯ *', language)}
               </span>
             </label>
@@ -531,7 +531,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder={b('e.g. Ravi Kumar', 'ಉದಾ: ರವಿ ಕುಮಾರ್', language)}
-                className="w-full bg-slate-950/70 border border-slate-800 focus:bg-slate-900 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-white text-sm transition outline-none placeholder:text-slate-600"
+                className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
               />
               <button
                 type="button"
@@ -539,7 +539,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                 className={`absolute right-2 p-1.5 rounded-lg transition cursor-pointer ${
                   listeningField === 'fullName'
                     ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
-                    : 'bg-slate-800 hover:bg-slate-750 text-cyan-300 border border-slate-700'
+                    : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
                 }`}
                 title={listeningField === 'fullName' ? 'Stop listening' : 'Speak Full Name'}
               >
@@ -551,12 +551,12 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
           {/* Row 2: District & Taluk (Mandatory) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="recovery-district" className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between mb-1.5">
+              <label htmlFor="recovery-district" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between mb-1.5">
                 <span className="flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-cyan-400" />
+                  <MapPin className="w-3.5 h-3.5 text-emerald-700" />
                   <span>{b('2. District', '2. ಜಿಲ್ಲೆ', language)}</span>
                 </span>
-                <span className="text-[10px] text-cyan-300 font-mono font-bold">{b('MANDATORY *', 'ಕಡ್ಡಾಯ *', language)}</span>
+                <span className="text-[10px] text-emerald-800 font-mono font-bold">{b('MANDATORY *', 'ಕಡ್ಡಾಯ *', language)}</span>
               </label>
               <div className="relative flex items-center">
                 <input
@@ -566,7 +566,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
                   placeholder={b('e.g. Bengaluru Rural', 'ಉದಾ: ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ', language)}
-                  className="w-full bg-slate-950/70 border border-slate-800 focus:bg-slate-900 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-white text-sm transition outline-none placeholder:text-slate-600"
+                  className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
                 />
                 <button
                   type="button"
@@ -574,7 +574,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                   className={`absolute right-2 p-1.5 rounded-lg transition cursor-pointer ${
                     listeningField === 'district'
                       ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
-                      : 'bg-slate-800 hover:bg-slate-750 text-cyan-300 border border-slate-700'
+                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
                   }`}
                   title={listeningField === 'district' ? 'Stop listening' : 'Speak District'}
                 >
@@ -584,12 +584,12 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
             </div>
 
             <div>
-              <label htmlFor="recovery-taluk" className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between mb-1.5">
+              <label htmlFor="recovery-taluk" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between mb-1.5">
                 <span className="flex items-center gap-1.5">
-                  <Building className="w-3.5 h-3.5 text-cyan-400" />
+                  <Building className="w-3.5 h-3.5 text-emerald-700" />
                   <span>{b('3. Taluk', '3. ತಾಲೂಕು', language)}</span>
                 </span>
-                <span className="text-[10px] text-cyan-300 font-mono font-bold">{b('MANDATORY *', 'ಕಡ್ಡಾಯ *', language)}</span>
+                <span className="text-[10px] text-emerald-800 font-mono font-bold">{b('MANDATORY *', 'ಕಡ್ಡಾಯ *', language)}</span>
               </label>
               <div className="relative flex items-center">
                 <input
@@ -599,7 +599,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                   value={taluk}
                   onChange={(e) => setTaluk(e.target.value)}
                   placeholder={b('e.g. Devanahalli', 'ಉದಾ: ದೇವನಹಳ್ಳಿ', language)}
-                  className="w-full bg-slate-950/70 border border-slate-800 focus:bg-slate-900 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-white text-sm transition outline-none placeholder:text-slate-600"
+                  className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
                 />
                 <button
                   type="button"
@@ -607,7 +607,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                   className={`absolute right-2 p-1.5 rounded-lg transition cursor-pointer ${
                     listeningField === 'taluk'
                       ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
-                      : 'bg-slate-800 hover:bg-slate-750 text-cyan-300 border border-slate-700'
+                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
                   }`}
                   title={listeningField === 'taluk' ? 'Stop listening' : 'Speak Taluk'}
                 >
@@ -620,12 +620,12 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
           {/* Row 3: Village (Mandatory) & Survey Number (Optional) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="recovery-village" className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between mb-1.5">
+              <label htmlFor="recovery-village" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between mb-1.5">
                 <span className="flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-cyan-400" />
+                  <MapPin className="w-3.5 h-3.5 text-emerald-700" />
                   <span>{b('4. Village', '4. ಗ್ರಾಮ / ಹಳ್ಳಿ', language)}</span>
                 </span>
-                <span className="text-[10px] text-cyan-300 font-mono font-bold">{b('MANDATORY *', 'ಕಡ್ಡಾಯ *', language)}</span>
+                <span className="text-[10px] text-emerald-800 font-mono font-bold">{b('MANDATORY *', 'ಕಡ್ಡಾಯ *', language)}</span>
               </label>
               <div className="relative flex items-center">
                 <input
@@ -635,7 +635,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                   value={village}
                   onChange={(e) => setVillage(e.target.value)}
                   placeholder={b('e.g. Devanahalli', 'ಉದಾ: ದೇವನಹಳ್ಳಿ', language)}
-                  className="w-full bg-slate-950/70 border border-slate-800 focus:bg-slate-900 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-white text-sm transition outline-none placeholder:text-slate-600"
+                  className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
                 />
                 <button
                   type="button"
@@ -643,7 +643,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                   className={`absolute right-2 p-1.5 rounded-lg transition cursor-pointer ${
                     listeningField === 'village'
                       ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
-                      : 'bg-slate-800 hover:bg-slate-750 text-cyan-300 border border-slate-700'
+                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
                   }`}
                   title={listeningField === 'village' ? 'Stop listening' : 'Speak Village'}
                 >
@@ -653,12 +653,12 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
             </div>
 
             <div>
-              <label htmlFor="recovery-survey" className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between mb-1.5">
+              <label htmlFor="recovery-survey" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between mb-1.5">
                 <span className="flex items-center gap-1.5">
                   <Hash className="w-3.5 h-3.5 text-slate-500" />
                   <span>{b('5. Survey Number', '5. ಸರ್ವೆ ಸಂಖ್ಯೆ', language)}</span>
                 </span>
-                <span className="text-[10px] text-slate-400 font-mono">{b('OPTIONAL', 'ಐಚ್ಛಿಕ', language)}</span>
+                <span className="text-[10px] text-slate-500 font-mono">{b('OPTIONAL', 'ಐಚ್ಛಿಕ', language)}</span>
               </label>
               <div className="relative flex items-center">
                 <input
@@ -667,7 +667,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                   value={surveyNumber}
                   onChange={(e) => setSurveyNumber(e.target.value)}
                   placeholder={b('e.g. 125/2 (leave blank to see all plots)', 'ಉದಾ: 125/2 (ಎಲ್ಲಾ ಜಮೀನು ನೋಡಲು ಖಾಲಿ ಬಿಡಿ)', language)}
-                  className="w-full bg-slate-950/70 border border-slate-800 focus:bg-slate-900 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-white text-sm transition outline-none placeholder:text-slate-600"
+                  className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
                 />
                 <button
                   type="button"
@@ -675,7 +675,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                   className={`absolute right-2 p-1.5 rounded-lg transition cursor-pointer ${
                     listeningField === 'surveyNumber'
                       ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
-                      : 'bg-slate-800 hover:bg-slate-750 text-cyan-300 border border-slate-700'
+                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
                   }`}
                   title={listeningField === 'surveyNumber' ? 'Stop listening' : 'Speak Survey Number'}
                 >
@@ -687,11 +687,11 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
 
           {/* Error Message Alert */}
           {errorMsg && (
-            <div className="p-4 bg-red-950/50 border border-red-800/80 rounded-xl text-red-300 text-xs flex items-start gap-2.5 animate-shake">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-400" />
+            <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs flex items-start gap-2.5 animate-shake">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-600" />
               <div>
                 <strong>{errorMsg}</strong>
-                <p className="text-[11px] text-red-400/90 mt-0.5">
+                <p className="text-[11px] text-red-600/90 mt-0.5">
                   {b(
                     'Please verify the spelling of your Full Name, Taluk, and Village, or check if the Survey Number is correct.',
                     'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹೆಸರು, ತಾಲೂಕು ಮತ್ತು ಗ್ರಾಮದ ಕಾಗುಣಿತವನ್ನು ಅಥವಾ ಸರ್ವೆ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಿ.',
@@ -707,7 +707,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:flex-1 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm tracking-wide shadow-lg shadow-cyan-950/50 flex items-center justify-center gap-2 transition cursor-pointer"
+              className="w-full sm:flex-1 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm tracking-wide shadow-xs hover:shadow flex items-center justify-center gap-2 transition cursor-pointer"
             >
               {loading ? (
                 <>
@@ -725,7 +725,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
             <button
               type="button"
               onClick={onBackToDashboard}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition cursor-pointer border border-slate-700"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer"
             >
               {b('Back to Dashboard', 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ', language)}
             </button>
@@ -737,11 +737,11 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
       {/* 3. MULTIPLE MATCHING RECORDS SELECTION                         */}
       {/* ============================================================== */}
       {matchedRecords.length > 1 && (
-        <div className="bg-slate-900/80 border border-slate-800 backdrop-blur-xl rounded-3xl p-6 sm:p-8 shadow-xl space-y-4 animate-fadeIn">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs space-y-4 animate-fadeIn">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-200">
             <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <span className="p-1.5 bg-cyan-950/60 text-cyan-400 rounded-lg border border-cyan-800/60">📋</span>
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span className="p-1.5 bg-emerald-50 text-emerald-800 rounded-lg">📋</span>
                 <span>
                   {b(
                     `Multiple Land Records Found (${matchedRecords.length} Parcels)`,
@@ -750,13 +750,13 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                   )}
                 </span>
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-600 mt-0.5">
                 {b(
                   `We found ${matchedRecords.length} agricultural land parcels registered under `,
                   `${village} ಗ್ರಾಮದಲ್ಲಿ `,
                   language
                 )}
-                <strong className="text-slate-200">{fullName}</strong>
+                <strong>{fullName}</strong>
                 {b(
                   ` in ${village}. Please select the parcel for crop damage assessment:`,
                   ` ಅವರ ಹೆಸರಿನಲ್ಲಿ ${matchedRecords.length} ಕೃಷಿ ಜಮೀನುಗಳು ಕಂಡುಬಂದಿವೆ. ಬೆಳೆ ಹಾನಿ ಮೌಲ್ಯಮಾಪನಕ್ಕೆ ಸಂಬಂಧಿತ ಜಮೀನನ್ನು ಆಯ್ಕೆಮಾಡಿ:`,
@@ -775,37 +775,37 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                   onClick={() => setSelectedRecord(rec)}
                   className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between ${
                     isSelected
-                      ? 'bg-slate-950/90 border-cyan-500 shadow-lg shadow-cyan-950/50 scale-[1.01]'
-                      : 'bg-slate-950/50 border-slate-800 hover:border-slate-700'
+                      ? 'bg-emerald-50/80 border-emerald-600 shadow-sm scale-[1.01]'
+                      : 'bg-slate-50 border-slate-200 hover:border-slate-300'
                   }`}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-mono font-bold text-cyan-300 bg-cyan-950/70 px-2 py-0.5 rounded border border-cyan-800/60">
+                      <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
                         {b('Survey #', 'ಸರ್ವೆ ಸಂಖ್ಯೆ #', language)}{rec.survey_number}
                       </span>
-                      <span className="text-xs font-bold text-slate-300">
+                      <span className="text-xs font-bold text-slate-700">
                         {rec.area_acres} {b('Acres', 'ಎಕರೆ', language)}
                       </span>
                     </div>
 
-                    <div className="text-sm font-bold text-white mb-1">
+                    <div className="text-sm font-bold text-slate-900 mb-1">
                       {rec.land_type}
                     </div>
 
-                    <div className="text-xs text-slate-400">
+                    <div className="text-xs text-slate-500">
                       {rec.village}, {rec.taluk}, {rec.district}
                     </div>
 
-                    <div className="mt-3 p-2 bg-slate-900 rounded-xl font-mono text-[11px] text-cyan-300 tracking-wider flex items-center justify-between border border-slate-800">
+                    <div className="mt-3 p-2 bg-white rounded-xl font-mono text-[11px] text-emerald-800 tracking-wider flex items-center justify-between border border-slate-200">
                       <span>ULPIN: {rec.ulpin}</span>
-                      {isSelected && <Check className="w-4 h-4 text-cyan-400" />}
+                      {isSelected && <Check className="w-4 h-4 text-emerald-700" />}
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-[11px]">
-                    <span className="text-slate-400">DIGIPIN: {rec.digipin}</span>
-                    <span className={`font-bold ${isSelected ? 'text-cyan-400' : 'text-slate-500'}`}>
+                  <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-[11px]">
+                    <span className="text-slate-500">DIGIPIN: {rec.digipin}</span>
+                    <span className={`font-bold ${isSelected ? 'text-emerald-700' : 'text-slate-400'}`}>
                       {isSelected
                         ? b('✓ Selected', '✓ ಆಯ್ಕೆಯಾಗಿದೆ', language)
                         : b('Click to Select', 'ಆಯ್ಕೆ ಮಾಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ', language)}
@@ -822,35 +822,35 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
       {/* 4. SUCCESSFUL RETRIEVAL UI CARD                                */}
       {/* ============================================================== */}
       {selectedRecord && (
-        <div className="bg-slate-900/90 border-2 border-cyan-500/50 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-6 animate-fadeIn">
+        <div className="bg-gradient-to-b from-emerald-50/80 via-white to-green-50/60 border-2 border-emerald-400 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6 animate-fadeIn">
           {/* Header Badge */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-emerald-200">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-gradient-to-tr from-cyan-600 to-blue-600 text-white rounded-2xl shadow-md shadow-cyan-950/50">
+              <div className="p-3 bg-emerald-600 text-white rounded-2xl shadow-xs">
                 <CheckCircle2 className="w-7 h-7" />
               </div>
               <div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-950/70 text-cyan-300 text-[10px] font-extrabold uppercase tracking-wider border border-cyan-800/60 mb-1">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold uppercase tracking-wider border border-emerald-300 mb-1">
                   {b('National Bhoomi Cadastral Match', 'ರಾಷ್ಟ್ರೀಯ ಭೂಮಿ ದಾಖಲೆ ಹೊಂದಾಣಿಕೆ', language)}
                 </div>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-white">
+                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                   {b('ULPIN Retrieved Successfully!', 'ULPIN ಯಶಸ್ವಿಯಾಗಿ ದೊರೆತಿದೆ!', language)}
                 </h2>
               </div>
             </div>
 
-            <div className="text-left sm:text-right font-mono text-xs text-cyan-300 bg-cyan-950/60 px-3 py-1.5 rounded-xl border border-cyan-800/60 font-bold">
+            <div className="text-left sm:text-right font-mono text-xs text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 font-bold">
               {b('Verified & Co-Registered', 'ಪರಿಶೀಲಿಸಲಾಗಿದೆ & ನೋಂದಾಯಿಸಲಾಗಿದೆ', language)}
             </div>
           </div>
 
           {/* Highlighted ULPIN Display Box */}
-          <div className="p-5 rounded-2xl bg-slate-950/90 border border-cyan-500/40 shadow-inner flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="p-5 rounded-2xl bg-white border border-emerald-300 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <span className="text-[10px] text-slate-400 uppercase tracking-widest font-bold block mb-1">
+              <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold block mb-1">
                 {b('Unique Land Parcel Identification Number (Bhu-Aadhaar)', 'ವಿಶಿಷ್ಟ ಭೂಮಿ ಗುರುತಿನ ಸಂಖ್ಯೆ (ಭೂ-ಆಧಾರ್)', language)}
               </span>
-              <div className="text-2xl sm:text-3xl font-black font-mono tracking-widest text-cyan-300">
+              <div className="text-2xl sm:text-3xl font-black font-mono tracking-widest text-emerald-800">
                 {selectedRecord.ulpin}
               </div>
             </div>
@@ -858,11 +858,11 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
             <button
               type="button"
               onClick={() => handleCopy(selectedRecord.ulpin)}
-              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-bold flex items-center justify-center gap-2 border border-slate-700 transition cursor-pointer shrink-0"
+              className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-emerald-800 text-xs font-bold flex items-center justify-center gap-2 border border-slate-300 transition cursor-pointer shrink-0"
             >
               {copiedULPIN ? (
                 <>
-                  <Check className="w-4 h-4 text-cyan-400" />
+                  <Check className="w-4 h-4 text-emerald-700" />
                   <span>{b('Copied to Clipboard!', 'ನಕಲಿಸಲಾಗಿದೆ!', language)}</span>
                 </>
               ) : (
@@ -875,54 +875,54 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
           </div>
 
           {/* Verified Land Record Detail Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-950/70 border border-slate-800 text-xs text-slate-300">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-900">
             <div>
-              <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+              <span className="text-slate-500 block text-[10px] uppercase font-semibold">
                 {b("Farmer's Full Name", 'ರೈತರ ಪೂರ್ಣ ಹೆಸರು', language)}
               </span>
-              <strong className="text-white text-sm">{selectedRecord.farmer_name}</strong>
+              <strong className="text-slate-900 text-sm">{selectedRecord.farmer_name}</strong>
             </div>
 
             <div>
-              <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+              <span className="text-slate-500 block text-[10px] uppercase font-semibold">
                 {b('Survey Number', 'ಸರ್ವೆ ಸಂಖ್ಯೆ', language)}
               </span>
-              <strong className="text-cyan-300 font-mono text-sm">#{selectedRecord.survey_number}</strong>
+              <strong className="text-emerald-800 font-mono text-sm">#{selectedRecord.survey_number}</strong>
             </div>
 
             <div>
-              <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+              <span className="text-slate-500 block text-[10px] uppercase font-semibold">
                 {b('Village', 'ಗ್ರಾಮ / ಊರು', language)}
               </span>
-              <strong className="text-slate-200">{selectedRecord.village}</strong>
+              <strong className="text-slate-800">{selectedRecord.village}</strong>
             </div>
 
             <div>
-              <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+              <span className="text-slate-500 block text-[10px] uppercase font-semibold">
                 {b('Taluk & District', 'ತಾಲೂಕು & ಜಿಲ್ಲೆ', language)}
               </span>
-              <span className="text-slate-300 font-medium">{selectedRecord.taluk}, {selectedRecord.district}</span>
+              <span className="text-slate-700 font-medium">{selectedRecord.taluk}, {selectedRecord.district}</span>
             </div>
 
             <div>
-              <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+              <span className="text-slate-500 block text-[10px] uppercase font-semibold">
                 {b('Registered Area', 'ನೋಂದಾಯಿತ ವಿಸ್ತೀರ್ಣ', language)}
               </span>
-              <strong className="text-white">{selectedRecord.area_acres} {b('Acres', 'ಎಕರೆ', language)}</strong>
+              <strong className="text-slate-900">{selectedRecord.area_acres} {b('Acres', 'ಎಕರೆ', language)}</strong>
             </div>
 
             <div>
-              <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+              <span className="text-slate-500 block text-[10px] uppercase font-semibold">
                 {b('National DIGIPIN', 'ರಾಷ್ಟ್ರೀಯ ಡಿಜಿಪಿನ್', language)}
               </span>
-              <strong className="text-cyan-300 font-mono">{selectedRecord.digipin}</strong>
+              <strong className="text-emerald-800 font-mono">{selectedRecord.digipin}</strong>
             </div>
 
             <div className="col-span-2">
-              <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+              <span className="text-slate-500 block text-[10px] uppercase font-semibold">
                 {b('GPS Centroid Coordinates', 'ಜಿಪಿಎಸ್ ನಿರ್ದೇಶಾಂಕಗಳು', language)}
               </span>
-              <span className="text-cyan-400 font-mono">
+              <span className="text-slate-700 font-mono">
                 {selectedRecord.latitude.toFixed(5)}° N, {selectedRecord.longitude.toFixed(5)}° E
               </span>
             </div>
@@ -933,7 +933,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
             <button
               type="button"
               onClick={() => onContinueToAssessment(selectedRecord)}
-              className="w-full sm:flex-1 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/50 transition cursor-pointer"
+              className="w-full sm:flex-1 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-xs hover:shadow transition cursor-pointer"
             >
               <span>{b('Continue to Crop Assessment', 'ಬೆಳೆ ಹಾನಿ ಮೌಲ್ಯಮಾಪನಕ್ಕೆ ಮುಂದುವರಿಯಿರಿ', language)}</span>
               <ArrowRight className="w-4 h-4" />
@@ -946,7 +946,7 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                 setMatchedRecords([]);
                 setHasSearched(false);
               }}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition cursor-pointer border border-slate-700"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer"
             >
               {b('Back', 'ಹಿಂದೆ', language)}
             </button>

@@ -549,30 +549,30 @@ export const VoiceAssistantModal: React.FC<Props> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-3xl bg-[#090D16]/95 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh] backdrop-blur-2xl text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+      <div className="relative w-full max-w-3xl bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh]">
         {/* Top Header */}
-        <div className="p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+        <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {/* Animated Avatar */}
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-600 to-blue-600 text-white shadow-md shadow-cyan-950/50">
+            <div className="relative flex items-center justify-center w-10 h-10 rounded-full bg-emerald-700 text-white shadow-sm">
               <span className="text-xl">🌾</span>
               {isSpeaking && (
                 <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-cyan-500 border border-slate-900"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-600"></span>
                 </span>
               )}
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-white">{b('KisanClaim Assessment Assistant', 'ಕಿಸಾನ್‌ಕ್ಲೇಮ್ ಬೆಳೆ ಹಾನಿ ಮೌಲ್ಯಮಾಪನ ಸಹಾಯಕ', language)}</h2>
-                <span className="text-[10px] bg-cyan-950/80 text-cyan-300 font-mono font-bold px-2 py-0.5 rounded-full border border-cyan-800/60">
+                <h2 className="text-base font-bold text-slate-900">{b('KisanClaim Assessment Assistant', 'ಕಿಸಾನ್‌ಕ್ಲೇಮ್ ಬೆಳೆ ಹಾನಿ ಮೌಲ್ಯಮಾಪನ ಸಹಾಯಕ', language)}</h2>
+                <span className="text-[10px] bg-emerald-50 text-emerald-800 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-200">
                   {b('AI GUIDED MODE', 'ಎಐ ಮಾರ್ಗದರ್ಶಿತ ಮೋಡ್', language)}
                 </span>
               </div>
-              <p className="text-xs text-slate-400">
-                {b(`Step ${currentStep} of 5 • Land parcel verified`, `ಹಂತ ${currentStep} / 5 • ಜಮೀನು ಪರಿಶೀಲಿಸಲಾಗಿದೆ`, language)} (ULPIN: <span className="font-mono text-cyan-400 font-bold">{formData.landParcelId}</span>)
+              <p className="text-xs text-slate-600">
+                {b(`Step ${currentStep} of 5 • Land parcel verified`, `ಹಂತ ${currentStep} / 5 • ಜಮೀನು ಪರಿಶೀಲಿಸಲಾಗಿದೆ`, language)} (ULPIN: <span className="font-mono text-emerald-800 font-bold">{formData.landParcelId}</span>)
               </p>
             </div>
           </div>
@@ -583,14 +583,14 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                 setVoiceEnabled(!voiceEnabled);
                 if (voiceEnabled) stopSpeaking();
               }}
-              className="p-2 text-slate-400 hover:text-cyan-400 rounded-xl hover:bg-slate-800 transition cursor-pointer"
+              className="p-2 text-slate-500 hover:text-emerald-700 rounded-xl hover:bg-slate-100 transition cursor-pointer"
               title="Toggle audio narration"
             >
-              {voiceEnabled ? <Volume2 className="w-5 h-5 text-cyan-400" /> : <VolumeX className="w-5 h-5 text-slate-500" />}
+              {voiceEnabled ? <Volume2 className="w-5 h-5 text-emerald-700" /> : <VolumeX className="w-5 h-5" />}
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition cursor-pointer"
+              className="p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -598,24 +598,24 @@ export const VoiceAssistantModal: React.FC<Props> = ({
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full bg-slate-800 h-1.5 overflow-hidden border-b border-slate-800">
+        <div className="w-full bg-slate-100 h-1.5 overflow-hidden border-b border-slate-200">
           <div
-            className="bg-gradient-to-r from-cyan-500 to-blue-500 h-full transition-all duration-300"
+            className="bg-emerald-600 h-full transition-all duration-300"
             style={{ width: `${(currentStep / 5) * 100}%` }}
           />
         </div>
 
         {/* Question Bubble & Listen / Audio Waves Button */}
-        <div className="p-4 sm:p-5 bg-slate-950/60 border-b border-slate-800/80 flex items-start gap-3 sm:gap-4">
-          <div className="p-4 bg-slate-900/90 border border-cyan-900/40 rounded-2xl flex-1 shadow-inner text-white">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-cyan-400 block mb-1 font-mono">
+        <div className="p-4 sm:p-5 bg-emerald-50/40 border-b border-slate-200 flex items-start gap-3 sm:gap-4">
+          <div className="p-4 bg-white border border-emerald-200 rounded-2xl flex-1 shadow-sm">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 block mb-1 font-mono">
               {currentQ.title}
             </span>
-            <p className="text-sm sm:text-base font-bold text-white leading-relaxed">
+            <p className="text-sm sm:text-base font-bold text-slate-900 leading-relaxed">
               "{language === 'kn' ? currentQ.questionKn : currentQ.questionEn}"
             </p>
-            <p className="text-xs text-slate-400 mt-2 flex items-center gap-1.5 font-medium">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" /> {currentQ.subtext}
+            <p className="text-xs text-slate-600 mt-2 flex items-center gap-1.5 font-medium">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-700 flex-shrink-0" /> {currentQ.subtext}
             </p>
           </div>
 
@@ -623,28 +623,28 @@ export const VoiceAssistantModal: React.FC<Props> = ({
           <button
             type="button"
             onClick={toggleSpeakQuestion}
-            className={`px-3.5 py-3 rounded-2xl transition-all flex flex-col items-center justify-center gap-1.5 text-xs font-bold cursor-pointer shadow-md ${
+            className={`px-3.5 py-3 rounded-2xl transition-all flex flex-col items-center justify-center gap-1.5 text-xs font-bold cursor-pointer shadow-sm ${
               isSpeaking
-                ? 'bg-cyan-950 text-cyan-300 border-2 border-cyan-500 animate-pulse'
-                : 'bg-slate-850 hover:bg-slate-800 text-slate-300 border border-slate-700/80'
+                ? 'bg-emerald-100 text-emerald-900 border-2 border-emerald-600 animate-pulse'
+                : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200'
             }`}
             title={isSpeaking ? 'Click to Stop Speaking' : 'Click to Listen to Question'}
           >
             {isSpeaking ? (
               <>
                 <div className="flex items-center gap-1 h-4">
-                  <span className="w-1 h-3 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                  <span className="w-1 h-4 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                  <span className="w-1 h-2.5 bg-cyan-400 rounded-full animate-bounce" />
+                  <span className="w-1 h-3 bg-emerald-600 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                  <span className="w-1 h-4 bg-emerald-700 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                  <span className="w-1 h-2.5 bg-emerald-600 rounded-full animate-bounce" />
                 </div>
-                <span className="text-[10px] text-cyan-300 font-extrabold uppercase whitespace-nowrap font-mono">
+                <span className="text-[10px] text-emerald-800 font-extrabold uppercase whitespace-nowrap font-mono">
                   {b('Speaking', 'ಮಾತನಾಡುತ್ತಿದೆ', language)}
                 </span>
               </>
             ) : (
               <>
-                <Volume2 className="w-5 h-5 text-cyan-400" />
-                <span className="text-[10px] text-slate-300 font-bold uppercase whitespace-nowrap">{b('Listen', 'ಕೇಳಿಸಿಕೊಳ್ಳಿ', language)}</span>
+                <Volume2 className="w-5 h-5 text-emerald-700" />
+                <span className="text-[10px] text-slate-600 font-bold uppercase whitespace-nowrap">{b('Listen', 'ಕೇಳಿಸಿಕೊಳ್ಳಿ', language)}</span>
               </>
             )}
           </button>
@@ -657,16 +657,16 @@ export const VoiceAssistantModal: React.FC<Props> = ({
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">{b('Survey Number', 'ಸರ್ವೆ ಸಂಖ್ಯೆ', language)}</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">{b('Survey Number', 'ಸರ್ವೆ ಸಂಖ್ಯೆ', language)}</label>
                   <input
                     type="text"
                     value={formData.surveyNumber}
                     onChange={e => setFormData({ ...formData, surveyNumber: e.target.value })}
-                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3.5 py-2 text-white text-sm font-mono focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 text-sm font-mono focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">{b('Land Area (Acres)', 'ಭೂ ವಿಸ್ತೀರ್ಣ (ಎಕರೆ)', language)}</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">{b('Land Area (Acres)', 'ಭೂ ವಿಸ್ತೀರ್ಣ (ಎಕರೆ)', language)}</label>
                   <input
                     type="number"
                     step="0.1"
@@ -678,39 +678,39 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                         insuredAreaAcres: parseFloat(e.target.value) || 0
                       })
                     }
-                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3.5 py-2 text-white text-sm font-mono focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-900 text-sm font-mono focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">{b('DIGIPIN (National Grid)', 'ಡಿಜಿಪಿನ್ (ರಾಷ್ಟ್ರೀಯ ಗ್ರಿಡ್)', language)}</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">{b('DIGIPIN (National Grid)', 'ಡಿಜಿಪಿನ್ (ರಾಷ್ಟ್ರೀಯ ಗ್ರಿಡ್)', language)}</label>
                   <input
                     type="text"
                     readOnly
                     value={formData.digipin}
-                    className="w-full bg-slate-950/90 border border-slate-800 rounded-xl px-3.5 py-2 text-cyan-400 font-bold text-sm font-mono"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-emerald-800 font-bold text-sm font-mono"
                   />
                 </div>
               </div>
 
               {/* Location Mode Choice */}
-              <div className="p-4 bg-slate-900/80 border border-slate-800 rounded-2xl space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-800">
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-200">
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-cyan-400" />
-                    <span className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+                    <MapPin className="w-4 h-4 text-emerald-700" />
+                    <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                       {b('Ground Parcel Geo-Location', 'ಜಮೀನಿನ ಜಿಯೋ-ಸ್ಥಳ', language)}
                     </span>
                   </div>
 
                   {/* Mode Selector Buttons */}
-                  <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 shadow-inner">
+                  <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-slate-200 shadow-sm">
                     <button
                       type="button"
                       onClick={() => setLocationMode('map')}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                         locationMode === 'map'
-                          ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md'
-                          : 'text-slate-400 hover:text-slate-200'
+                          ? 'bg-emerald-700 text-white shadow-sm'
+                          : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
                       <Layers className="w-3 h-3" />
@@ -722,8 +722,8 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                       onClick={() => setLocationMode('autofetch')}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                         locationMode === 'autofetch'
-                          ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md'
-                          : 'text-slate-400 hover:text-slate-200'
+                          ? 'bg-emerald-700 text-white shadow-sm'
+                          : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
                       <Navigation className="w-3 h-3" />
@@ -735,8 +735,8 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                       onClick={() => setLocationMode('manual')}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                         locationMode === 'manual'
-                          ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md'
-                          : 'text-slate-400 hover:text-slate-200'
+                          ? 'bg-emerald-700 text-white shadow-sm'
+                          : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
                       <Edit3 className="w-3 h-3" />
@@ -761,22 +761,22 @@ export const VoiceAssistantModal: React.FC<Props> = ({
 
                 {/* Sub-panel 2: Auto Fetch Location */}
                 {locationMode === 'autofetch' && (
-                  <div className="p-3.5 bg-slate-950/80 rounded-xl border border-slate-800 shadow-sm flex flex-wrap items-center justify-between gap-3">
+                  <div className="p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <div className="text-xs font-bold text-white flex items-center gap-2">
+                      <div className="text-xs font-bold text-slate-900 flex items-center gap-2">
                         <span>Device & Cadastral GPS Synchronizer</span>
-                        <span className="text-[10px] bg-cyan-950/80 text-cyan-300 px-2 py-0.5 rounded-full font-mono font-bold border border-cyan-800/60">
+                        <span className="text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full font-mono font-bold border border-emerald-200">
                           ACCURACY: ±3.2m
                         </span>
                       </div>
-                      <div className="text-xs text-slate-400 mt-0.5">{locationStatus}</div>
+                      <div className="text-xs text-slate-600 mt-0.5">{locationStatus}</div>
                     </div>
 
                     <button
                       type="button"
                       onClick={handleAutoFetchLocation}
                       disabled={isLocating}
-                      className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 text-white font-bold text-xs rounded-xl flex items-center gap-2 shadow-md transition cursor-pointer"
+                      className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-xs rounded-xl flex items-center gap-2 shadow-sm transition cursor-pointer"
                     >
                       <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
                       <span>{isLocating ? 'Locking Coordinates...' : 'Auto-Fetch Location Now'}</span>
@@ -786,13 +786,13 @@ export const VoiceAssistantModal: React.FC<Props> = ({
 
                 {/* Sub-panel 3: Manual Latitude & Longitude Input */}
                 {locationMode === 'manual' && (
-                  <div className="p-3.5 bg-slate-950/80 rounded-xl border border-slate-800 shadow-sm space-y-3">
-                    <div className="text-xs text-slate-300 font-medium">
+                  <div className="p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm space-y-3">
+                    <div className="text-xs text-slate-700 font-medium">
                       Enter the geodetic centroid coordinates for your land parcel. DIGIPIN will be computed dynamically.
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                        <label className="text-[11px] font-semibold text-slate-700 block mb-1">
                           Latitude (°N, e.g. 13.2456)
                         </label>
                         <input
@@ -800,11 +800,11 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                           step="0.0001"
                           value={formData.latitude}
                           onChange={e => handleManualCoordChange('latitude', parseFloat(e.target.value) || 0)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-sm focus:border-cyan-500 outline-none"
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 font-mono text-sm focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none"
                         />
                       </div>
                       <div>
-                        <label className="text-[11px] font-semibold text-slate-300 block mb-1">
+                        <label className="text-[11px] font-semibold text-slate-700 block mb-1">
                           Longitude (°E, e.g. 77.7123)
                         </label>
                         <input
@@ -812,7 +812,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                           step="0.0001"
                           value={formData.longitude}
                           onChange={e => handleManualCoordChange('longitude', parseFloat(e.target.value) || 0)}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-sm focus:border-cyan-500 outline-none"
+                          className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 font-mono text-sm focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none"
                         />
                       </div>
                     </div>
@@ -822,60 +822,60 @@ export const VoiceAssistantModal: React.FC<Props> = ({
             </div>
           )}
 
-          {/* STEP 2: Crop Details */}
+          {/* STEP 2: Crop Details (Crop Variety & Growth Stage Removed as requested) */}
           {currentStep === 2 && (
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Crop Sown</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Crop Sown</label>
                   <select
                     value={formData.cropName}
                     onChange={e => setFormData({ ...formData, cropName: e.target.value })}
-                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-cyan-500 outline-none"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 text-sm focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none"
                   >
                     {['Ragi', 'Paddy', 'Cotton', 'Sugarcane', 'Wheat', 'Onion', 'Maize', 'Soybean'].map(c => (
-                      <option key={c} value={c} className="bg-slate-900 text-white">{c}</option>
+                      <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Approximate Sowing Date</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Approximate Sowing Date</label>
                   <input
                     type="date"
                     value={formData.sowingDate}
                     onChange={e => setFormData({ ...formData, sowingDate: e.target.value })}
-                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white text-sm focus:border-cyan-500 outline-none"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 text-sm focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Policy Insured Area (Acres)</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Policy Insured Area (Acres)</label>
                   <input
                     type="number"
                     step="0.1"
                     value={formData.insuredAreaAcres}
                     onChange={e => setFormData({ ...formData, insuredAreaAcres: parseFloat(e.target.value) || 0 })}
-                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white text-sm font-mono focus:border-cyan-500 outline-none"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 text-sm font-mono focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">PMFBY Policy Application Number</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">PMFBY Policy Application Number</label>
                   <input
                     type="text"
                     value={formData.applicationNumber}
                     readOnly
-                    className="w-full bg-slate-950/90 border border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-400 text-sm font-mono"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-700 text-sm font-mono"
                   />
                 </div>
               </div>
 
-              <div className="p-3.5 bg-slate-900/80 border border-cyan-900/50 rounded-2xl flex items-center justify-between">
+              <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between">
                 <div>
-                  <div className="text-xs text-cyan-400 font-semibold">Maximum Sum Insured Cap</div>
-                  <div className="text-lg font-bold text-white font-mono mt-0.5">
+                  <div className="text-xs text-emerald-800 font-semibold">Maximum Sum Insured Cap</div>
+                  <div className="text-lg font-bold text-slate-900 font-mono mt-0.5">
                     ₹{(formData.insuredAreaAcres * 10000).toLocaleString('en-IN')}
                   </div>
                 </div>
-                <span className="text-[10px] font-mono bg-cyan-950/80 border border-cyan-800 text-cyan-300 px-2.5 py-1 rounded-lg font-bold shadow-sm">
+                <span className="text-[10px] font-mono bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-lg font-bold shadow-sm">
                   ₹10,000/ACRE PMFBY SCALE
                 </span>
               </div>
@@ -887,32 +887,32 @@ export const VoiceAssistantModal: React.FC<Props> = ({
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Disaster Type</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Disaster Type</label>
                   <select
                     value={formData.disasterType}
                     onChange={e => setFormData({ ...formData, disasterType: e.target.value })}
-                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 outline-none"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 text-sm focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none"
                   >
-                    <option value="Flood" className="bg-slate-900 text-white">Flood / Inundation</option>
-                    <option value="Drought" className="bg-slate-900 text-white">Drought / Dry Spell</option>
-                    <option value="Cyclone" className="bg-slate-900 text-white">Cyclone / Gale Wind</option>
-                    <option value="Hailstorm" className="bg-slate-900 text-white">Hailstorm</option>
-                    <option value="Pest Attack" className="bg-slate-900 text-white">Pest / Disease Attack</option>
+                    <option value="Flood">Flood / Inundation</option>
+                    <option value="Drought">Drought / Dry Spell</option>
+                    <option value="Cyclone">Cyclone / Gale Wind</option>
+                    <option value="Hailstorm">Hailstorm</option>
+                    <option value="Pest Attack">Pest / Disease Attack</option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Disaster Date</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Disaster Date</label>
                   <input
                     type="date"
                     value={formData.disasterDate}
                     onChange={e => setFormData({ ...formData, disasterDate: e.target.value })}
-                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-white text-sm focus:border-cyan-500 outline-none"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 text-sm focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">
                     Damage Percentage:{' '}
-                    <span className="text-cyan-400 font-bold font-mono">{formData.damagePercentage}%</span>
+                    <span className="text-emerald-700 font-bold font-mono">{formData.damagePercentage}%</span>
                   </label>
                   <input
                     type="range"
@@ -920,18 +920,18 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                     max="100"
                     value={formData.damagePercentage}
                     onChange={e => setFormData({ ...formData, damagePercentage: parseInt(e.target.value, 10) })}
-                    className="w-full accent-cyan-500 cursor-pointer mt-2"
+                    className="w-full accent-emerald-600 cursor-pointer mt-2"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Farmer Narrative / Details</label>
+                <label className="text-xs font-semibold text-slate-700 block mb-1">Farmer Narrative / Details</label>
                 <textarea
                   rows={3}
                   value={formData.description}
                   onChange={e => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-3 text-white text-xs focus:border-cyan-500 outline-none"
+                  className="w-full bg-white border border-slate-300 rounded-xl p-3 text-slate-900 text-xs focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none"
                 />
               </div>
             </div>
@@ -940,51 +940,52 @@ export const VoiceAssistantModal: React.FC<Props> = ({
           {/* STEP 4: Financial Loss */}
           {currentStep === 4 && (
             <div className="space-y-4">
-              <div className="p-4 bg-slate-900/80 border border-cyan-900/50 rounded-2xl">
-                <div className="text-xs text-cyan-400 font-semibold mb-1">Estimated Out-of-Pocket Crop Loss</div>
+              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
+                <div className="text-xs text-emerald-800 font-semibold mb-1">Estimated Out-of-Pocket Crop Loss</div>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-slate-300">₹</span>
+                  <span className="text-2xl font-bold text-slate-800">₹</span>
                   <input
                     type="number"
                     value={formData.farmerLossEstimate}
                     onChange={e => setFormData({ ...formData, farmerLossEstimate: parseFloat(e.target.value) || 0 })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xl font-bold text-cyan-300 outline-none font-mono focus:border-cyan-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-xl font-bold text-emerald-800 outline-none font-mono focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
                   />
                 </div>
-                <p className="text-[11px] text-slate-400 mt-2">
+                <p className="text-[11px] text-slate-600 mt-2">
                   Enter your estimated financial investment lost due to this damage. AI actuarial modeling will corroborate this against PMFBY standards.
                 </p>
               </div>
             </div>
           )}
 
-          {/* STEP 5: Photo Evidence with Live Geotag Camera */}
+          {/* STEP 5: Photo Evidence with Live Geotag Camera (Upload file button removed as requested) */}
           {currentStep === 5 && (
             <div className="space-y-4">
               {/* Top Banner & Trigger Button */}
-              <div className="p-4 rounded-2xl bg-slate-900/80 border border-cyan-900/40 flex flex-wrap items-center justify-between gap-3 shadow-md">
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-white border border-emerald-200 flex flex-wrap items-center justify-between gap-3 shadow-sm">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-300 font-mono text-[10px] font-bold">
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-900 font-mono text-[10px] font-bold">
                       LIVE GEOCAMERA ENGINE
                     </span>
-                    <span className="text-xs font-mono text-cyan-400 font-bold">
+                    <span className="text-xs font-mono text-emerald-800 font-bold">
                       📍 {formData.latitude.toFixed(4)}°N, {formData.longitude.toFixed(4)}°E
                     </span>
                   </div>
-                  <h4 className="text-sm font-bold text-white mt-1">Capture Real-Time Ground Evidence</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <h4 className="text-sm font-bold text-slate-900 mt-1">Capture Real-Time Ground Evidence</h4>
+                  <p className="text-xs text-slate-600 mt-0.5">
                     Photographs captured through the website camera automatically burn verified GPS coordinates, DIGIPIN (
-                    <span className="font-mono text-cyan-300 font-bold">{formData.digipin}</span>
+                    <span className="font-mono text-emerald-800 font-bold">{formData.digipin}</span>
                     ), and Survey #{formData.surveyNumber} into image pixels.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2">
+                  {/* Website Camera Button (ONLY button, upload file removed) */}
                   <button
                     type="button"
                     onClick={() => setShowCameraModal(true)}
-                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-cyan-950/50 transition cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition transform hover:-translate-y-0.5 cursor-pointer"
                   >
                     <Camera className="w-4 h-4 text-white" />
                     <span>📸 Open Website Camera</span>
@@ -994,26 +995,26 @@ export const VoiceAssistantModal: React.FC<Props> = ({
 
               {/* Photos Grid */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
+                <div className="flex items-center justify-between text-xs text-slate-600 px-1 font-mono">
                   <span>Attached Evidence Photos ({formData.photos.length}):</span>
-                  <span className="text-cyan-400 font-semibold flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" /> All Geo-Tags Synchronized
+                  <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" /> All Geo-Tags Synchronized
                   </span>
                 </div>
 
                 {formData.photos.length === 0 ? (
-                  <div className="p-8 text-center bg-slate-950/60 rounded-2xl border border-dashed border-slate-800 space-y-3">
-                    <div className="w-12 h-12 mx-auto rounded-full bg-cyan-950/60 text-cyan-400 flex items-center justify-center border border-cyan-800/60">
+                  <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-300 space-y-3">
+                    <div className="w-12 h-12 mx-auto rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center border border-emerald-200">
                       <Camera className="w-6 h-6" />
                     </div>
-                    <div className="text-sm font-semibold text-white">No photos captured yet</div>
-                    <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                    <div className="text-sm font-semibold text-slate-900">No photos captured yet</div>
+                    <p className="text-xs text-slate-600 max-w-sm mx-auto">
                       Click "Open Website Camera" to take live photos of the damaged crop, flood water, or field boundary.
                     </p>
                     <button
                       type="button"
                       onClick={() => setShowCameraModal(true)}
-                      className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl text-xs inline-flex items-center gap-1.5 cursor-pointer shadow-md"
+                      className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
                     >
                       <Camera className="w-4 h-4" />
                       <span>Take First Photo Now</span>
@@ -1024,9 +1025,9 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                     {formData.photos.map((p, idx) => (
                       <div
                         key={idx}
-                        className="group relative bg-slate-900/90 p-2.5 rounded-2xl border border-slate-800 hover:border-slate-700 transition-all shadow-md flex flex-col justify-between"
+                        className="group relative bg-white p-2.5 rounded-2xl border border-slate-200 hover:border-slate-300 transition-all shadow-sm flex flex-col justify-between"
                       >
-                        <div className="relative overflow-hidden rounded-xl bg-slate-950 aspect-video mb-2">
+                        <div className="relative overflow-hidden rounded-xl bg-slate-900 aspect-video mb-2">
                           <img
                             src={p.photo_url}
                             alt="Crop Evidence"
@@ -1047,19 +1048,19 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                         </div>
 
                         <div className="space-y-1">
-                          <span className="text-xs font-bold text-white block capitalize truncate">
+                          <span className="text-xs font-bold text-slate-900 block capitalize truncate">
                             {p.caption}
                           </span>
-                          <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                          <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono">
                             <span>📍 {p.latitude.toFixed(4)}°N</span>
-                            <span className="text-cyan-400 font-semibold">✓ Verified</span>
+                            <span className="text-emerald-700 font-semibold">✓ Verified</span>
                           </div>
                         </div>
 
                         <button
                           type="button"
                           onClick={() => handleRemovePhoto(idx)}
-                          className="mt-2 w-full py-1 text-[10px] text-red-400 hover:bg-red-950/40 rounded-lg flex items-center justify-center gap-1 transition cursor-pointer"
+                          className="mt-2 w-full py-1 text-[10px] text-red-600 hover:bg-red-50 rounded-lg flex items-center justify-center gap-1 transition"
                         >
                           <Trash2 className="w-3 h-3" />
                           <span>Remove</span>
@@ -1075,19 +1076,19 @@ export const VoiceAssistantModal: React.FC<Props> = ({
 
         {/* Quick Voice Answers Strip for Current Step */}
         {sampleAnswersForStep[currentStep] && (
-          <div className="px-4 py-2 bg-slate-950/80 border-t border-slate-800 flex items-center gap-2 overflow-x-auto text-xs no-scrollbar">
-            <span className="text-[10px] text-cyan-400 font-mono font-bold uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-cyan-400" /> Quick Voice Answers:
+          <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center gap-2 overflow-x-auto text-xs no-scrollbar">
+            <span className="text-[10px] text-emerald-800 font-mono font-bold uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-emerald-700" /> Quick Voice Answers:
             </span>
             {getActiveSampleAnswers().map((sample, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => handleUseSampleAnswer(sample)}
-                className="px-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 whitespace-nowrap text-[11px] transition flex items-center gap-1.5 cursor-pointer shadow-sm group"
+                className="px-2.5 py-1 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 whitespace-nowrap text-[11px] transition flex items-center gap-1.5 cursor-pointer shadow-sm group"
                 title="Click to simulate speaking this answer"
               >
-                <Mic className="w-3 h-3 text-cyan-400 group-hover:scale-110 transition-transform" />
+                <Mic className="w-3 h-3 text-emerald-700 group-hover:scale-110 transition-transform" />
                 <span>"{sample}"</span>
               </button>
             ))}
@@ -1095,7 +1096,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
         )}
 
         {/* Bottom Action Footer */}
-        <div className="p-4 bg-slate-900/90 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
+        <div className="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
             {/* Microphone Button */}
             <button
@@ -1103,7 +1104,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
               className={`px-4 py-2.5 rounded-2xl font-bold flex items-center gap-2 text-xs transition-all cursor-pointer ${
                 isListening
                   ? 'bg-red-600 hover:bg-red-500 text-white animate-pulse shadow-md ring-2 ring-red-400'
-                  : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-md shadow-cyan-950/50'
+                  : 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-sm'
               }`}
             >
               {isListening ? (
@@ -1121,23 +1122,23 @@ export const VoiceAssistantModal: React.FC<Props> = ({
 
             {/* Recognized or Parsed Feedback */}
             {lastParsedSummary && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-950 border border-cyan-800/60 rounded-xl text-cyan-300 text-xs font-mono font-medium shadow-sm">
-                <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-mono font-medium shadow-sm">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 flex-shrink-0" />
                 <span className="truncate max-w-xs">{lastParsedSummary}</span>
               </div>
             )}
 
             {/* Error or Help Tip */}
             {recErrorMsg && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-950/60 border border-amber-800/80 rounded-xl text-amber-300 text-xs">
-                <AlertCircle className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
                 <span className="truncate max-w-xs">{recErrorMsg}</span>
               </div>
             )}
 
             {/* Spoken Transcript Live Preview */}
             {!lastParsedSummary && spokenTranscript && (
-              <span className="text-xs text-slate-400 italic truncate max-w-xs font-mono">
+              <span className="text-xs text-slate-600 italic truncate max-w-xs font-mono">
                 "{spokenTranscript}"
               </span>
             )}
@@ -1147,7 +1148,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
             {currentStep > 1 && (
               <button
                 onClick={handleBack}
-                className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer transition shadow-sm"
+                className="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer transition shadow-sm"
               >
                 <ArrowLeft className="w-3.5 h-3.5" /> {b('Back', 'ಹಿಂದೆ', language)}
               </button>
@@ -1155,14 +1156,14 @@ export const VoiceAssistantModal: React.FC<Props> = ({
 
             <button
               onClick={handleNext}
-              className="px-3 py-2 bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer transition"
+              className="px-3 py-2 bg-white hover:bg-slate-100 text-slate-500 hover:text-slate-800 border border-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer transition"
             >
               <SkipForward className="w-3.5 h-3.5" /> {b('Skip', 'ಬಿಟ್ಟುಬಿಡಿ', language)}
             </button>
 
             <button
               onClick={handleNext}
-              className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-cyan-950/50 transition-all cursor-pointer"
+              className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
             >
               <span>{currentStep === 5 ? b('Submit Claim & Analyze', 'ಕ್ಲೇಮ್ ಸಲ್ಲಿಸಿ & ವಿಶ್ಲೇಷಿಸಿ', language) : b('Continue', 'ಮುಂದುವರಿಯಿರಿ', language)}</span>
               <ArrowRight className="w-4 h-4" />
@@ -1189,30 +1190,30 @@ export const VoiceAssistantModal: React.FC<Props> = ({
 
       {/* Fullscreen Photo Evidence Inspector Modal */}
       {selectedPreviewPhoto && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative max-w-3xl w-full bg-[#090D16] border border-slate-800 rounded-3xl p-5 shadow-2xl text-white">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
-              <div className="text-xs font-bold text-white flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-cyan-400" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+          <div className="relative max-w-3xl w-full bg-white border border-slate-200 rounded-3xl p-5 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
+              <div className="text-xs font-bold text-slate-900 flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-700" />
                 <span>Geotagged Photo Inspection • {selectedPreviewPhoto.caption}</span>
               </div>
               <button
                 onClick={() => setSelectedPreviewPhoto(null)}
-                className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition cursor-pointer"
+                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
-            <div className="rounded-2xl overflow-hidden bg-slate-950 max-h-[70vh] flex items-center justify-center border border-slate-800">
+            <div className="rounded-2xl overflow-hidden bg-slate-950 max-h-[70vh] flex items-center justify-center">
               <img
                 src={selectedPreviewPhoto.photo_url}
                 alt="Enlarged Evidence"
                 className="max-h-[70vh] w-auto object-contain"
               />
             </div>
-            <div className="mt-3 flex items-center justify-between text-xs text-slate-400 font-mono">
+            <div className="mt-3 flex items-center justify-between text-xs text-slate-600 font-mono">
               <span>📍 {selectedPreviewPhoto.latitude?.toFixed(5)}°N, {selectedPreviewPhoto.longitude?.toFixed(5)}°E</span>
-              <span className="text-cyan-400 font-bold">✓ Burnt In-Pixel Geotag Verified</span>
+              <span className="text-emerald-700 font-bold">✓ Burnt In-Pixel Geotag Verified</span>
             </div>
           </div>
         </div>
