@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Bell, Globe, Sparkles, CheckCircle2, AlertTriangle, FileText, LogOut, ArrowRightLeft, User, Building2 } from 'lucide-react';
+import { ShieldCheck, Bell, Globe, Sparkles, CheckCircle2, AlertTriangle, FileText, LogOut, ArrowRightLeft, User, Building2, PhoneCall, HelpCircle } from 'lucide-react';
 import { NotificationItem, UserSession } from '../types';
+import { CustomerSupportModal } from './common/CustomerSupportModal';
 
 interface Props {
   userSession: UserSession | null;
@@ -20,6 +21,7 @@ export const Navbar: React.FC<Props> = ({
   notifications
 }) => {
   const [showNotifs, setShowNotifs] = useState<boolean>(false);
+  const [showSupportModal, setShowSupportModal] = useState<boolean>(false);
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const role = userSession?.role || 'farmer';
@@ -100,6 +102,31 @@ export const Navbar: React.FC<Props> = ({
               {role === 'farmer' ? 'Switch to Insurer' : 'Switch to Farmer'}
             </span>
           </button>
+
+          {/* Customer Support Helpline for Farmers (Prominently displayed at top) */}
+          {role === 'farmer' && (
+            <div className="flex items-center gap-1.5 shrink-0">
+              <a
+                href="tel:9019715931"
+                className="px-3 py-1.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 text-white text-xs font-black rounded-xl flex items-center gap-1.5 shadow-md shadow-emerald-600/30 border border-emerald-400/40 transition transform hover:-translate-y-0.5 cursor-pointer shrink-0"
+                title="Direct Farmer Customer Support Helpline"
+              >
+                <PhoneCall className="w-3.5 h-3.5 animate-pulse text-white" />
+                <span className="hidden md:inline">Support:</span>
+                <span className="font-mono tracking-tight font-extrabold">9019715931</span>
+              </a>
+
+              <button
+                type="button"
+                onClick={() => setShowSupportModal(true)}
+                className="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-emerald-400 hover:text-emerald-300 rounded-xl border border-slate-800 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shrink-0"
+                title="Customer Support Help & FAQs"
+              >
+                <HelpCircle className="w-4 h-4 text-emerald-400" />
+                <span className="hidden lg:inline text-xs font-semibold text-slate-300">Help & FAQs</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Right Controls: Notifications, Language & Sign Out */}
@@ -168,6 +195,17 @@ export const Navbar: React.FC<Props> = ({
           </button>
         </div>
       </div>
+
+      {/* Customer Support Modal */}
+      {showSupportModal && (
+        <CustomerSupportModal
+          isOpen={showSupportModal}
+          onClose={() => setShowSupportModal(false)}
+          language={language}
+          farmerName={userName}
+          farmerMobile={userSession?.user?.mobile || '9876543210'}
+        />
+      )}
     </header>
   );
 };
