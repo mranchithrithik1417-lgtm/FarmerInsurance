@@ -13,17 +13,15 @@ import {
   Crosshair,
   CheckCircle2,
   ChevronDown,
-  ChevronUp,
-  LocateFixed
+  ChevronUp
 } from 'lucide-react';
 import { Claim } from '../../types';
-import { b, t } from '../../utils/translations';
+import { b } from '../../utils/translations';
 import {
   calculatePolygonCentroid,
   calculatePolygonAreaAcres,
   calculateEdgeDistances,
-  generateDefaultParcelCoordinates,
-  haversineDistanceMeters
+  generateDefaultParcelCoordinates
 } from '../../utils/geo';
 
 interface Props {
@@ -36,9 +34,8 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
   const [sliderPos, setSliderPos] = useState<number>(50);
   const [viewMode, setViewMode] = useState<'earth' | 'rgb' | 'ndvi' | 'flood'>('earth');
   const [satelliteFeedType, setSatelliteFeedType] = useState<'interactive' | 'stream' | 'ortho'>('interactive');
-  const [showPhotoMarkers, setShowPhotoMarkers] = useState<boolean>(true);
+  const [showPhotoMarkers] = useState<boolean>(true);
   const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null);
-  const [showCadastralGrid, setShowCadastralGrid] = useState<boolean>(true);
   const [showBoundaryAudit, setShowBoundaryAudit] = useState<boolean>(true);
 
   // Dynamic satellite fetch simulation state
@@ -69,7 +66,6 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
   // Leaflet map references for live interactive satellite view
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
-  const polygonLayerRef = useRef<L.Polygon | null>(null);
 
   const cornerLabels = ['P1 (NW)', 'P2 (NE)', 'P3 (SE)', 'P4 (SW)', 'P5', 'P6', 'P7', 'P8'];
 
@@ -101,102 +97,72 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
       L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         {
-          maxZoom: 19,
-          attribution: 'Esri World Imagery'
+          attribution: 'Esri, Maxar, Earthstar Geographics',
+          maxZoom: 19
         }
       ).addTo(map);
 
-      // 1. Draw Marked Land Plot Polygon
-      const poly = L.polygon(polygonCoords, {
-        color: '#10b981',
-        weight: 3,
-        fillColor: '#10b981',
-        fillOpacity: 0.28,
-        dashArray: '6, 4'
+      // Layer 2: Reference Places & Transportation overlays for context
+      L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+        {
+          maxZoom: 19,
+          opacity: 0.75
+        }
+      ).addTo(map);
+
+      // Draw the Cadastral Polygon with high-tech glowing cyan boundary
+      const polygon = L.polygon(polygonCoords, {
+        color: '#22d3ee',
+        weight: 3.5,
+        opacity: 0.95,
+        fillColor: '#06b6d4',
+        fillOpacity: 0.22,
+        dashArray: '6, 6'
       }).addTo(map);
-      polygonLayerRef.current = poly;
 
-      // 2. Draw Corner Vertex Pins
-      polygonCoords.forEach((pt, idx) => {
-        const pinIcon = L.divIcon({
-          className: 'leaflet-pin-icon',
+      map.fitBounds(polygon.getBounds(), { padding: [40, 40] });
+
+      // Draw 4 corner vertex markers with cyan glowing badges
+      polygonCoords.forEach((coord, idx) => {
+        const cornerIcon = L.divIcon({
+          className: 'leaflet-corner-marker',
           html: `
             <div style="
-              width: 28px;
-              height: 28px;
-              background: #10b981;
-              color: #020617;
+              width: 14px;
+              height: 14px;
               border: 2px solid #ffffff;
+              background: #06b6d4;
               border-radius: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-weight: 900;
-              font-size: 10px;
-              font-family: ui-monospace, monospace;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.7);
-            ">
-              P${idx + 1}
-            </div>
-          `,
-          iconSize: [28, 28],
-          iconAnchor: [14, 14]
-        });
-
-        L.marker(pt, { icon: pinIcon }).addTo(map);
-      });
-
-      // 3. Draw Edge Distance Badges at midpoints
-      const n = polygonCoords.length;
-      for (let i = 0; i < n; i++) {
-        const nextIdx = (i + 1) % n;
-        const p1 = polygonCoords[i];
-        const p2 = polygonCoords[nextIdx];
-        const midLat = (p1[0] + p2[0]) / 2;
-        const midLon = (p1[1] + p2[1]) / 2;
-        const dist = Math.round(haversineDistanceMeters(p1[0], p1[1], p2[0], p2[1]));
-
-        const distIcon = L.divIcon({
-          className: 'leaflet-dist-icon',
-          html: `
-            <div style="
-              background: rgba(2, 6, 23, 0.95);
-              backdrop-filter: blur(4px);
-              color: #6ee7b7;
-              border: 1px solid rgba(16, 185, 129, 0.6);
-              border-radius: 5px;
-              padding: 1px 5px;
-              font-size: 9px;
-              font-weight: 700;
-              font-family: ui-monospace, monospace;
-              white-space: nowrap;
+              box-shadow: 0 0 10px rgba(6, 182, 212, 1);
               transform: translate(-50%, -50%);
-              box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-            ">
-              ${dist}m
-            </div>
+            "></div>
           `,
           iconSize: [0, 0],
           iconAnchor: [0, 0]
         });
 
-        L.marker([midLat, midLon], { icon: distIcon, interactive: false }).addTo(map);
-      }
+        L.marker(coord, { icon: cornerIcon, interactive: false }).addTo(map);
+      });
 
-      // 4. DIGIPIN 4x4m Square Reticle at Centroid
+      // Draw National 4m x 4m DIGIPIN Cell Reticle at Centroid
       const [cLat, cLon] = centroid;
-      const dLat = 4.0 / 110574.0;
-      const dLon = 4.0 / (111320.0 * Math.cos((cLat * Math.PI) / 180.0));
-      const bounds: L.LatLngBoundsExpression = [
-        [cLat - dLat / 2, cLon - dLon / 2],
-        [cLat + dLat / 2, cLon + dLon / 2]
+      const dLat = 0.000036; // approx 4 meters
+      const dLon = 0.000036;
+
+      const digipinBounds: [number, number][] = [
+        [cLat - dLat, cLon - dLon],
+        [cLat + dLat, cLon - dLon],
+        [cLat + dLat, cLon + dLon],
+        [cLat - dLat, cLon + dLon]
       ];
 
-      L.rectangle(bounds, {
-        color: '#06b6d4',
-        weight: 2.5,
-        fillColor: '#06b6d4',
-        fillOpacity: 0.35,
+      L.polygon(digipinBounds, {
+        color: '#22d3ee',
+        weight: 2,
+        opacity: 1,
+        fillColor: '#22d3ee',
+        fillOpacity: 0.4,
         dashArray: '3, 3'
       }).addTo(map);
 
@@ -272,25 +238,25 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm">
+    <div className="bg-[#0B101E]/90 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl backdrop-blur-xl text-slate-100">
       {/* Header bar */}
-      <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+      <div className="p-4 bg-slate-950/80 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-100 text-emerald-800 rounded-lg border border-emerald-200">
+          <div className="p-2 bg-cyan-500/10 text-cyan-400 rounded-lg border border-cyan-500/30">
             <Layers className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-bold text-slate-900 tracking-wide">
+              <h3 className="text-base font-bold text-white tracking-wide">
                 {b('Geospatial Evidence Twin', 'ಭೂ-ಅಂತರಿಕ್ಷ ಸಾಕ್ಷ್ಯ ದೃಶ್ಯ (ಟ್ವಿನ್)', language)}
               </h3>
-              <span className="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full font-mono font-bold flex items-center gap-1">
-                <Crosshair className="w-3 h-3 text-emerald-700" />
+              <span className="text-xs bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 px-2.5 py-0.5 rounded-full font-mono font-bold flex items-center gap-1">
+                <Crosshair className="w-3 h-3 text-cyan-400" />
                 <span>DIGIPIN: {claim.land.digipin}</span>
               </span>
             </div>
-            <p className="text-xs text-slate-600">
-              {b('Survey #', 'ಸರ್ವೆ ಸಂಖ್ಯೆ #', language)}{claim.land.survey_number} • <span className="text-slate-900 font-semibold">{claim.land.land_parcel_id}</span> ({measuredArea} {b('ac', 'ಎಕರೆ', language)}) • {claim.farmer.village}, {claim.farmer.district}
+            <p className="text-xs text-slate-400">
+              {b('Survey #', 'ಸರ್ವೆ ಸಂಖ್ಯೆ #', language)}{claim.land.survey_number} • <span className="text-white font-semibold">{claim.land.land_parcel_id}</span> ({measuredArea} {b('ac', 'ಎಕರೆ', language)}) • {claim.farmer.village}, {claim.farmer.district}
             </p>
           </div>
         </div>
@@ -300,7 +266,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
           <button
             onClick={handleFetchDynamicSatellite}
             disabled={isFetching}
-            className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-slate-200 disabled:text-slate-400 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm cursor-pointer"
+            className="px-3 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:bg-slate-800 disabled:text-slate-500 text-slate-950 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-[0_0_15px_rgba(6,182,212,0.3)] cursor-pointer"
             title="Fetch live satellite pass for this location"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin' : ''}`} />
@@ -311,10 +277,10 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             href={googleEarthWebUrl}
             target="_blank"
             rel="noreferrer"
-            className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold border border-slate-200 flex items-center gap-1.5 transition shadow-sm"
+            className="px-3 py-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white rounded-xl text-xs font-bold border border-slate-700/80 flex items-center gap-1.5 transition shadow-sm"
             title="Open in official 3D Google Earth"
           >
-            <Globe className="w-3.5 h-3.5 text-emerald-700" />
+            <Globe className="w-3.5 h-3.5 text-cyan-400" />
             <span className="hidden sm:inline">{b('Open in Google Earth 3D', 'ಗೂಗಲ್ ಅರ್ಥ್ 3D ಯಲ್ಲಿ ವೀಕ್ಷಿಸಿ', language)}</span>
             <ExternalLink className="w-3 h-3 text-slate-400" />
           </a>
@@ -322,14 +288,14 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
       </div>
 
       {/* View Mode Toggle Sub-bar */}
-      <div className="px-4 py-2 bg-white border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+      <div className="px-4 py-2 bg-slate-900/90 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 text-xs">
           <button
             onClick={() => setViewMode('earth')}
             className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
               viewMode === 'earth'
-                ? 'bg-emerald-700 text-white shadow-sm'
-                : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold shadow-[0_0_15px_rgba(6,182,212,0.3)]'
+                : 'text-slate-400 hover:text-white bg-slate-950/60 border border-slate-800 hover:bg-slate-800/80'
             }`}
           >
             <Globe className="w-3.5 h-3.5" />
@@ -340,8 +306,8 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             onClick={() => setViewMode('rgb')}
             className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
               viewMode === 'rgb'
-                ? 'bg-emerald-700 text-white shadow-sm'
-                : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold shadow-[0_0_15px_rgba(6,182,212,0.3)]'
+                : 'text-slate-400 hover:text-white bg-slate-950/60 border border-slate-800 hover:bg-slate-800/80'
             }`}
           >
             {b('Sentinel-2 Pre/Post Slider', 'ಸೆಂಟಿನೆಲ್-2 ಮುಂಚೆ/ನಂತರದ ಸ್ಲೈಡರ್', language)}
@@ -351,8 +317,8 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             onClick={() => setViewMode('ndvi')}
             className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
               viewMode === 'ndvi'
-                ? 'bg-emerald-700 text-white shadow-sm'
-                : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold shadow-[0_0_15px_rgba(6,182,212,0.3)]'
+                : 'text-slate-400 hover:text-white bg-slate-950/60 border border-slate-800 hover:bg-slate-800/80'
             }`}
           >
             {b('NDVI Spatial Heatmap', 'ಎನ್‌ಡಿವಿಐ ಹಸಿರು ನಕ್ಷೆ', language)}
@@ -362,8 +328,8 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             onClick={() => setViewMode('flood')}
             className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
               viewMode === 'flood'
-                ? 'bg-sky-700 text-white shadow-sm'
-                : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50'
+                ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold shadow-[0_0_15px_rgba(59,130,246,0.4)]'
+                : 'text-slate-400 hover:text-white bg-slate-950/60 border border-slate-800 hover:bg-slate-800/80'
             }`}
           >
             {b('Inundation Mask', 'ಪ್ರವಾಹ ನೀರಿನ ಮುಸುಕು', language)}
@@ -371,16 +337,16 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
         </div>
 
         {/* Live GPS / Cadastral Centroid Badge */}
-        <div className="text-[11px] font-mono text-slate-600 flex items-center gap-1.5">
-          <Compass className="w-3.5 h-3.5 text-emerald-700" />
-          <span>{b('Centroid:', 'ಕೇಂದ್ರ ಬಿಂದು:', language)} <strong>{lat.toFixed(4)}°N, {lng.toFixed(4)}°E</strong></span>
+        <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
+          <Compass className="w-3.5 h-3.5 text-cyan-400" />
+          <span>{b('Centroid:', 'ಕೇಂದ್ರ ಬಿಂದು:', language)} <strong className="text-white">{lat.toFixed(4)}°N, {lng.toFixed(4)}°E</strong></span>
         </div>
       </div>
 
       {/* Dynamic Status Toast Banner */}
       {fetchStatus && (
-        <div className="px-4 py-2 bg-emerald-50 border-b border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 animate-fadeIn">
-          <Sparkles className="w-4 h-4 text-emerald-700 flex-shrink-0 animate-spin" />
+        <div className="px-4 py-2 bg-cyan-950/40 border-b border-cyan-500/30 text-cyan-300 text-xs flex items-center gap-2 animate-fadeIn">
+          <Sparkles className="w-4 h-4 text-cyan-400 flex-shrink-0 animate-spin" />
           <span>{fetchStatus}</span>
         </div>
       )}
@@ -415,33 +381,33 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             )}
 
             {/* Top Left: Cadastral Survey HUD Overlay */}
-            <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-2 rounded-xl shadow-lg z-20 text-xs max-w-xs space-y-1 pointer-events-none">
+            <div className="absolute top-3 left-3 bg-slate-950/90 backdrop-blur-md border border-slate-800 px-3 py-2 rounded-xl shadow-xl z-20 text-xs max-w-xs space-y-1 pointer-events-none text-slate-200">
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="font-bold text-slate-900">{b('Cadastral Survey #', 'ಕಂದಾಯ ಸರ್ವೆ ಸಂಖ್ಯೆ #', language)}{claim.land.survey_number}</span>
-                <span className="text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-1.5 py-0.2 rounded font-mono font-bold">
+                <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
+                <span className="font-bold text-white">{b('Cadastral Survey #', 'ಕಂದಾಯ ಸರ್ವೆ ಸಂಖ್ಯೆ #', language)}{claim.land.survey_number}</span>
+                <span className="text-[9px] bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.2 rounded font-mono font-bold">
                   {measuredArea} {b('Acres', 'ಎಕರೆ', language)}
                 </span>
               </div>
-              <div className="text-[10px] text-slate-600 font-mono">
+              <div className="text-[10px] text-slate-400 font-mono">
                 {b('Centroid:', 'ಕೇಂದ್ರ ಬಿಂದು:', language)} {lat.toFixed(4)}°N, {lng.toFixed(4)}°E • {claim.farmer.village}
               </div>
-              <div className="text-[10px] text-emerald-700 font-semibold flex items-center gap-1 pt-0.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+              <div className="text-[10px] text-cyan-400 font-semibold flex items-center gap-1 pt-0.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
                 <span>{b('Physical Field Bunds Aligned', 'ಜಮೀನಿನ ಬದುಗಳು ಹೊಂದಾಣಿಕೆಯಾಗಿವೆ', language)} ({totalPerimeterMeters}m)</span>
               </div>
             </div>
 
             {/* Top Right: Layer Toggle & 3D Earth Link */}
             <div className="absolute top-3 right-12 flex items-center gap-1.5 z-20">
-              <div className="bg-white/95 backdrop-blur-md border border-slate-200 p-1 rounded-xl flex items-center gap-1 text-[11px] shadow-lg">
+              <div className="bg-slate-950/90 backdrop-blur-md border border-slate-800 p-1 rounded-xl flex items-center gap-1 text-[11px] shadow-xl">
                 <button
                   type="button"
                   onClick={() => setSatelliteFeedType('interactive')}
                   className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
                     satelliteFeedType === 'interactive'
-                      ? 'bg-emerald-700 text-white'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-cyan-500 text-slate-950 shadow-sm'
+                      : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   {b('Live Satellite Map', 'ಲೈವ್ ಉಪಗ್ರಹ ನಕ್ಷೆ', language)}
@@ -451,8 +417,8 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                   onClick={() => setSatelliteFeedType('stream')}
                   className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
                     satelliteFeedType === 'stream'
-                      ? 'bg-sky-700 text-white'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-cyan-500 text-slate-950 shadow-sm'
+                      : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   {b('Google Maps Feed', 'ಗೂಗಲ್ ನಕ್ಷೆ ಸ್ಟ್ರೀಮ್', language)}
@@ -463,7 +429,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                 href={googleEarthWebUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5 transition cursor-pointer"
+                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.3)] flex items-center gap-1.5 transition cursor-pointer"
               >
                 <span>3D Earth</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -471,14 +437,14 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             </div>
 
             {/* Bottom Telemetry Ticker */}
-            <div className="absolute bottom-2 left-3 right-3 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl text-[10px] text-slate-700 flex flex-wrap items-center justify-between gap-2 z-20 font-mono shadow-lg">
+            <div className="absolute bottom-2 left-3 right-3 bg-slate-950/90 backdrop-blur-md border border-slate-800 px-3 py-1.5 rounded-xl text-[10px] text-slate-300 flex flex-wrap items-center justify-between gap-2 z-20 font-mono shadow-xl">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
-                <span>DIGIPIN Reticle: <strong>{claim.land.digipin}</strong></span>
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                <span>DIGIPIN Reticle: <strong className="text-cyan-300">{claim.land.digipin}</strong></span>
               </div>
               <span>Location: {lat.toFixed(4)}°N, {lng.toFixed(4)}°E ({claim.farmer.village})</span>
               <span>Acquisition: {sceneAcquiredTime}</span>
-              <span className="text-emerald-700 font-bold">Boundary Verification: 100% Match</span>
+              <span className="text-cyan-400 font-bold">Boundary Verification: 100% Match</span>
             </div>
           </div>
         )}
@@ -517,12 +483,12 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                 />
               </div>
 
-              <div className="absolute top-4 left-4 bg-emerald-950/80 border border-emerald-500/50 backdrop-blur-md px-3 py-1.5 rounded-lg shadow-lg z-30">
-                <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider block">
+              <div className="absolute top-4 left-4 bg-cyan-950/80 border border-cyan-500/50 backdrop-blur-md px-3 py-1.5 rounded-lg shadow-lg z-30">
+                <span className="text-[10px] uppercase font-bold text-cyan-300 tracking-wider block">
                   Before Disaster ({claim.satellite.pre_disaster_date})
                 </span>
                 <span className="text-xs font-mono font-bold text-white">
-                  NDVI: <span className="text-emerald-400">{preNDVI}</span> (Healthy Canopy)
+                  NDVI: <span className="text-cyan-300">{preNDVI}</span> (Healthy Canopy)
                 </span>
               </div>
             </div>
@@ -533,7 +499,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                 className="absolute top-0 bottom-0 z-30 -ml-4 flex items-center justify-center cursor-ew-resize"
                 style={{ left: `${sliderPos}%` }}
               >
-                <div className="w-8 h-8 rounded-full bg-white shadow-xl border-2 border-emerald-600 flex items-center justify-center text-slate-800 font-bold text-xs">
+                <div className="w-8 h-8 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.8)] border-2 border-white flex items-center justify-center text-slate-950 font-bold text-xs">
                   ↔
                 </div>
               </div>
@@ -560,7 +526,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
               className="w-full h-full object-cover"
             />
             <div className="absolute top-4 left-4 bg-slate-950/85 backdrop-blur-md border border-slate-700 px-3 py-1.5 rounded-xl shadow-lg z-10 text-xs">
-              <span className="font-bold text-emerald-400 block">False-Color NDVI Difference Heatmap</span>
+              <span className="font-bold text-cyan-300 block">False-Color NDVI Difference Heatmap</span>
               <span className="text-[10px] text-slate-300">Spectral Band Ratio: (NIR - Red) / (NIR + Red)</span>
             </div>
           </div>
@@ -611,80 +577,80 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
       </div>
 
       {/* KPI & Metrics Bar below the map */}
-      <div className="p-4 bg-slate-50 border-t border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-        <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-500 block">{b('Pre-Disaster NDVI', 'ವಿಪತ್ತಿಗೂ ಮುಂಚಿನ NDVI', language)}</span>
-          <span className="text-xl font-black text-emerald-700 font-mono">{preNDVI}</span>
-          <span className="text-[10px] text-emerald-800 block">{b('Healthy vegetative', 'ಆರೋಗ್ಯಕರ ಹಸಿರು ಬೆಳೆ', language)}</span>
+      <div className="p-4 bg-slate-950/70 border-t border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+        <div className="p-2.5 bg-slate-900/80 rounded-xl border border-slate-800 shadow-md">
+          <span className="text-[10px] uppercase font-bold text-slate-400 block">{b('Pre-Disaster NDVI', 'ವಿಪತ್ತಿಗೂ ಮುಂಚಿನ NDVI', language)}</span>
+          <span className="text-xl font-black text-cyan-400 font-mono">{preNDVI}</span>
+          <span className="text-[10px] text-cyan-300 block">{b('Healthy vegetative', 'ಆರೋಗ್ಯಕರ ಹಸಿರು ಬೆಳೆ', language)}</span>
         </div>
 
-        <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-500 block">{b('Post-Disaster NDVI', 'ವಿಪತ್ತಿನ ನಂತರದ NDVI', language)}</span>
-          <span className="text-xl font-black text-red-700 font-mono">{postNDVI}</span>
-          <span className="text-[10px] text-red-800 block">{b('Submerged / Lodged', 'ನೀರಲ್ಲಿ ಮುಳುಗಿದ / ನೆಲಕಚ್ಚಿದ', language)}</span>
+        <div className="p-2.5 bg-slate-900/80 rounded-xl border border-slate-800 shadow-md">
+          <span className="text-[10px] uppercase font-bold text-slate-400 block">{b('Post-Disaster NDVI', 'ವಿಪತ್ತಿನ ನಂತರದ NDVI', language)}</span>
+          <span className="text-xl font-black text-red-400 font-mono">{postNDVI}</span>
+          <span className="text-[10px] text-red-400 block">{b('Submerged / Lodged', 'ನೀರಲ್ಲಿ ಮುಳುಗಿದ / ನೆಲಕಚ್ಚಿದ', language)}</span>
         </div>
 
-        <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-500 block">{b('Net Vegetation Drop', 'ಒಟ್ಟು ಹಸಿರು ಇಳಿಕೆ', language)}</span>
-          <span className="text-xl font-black text-amber-700 font-mono">{ndviDiff}</span>
-          <span className="text-[10px] text-amber-800 block">-{claim.satellite.vegetation_drop_pct}% {b('loss', 'ನಷ್ಟ', language)}</span>
+        <div className="p-2.5 bg-slate-900/80 rounded-xl border border-slate-800 shadow-md">
+          <span className="text-[10px] uppercase font-bold text-slate-400 block">{b('Net Vegetation Drop', 'ಒಟ್ಟು ಹಸಿರು ಇಳಿಕೆ', language)}</span>
+          <span className="text-xl font-black text-amber-400 font-mono">{ndviDiff}</span>
+          <span className="text-[10px] text-amber-400 block">-{claim.satellite.vegetation_drop_pct}% {b('loss', 'ನಷ್ಟ', language)}</span>
         </div>
 
-        <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-500 block">{b('NDWI Water Index', 'NDWI ನೀರಿನ ಸೂಚ್ಯಂಕ', language)}</span>
-          <span className="text-xl font-black text-sky-700 font-mono">+{claim.satellite.flood_water_index_ndwi || 0.48}</span>
-          <span className="text-[10px] text-sky-800 block">{b('Flood Inundation Confirmed', 'ಪ್ರವಾಹ ದೃಢಪಟ್ಟಿದೆ', language)}</span>
+        <div className="p-2.5 bg-slate-900/80 rounded-xl border border-slate-800 shadow-md">
+          <span className="text-[10px] uppercase font-bold text-slate-400 block">{b('NDWI Water Index', 'NDWI ನೀರಿನ ಸೂಚ್ಯಂಕ', language)}</span>
+          <span className="text-xl font-black text-blue-400 font-mono">+{claim.satellite.flood_water_index_ndwi || 0.48}</span>
+          <span className="text-[10px] text-blue-300 block">{b('Flood Inundation Confirmed', 'ಪ್ರವಾಹ ದೃಢಪಟ್ಟಿದೆ', language)}</span>
         </div>
       </div>
 
       {/* Expandable Marked Land Plot Boundary & DIGIPIN Match Verification Audit */}
-      <div className="border-t border-slate-200 bg-white">
+      <div className="border-t border-slate-800 bg-slate-900/60">
         <button
           type="button"
           onClick={() => setShowBoundaryAudit(!showBoundaryAudit)}
-          className="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-50 transition cursor-pointer"
+          className="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-800/60 transition cursor-pointer"
         >
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-emerald-100 text-emerald-800">
-              <Crosshair className="w-4 h-4 text-emerald-700" />
+            <div className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+              <Crosshair className="w-4 h-4 text-cyan-400" />
             </div>
             <div>
-              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider block">
+              <span className="text-xs font-bold text-white uppercase tracking-wider block">
                 {b('Marked Land Plot Boundary & DIGIPIN Square Match Verification Audit', 'ಗುರುತಿಸಲಾದ ಭೂಮಿ ಗಡಿ & ಡಿಜಿಪಿನ್ ಚೌಕ ಹೊಂದಾಣಿಕೆ ಆಡಿಟ್', language)}
               </span>
-              <span className="text-[11px] text-slate-600">
-                {polygonCoords.length} {b('corner vertices verified', 'ಮೂಲೆಯ ಬಿಂದುಗಳು ಪರಿಶೀಲಿಸಲಾಗಿದೆ', language)} • {measuredArea} {b('Acres', 'ಎಕರೆ', language)} • DIGIPIN: <strong className="text-emerald-800 font-mono">{claim.land.digipin}</strong>
+              <span className="text-[11px] text-slate-400">
+                {polygonCoords.length} {b('corner vertices verified', 'ಮೂಲೆಯ ಬಿಂದುಗಳು ಪರಿಶೀಲಿಸಲಾಗಿದೆ', language)} • {measuredArea} {b('Acres', 'ಎಕರೆ', language)} • DIGIPIN: <strong className="text-cyan-300 font-mono">{claim.land.digipin}</strong>
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[11px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+            <span className="text-[11px] bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
               <span>{b('100% GIS Ground Match', '100% ಜಿಐಎಸ್ ಭೂ ಸಾಕ್ಷ್ಯ ಹೊಂದಾಣಿಕೆ', language)}</span>
             </span>
-            {showBoundaryAudit ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+            {showBoundaryAudit ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
           </div>
         </button>
 
         {showBoundaryAudit && (
-          <div className="px-4 pb-4 pt-1 space-y-3 border-t border-slate-200">
+          <div className="px-4 pb-4 pt-1 space-y-3 border-t border-slate-800">
             {/* Boundary Corners Table */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {polygonCoords.map((pt, idx) => (
-                <div key={`audit-pt-${idx}`} className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                <div key={`audit-pt-${idx}`} className="p-2.5 bg-slate-950/80 rounded-xl border border-slate-800">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-extrabold text-emerald-800 font-mono">
+                    <span className="text-[10px] font-extrabold text-cyan-400 font-mono">
                       {cornerLabels[idx] || `Corner P${idx + 1}`}
                     </span>
-                    <span className="text-[9px] bg-white border border-slate-200 text-slate-600 px-1.5 py-0.2 rounded font-mono">
+                    <span className="text-[9px] bg-slate-900 border border-slate-700 text-slate-400 px-1.5 py-0.2 rounded font-mono">
                       {b('Vertex #', 'ಬಿಂದು #', language)}{idx + 1}
                     </span>
                   </div>
-                  <div className="text-[11px] font-mono text-slate-900 font-semibold">
+                  <div className="text-[11px] font-mono text-white font-semibold">
                     {pt[0].toFixed(5)}°N
                   </div>
-                  <div className="text-[11px] font-mono text-slate-600">
+                  <div className="text-[11px] font-mono text-slate-400">
                     {pt[1].toFixed(5)}°E
                   </div>
                 </div>
@@ -692,15 +658,15 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             </div>
 
             {/* Verification Metadata Ticker */}
-            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs text-emerald-950">
+            <div className="p-3 bg-cyan-950/20 border border-cyan-500/30 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs text-slate-200">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-700 flex-shrink-0" />
+                <ShieldCheck className="w-4 h-4 text-cyan-400 flex-shrink-0" />
                 <span>
-                  <strong>{b('National DIGIPIN Alignment:', 'ರಾಷ್ಟ್ರೀಯ ಡಿಜಿಪಿನ್ ಜೋಡಣೆ:', language)}</strong> {b(`The polygon centroid maps to 4m×4m cell `, `ಕೇಂದ್ರ ಬಿಂದುವು 4ಮೀ×4ಮೀ ಕೋಶಕ್ಕೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ `, language)}<span className="text-emerald-800 font-mono font-bold">{claim.land.digipin}</span>{b(`, precisely corroborating Cadastral Survey #${claim.land.survey_number}.`, `, ಇದು ಸರ್ವೆ #${claim.land.survey_number} ಗೆ ನಿಖರವಾಗಿ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ.`, language)}
+                  <strong>{b('National DIGIPIN Alignment:', 'ರಾಷ್ಟ್ರೀಯ ಡಿಜಿಪಿನ್ ಜೋಡಣೆ:', language)}</strong> {b(`The polygon centroid maps to 4m×4m cell `, `ಕೇಂದ್ರ ಬಿಂದುವು 4ಮೀ×4ಮೀ ಕೋಶಕ್ಕೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ `, language)}<span className="text-cyan-300 font-mono font-bold">{claim.land.digipin}</span>{b(`, precisely corroborating Cadastral Survey #${claim.land.survey_number}.`, `, ಇದು ಸರ್ವೆ #${claim.land.survey_number} ಗೆ ನಿಖರವಾಗಿ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ.`, language)}
                 </span>
               </div>
-              <div className="text-[11px] text-slate-600 font-mono">
-                {b('Perimeter:', 'ಸುತ್ತಳತೆ:', language)} <strong>{totalPerimeterMeters}m</strong> {b(`across ${polygonCoords.length} bunds`, `${polygonCoords.length} ಬದುಗಳಲ್ಲಿ`, language)}
+              <div className="text-[11px] text-slate-400 font-mono">
+                {b('Perimeter:', 'ಸುತ್ತಳತೆ:', language)} <strong className="text-white">{totalPerimeterMeters}m</strong> {b(`across ${polygonCoords.length} bunds`, `${polygonCoords.length} ಬದುಗಳಲ್ಲಿ`, language)}
               </div>
             </div>
           </div>
@@ -709,20 +675,20 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
 
       {/* Photo Popup Modal if clicked */}
       {selectedPhoto && (
-        <div className="p-4 bg-white border-t border-slate-200 flex items-center justify-between gap-4 shadow-lg">
+        <div className="p-4 bg-slate-950/95 border-t border-slate-800 flex items-center justify-between gap-4 shadow-2xl">
           <div className="flex items-center gap-3">
-            <img src={selectedPhoto.photo_url} alt="Evidence" className="w-16 h-12 object-cover rounded-lg border border-slate-200 shadow-sm" />
+            <img src={selectedPhoto.photo_url} alt="Evidence" className="w-16 h-12 object-cover rounded-lg border border-slate-700 shadow-sm" />
             <div className="text-xs">
-              <div className="font-bold text-slate-900 capitalize">{selectedPhoto.photo_type.replace('_', ' ')}</div>
-              <div className="text-slate-600 font-mono">GPS: {selectedPhoto.latitude.toFixed(4)}°N, {selectedPhoto.longitude.toFixed(4)}°E</div>
-              <div className="text-emerald-700 font-semibold flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" /> EXIF Geotag Timestamp Verified: {selectedPhoto.timestamp.replace('T', ' ')}
+              <div className="font-bold text-white capitalize">{selectedPhoto.photo_type.replace('_', ' ')}</div>
+              <div className="text-slate-400 font-mono">GPS: {selectedPhoto.latitude.toFixed(4)}°N, {selectedPhoto.longitude.toFixed(4)}°E</div>
+              <div className="text-cyan-400 font-semibold flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" /> EXIF Geotag Timestamp Verified: {selectedPhoto.timestamp.replace('T', ' ')}
               </div>
             </div>
           </div>
           <button
             onClick={() => setSelectedPhoto(null)}
-            className="text-xs bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg text-slate-700 transition cursor-pointer"
+            className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition cursor-pointer"
           >
             Close
           </button>

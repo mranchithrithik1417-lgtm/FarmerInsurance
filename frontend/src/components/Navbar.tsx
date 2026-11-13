@@ -31,26 +31,26 @@ export const Navbar: React.FC<Props> = ({
     : (userSession?.user.company_id || 'AGRI-INS-409');
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-xs">
+    <header className="sticky top-0 z-40 bg-[#0A0F1D]/90 backdrop-blur-xl border-b border-slate-800/80 shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         {/* Brand Logo */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-700 via-green-600 to-emerald-500 text-white shadow-sm text-xl font-bold">
+          <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-600 via-sky-500 to-indigo-600 text-white shadow-[0_0_18px_rgba(6,182,212,0.45)] text-xl font-bold ring-1 ring-cyan-400/40">
             🌾
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-black tracking-tight text-slate-900">
-                Kisan<span className="text-emerald-700">Claim</span>
+              <span className="text-lg font-black tracking-tight text-white">
+                Kisan<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-sky-300">Claim</span>
               </span>
-              <span className="hidden md:inline-block text-[10px] font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200/80 px-2 py-0.5 rounded-full font-mono">
-                PMFBY AgriTech
+              <span className="hidden md:inline-block text-[10px] font-extrabold uppercase tracking-wider bg-cyan-950/70 text-cyan-300 border border-cyan-500/40 px-2 py-0.5 rounded-full font-mono shadow-[0_0_10px_rgba(6,182,212,0.15)]">
+                PMFBY Orbit
               </span>
             </div>
-            <p className="text-[10px] text-slate-500 hidden sm:block font-medium">
+            <p className="text-[10px] text-slate-400 hidden sm:block font-medium">
               {language === 'kn'
-                ? 'ಪುರಾವೆ ಅವಳಿ ಮತ್ತು ಬೆಳೆ ವಿಮಾ ಕ್ಲೇಮ್ ಪರಿಶೀಲನಾ ವೇದಿಕೆ'
-                : 'Evidence Twin & Insurance Claim Verification Platform'}
+                ? 'ಉಪಗ್ರಹ ಪುರಾವೆ ಅವಳಿ ಮತ್ತು ಬೆಳೆ ವಿಮಾ ಕ್ಲೇಮ್ ಪರಿಶೀಲನಾ ವೇದಿಕೆ'
+                : 'Geospatial Telemetry & Insurance Adjudication Twin'}
             </p>
           </div>
         </div>
@@ -58,34 +58,34 @@ export const Navbar: React.FC<Props> = ({
         {/* Active Portal Badge & Judge Fast-Switcher */}
         <div className="flex items-center gap-2">
           {role === 'farmer' ? (
-            <div className="flex items-center bg-emerald-50/90 border border-emerald-200/90 rounded-2xl px-3 py-1.5 shadow-xs">
+            <div className="flex items-center bg-slate-900/90 border border-cyan-500/30 rounded-2xl px-3 py-1.5 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
               <div className="flex items-center gap-2">
                 <span className="text-sm">🌾</span>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-bold text-slate-900">{userName}</span>
-                    <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded font-bold">
+                    <span className="text-xs font-bold text-white">{userName}</span>
+                    <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950/80 border border-cyan-500/40 px-1.5 py-0.5 rounded font-bold">
                       {userIdentifier}
                     </span>
                   </div>
-                  <div className="text-[10px] text-emerald-700 font-semibold hidden lg:block">
-                    {language === 'kn' ? 'ರೈತರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ (Farmer Dashboard)' : 'Farmer Dashboard / ರೈತರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್'}
+                  <div className="text-[10px] text-cyan-400 font-semibold hidden lg:block">
+                    {language === 'kn' ? 'ರೈತರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ (Farmer Dashboard)' : 'Farmer Portal / ರೈತರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್'}
                   </div>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="flex items-center bg-blue-50/90 border border-blue-200/90 rounded-2xl px-3 py-1.5 shadow-xs">
+            <div className="flex items-center bg-slate-900/90 border border-indigo-500/30 rounded-2xl px-3 py-1.5 shadow-[0_0_15px_rgba(99,102,241,0.1)]">
               <div className="flex items-center gap-2">
                 <span className="text-sm">🏢</span>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-bold text-slate-900">{userName}</span>
-                    <span className="text-[10px] font-mono text-blue-800 bg-blue-100/80 px-1.5 py-0.5 rounded font-bold">
+                    <span className="text-xs font-bold text-white">{userName}</span>
+                    <span className="text-[10px] font-mono text-indigo-300 bg-indigo-950/80 border border-indigo-500/40 px-1.5 py-0.5 rounded font-bold">
                       {userIdentifier}
                     </span>
                   </div>
-                  <div className="text-[10px] text-blue-700 font-semibold hidden lg:block">
+                  <div className="text-[10px] text-indigo-400 font-semibold hidden lg:block">
                     {language === 'kn' ? 'ವಿಮಾ ಕಂಪನಿ ಕನ್ಸೋಲ್ (Insurance Console)' : 'Insurance Console / ವಿಮಾ ಕನ್ಸೋಲ್'}
                   </div>
                 </div>
@@ -97,10 +97,10 @@ export const Navbar: React.FC<Props> = ({
           <button
             type="button"
             onClick={() => onSwitchRole(role === 'farmer' ? 'insurance' : 'farmer')}
-            className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-xl border border-slate-200 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+            className="px-2.5 py-1.5 bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 hover:text-white rounded-xl border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
             title={`Switch to ${role === 'farmer' ? 'Insurance Console' : 'Farmer Dashboard'}`}
           >
-            <ArrowRightLeft className="w-3.5 h-3.5 text-emerald-700" />
+            <ArrowRightLeft className="w-3.5 h-3.5 text-cyan-400" />
             <span className="hidden sm:inline">
               {role === 'farmer'
                 ? (language === 'kn' ? 'ವಿಮಾದಾರರಿಗೆ ಬದಲಾಯಿಸಿ' : 'Switch to Insurer')
@@ -108,12 +108,12 @@ export const Navbar: React.FC<Props> = ({
             </span>
           </button>
 
-          {/* Customer Support Helpline for Farmers (Prominently displayed at top) */}
+          {/* Customer Support Helpline for Farmers */}
           {role === 'farmer' && (
             <div className="flex items-center gap-1.5 shrink-0">
               <a
                 href="tel:9019715931"
-                className="px-3 py-1.5 bg-gradient-to-r from-emerald-700 via-green-600 to-emerald-600 hover:from-emerald-800 hover:to-green-700 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-xs border border-emerald-700 transition transform hover:-translate-y-0.5 cursor-pointer shrink-0"
+                className="px-3 py-1.5 bg-gradient-to-r from-cyan-600 via-sky-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-[0_0_15px_rgba(6,182,212,0.35)] border border-cyan-400/40 transition transform hover:-translate-y-0.5 cursor-pointer shrink-0"
                 title="Direct Farmer Customer Support Helpline"
               >
                 <PhoneCall className="w-3.5 h-3.5 animate-pulse text-white" />
@@ -124,11 +124,11 @@ export const Navbar: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={() => setShowSupportModal(true)}
-                className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 hover:text-emerald-900 rounded-xl border border-emerald-200 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shrink-0"
+                className="px-2.5 py-1.5 bg-slate-800/80 hover:bg-slate-700/80 text-cyan-300 hover:text-cyan-200 rounded-xl border border-cyan-500/30 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shrink-0"
                 title="Customer Support Help & FAQs"
               >
-                <HelpCircle className="w-4 h-4 text-emerald-700" />
-                <span className="hidden lg:inline text-xs font-semibold text-emerald-900">
+                <HelpCircle className="w-4 h-4 text-cyan-400" />
+                <span className="hidden lg:inline text-xs font-semibold text-cyan-300">
                   {language === 'kn' ? 'ಸಹಾಯ & FAQ' : 'Help & FAQs'}
                 </span>
               </button>
@@ -142,10 +142,10 @@ export const Navbar: React.FC<Props> = ({
           <button
             type="button"
             onClick={() => onLanguageChange(language === 'en' ? 'kn' : 'en')}
-            className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-xl border border-slate-200 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+            className="px-2.5 py-1.5 bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 hover:text-white rounded-xl border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
             title="Switch Language (English / ಕನ್ನಡ)"
           >
-            <Globe className="w-3.5 h-3.5 text-emerald-700" />
+            <Globe className="w-3.5 h-3.5 text-cyan-400" />
             <span className="font-semibold">{language === 'en' ? 'ಕನ್ನಡ (KN)' : 'English (EN)'}</span>
           </button>
 
@@ -154,12 +154,12 @@ export const Navbar: React.FC<Props> = ({
             <button
               type="button"
               onClick={() => setShowNotifs(!showNotifs)}
-              className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-xl border border-slate-200 relative transition cursor-pointer"
+              className="p-2 bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 hover:text-white rounded-xl border border-slate-700 relative transition cursor-pointer"
               title="Real-Time Claim Alerts"
             >
               <Bell className="w-4 h-4" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-white text-[9px] font-bold rounded-full flex items-center justify-center animate-pulse">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center animate-pulse">
                   {unreadCount}
                 </span>
               )}
@@ -167,28 +167,28 @@ export const Navbar: React.FC<Props> = ({
 
             {/* Notification Dropdown */}
             {showNotifs && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden z-50">
-                <div className="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-900">
+              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#0E1527] border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden z-50 backdrop-blur-xl">
+                <div className="p-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between text-xs">
+                  <span className="font-bold text-white">
                     {language === 'kn' ? 'ಲೈವ್ ಅಧಿಸೂಚನೆಗಳು (Alerts)' : 'Live Telemetry Alerts'}
                   </span>
-                  <span className="text-[10px] text-emerald-700 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                  <span className="text-[10px] text-cyan-300 font-mono font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-500/40">
                     {language === 'kn' ? 'ಸಕ್ರಿಯ (Live)' : 'WebSocket Active'}
                   </span>
                 </div>
-                <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
+                <div className="max-h-72 overflow-y-auto divide-y divide-slate-800/80">
                   {notifications.length === 0 ? (
-                    <div className="p-4 text-center text-xs text-slate-500">
+                    <div className="p-4 text-center text-xs text-slate-400">
                       {language === 'kn' ? 'ಯಾವುದೇ ಹೊಸ ಅಧಿಸೂಚನೆಗಳಿಲ್ಲ (No notifications)' : 'No notifications received yet.'}
                     </div>
                   ) : (
                     notifications.map((n) => (
-                      <div key={n.id} className="p-3 hover:bg-slate-50 transition text-xs">
-                        <div className="font-bold text-slate-900 flex items-center justify-between">
+                      <div key={n.id} className="p-3 hover:bg-slate-800/50 transition text-xs">
+                        <div className="font-bold text-slate-100 flex items-center justify-between">
                           <span>{n.title}</span>
-                          <span className="text-[9px] text-slate-500 font-mono">{n.timestamp.slice(11, 16)}</span>
+                          <span className="text-[9px] text-cyan-400 font-mono">{n.timestamp.slice(11, 16)}</span>
                         </div>
-                        <p className="text-slate-600 mt-1 text-[11px] leading-relaxed">{n.message}</p>
+                        <p className="text-slate-400 mt-1 text-[11px] leading-relaxed">{n.message}</p>
                       </div>
                     ))
                   )}
@@ -201,10 +201,10 @@ export const Navbar: React.FC<Props> = ({
           <button
             type="button"
             onClick={onLogout}
-            className="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-xl border border-red-200 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+            className="px-2.5 py-1.5 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-xl border border-rose-800/50 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
             title="Sign Out / ನಿರ್ಗಮಿಸಿ"
           >
-            <LogOut className="w-3.5 h-3.5 text-red-600" />
+            <LogOut className="w-3.5 h-3.5 text-rose-400" />
             <span className="hidden sm:inline">
               {language === 'kn' ? 'ನಿರ್ಗಮಿಸಿ (Sign Out)' : 'Sign Out'}
             </span>

@@ -223,7 +223,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-emerald-600 selection:text-white">
+    <div className="min-h-screen bg-[#080C14] text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-black agri-bg-mesh">
       {/* Top Navbar */}
       <Navbar
         userSession={session}
@@ -236,15 +236,15 @@ export function App() {
 
       {/* Floating Live WebSocket Toast */}
       {toastAlert && (
-        <div className="fixed bottom-6 right-6 z-50 bg-white border border-emerald-500 text-slate-900 px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 animate-bounce">
-          <div className="p-2 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-200">
+        <div className="fixed bottom-6 right-6 z-50 bg-[#0E1526]/95 border border-cyan-500/40 text-slate-100 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-xl flex items-center gap-3 animate-bounce">
+          <div className="p-2 bg-cyan-500/10 text-cyan-400 rounded-xl border border-cyan-500/30">
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider font-mono">
+            <div className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider font-mono">
               Live Network Update
             </div>
-            <div className="text-sm font-semibold text-slate-800">{toastAlert}</div>
+            <div className="text-sm font-semibold text-slate-200">{toastAlert}</div>
           </div>
         </div>
       )}
@@ -253,8 +253,8 @@ export function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32 space-y-4">
-            <div className="w-12 h-12 rounded-full border-4 border-emerald-600 border-t-transparent animate-spin" />
-            <p className="text-sm text-slate-700 font-medium">
+            <div className="w-12 h-12 rounded-full border-4 border-cyan-500 border-t-transparent animate-spin" />
+            <p className="text-sm text-slate-300 font-medium font-mono">
               {language === 'kn'
                 ? 'ಕಿಸಾನ್‌ಕ್ಲೇಮ್ ಉಪಗ್ರಹ ದತ್ತಾಂಶಕ್ಕೆ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ... (Connecting to KisanClaim Geospatial Telemetry...)'
                 : 'Connecting to KisanClaim Geospatial Telemetry... / ಕಿಸಾನ್‌ಕ್ಲೇಮ್ ದತ್ತಾಂಶ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ...'}
@@ -282,12 +282,12 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-600">
+      <footer className="border-t border-slate-800/80 bg-[#0A0F1D]/80 backdrop-blur-xl py-6 text-center text-xs text-slate-400">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-extrabold text-slate-900">KisanClaim • ಕಿಸಾನ್‌ಕ್ಲೇಮ್</span>
-            <span className="text-slate-400">•</span>
-            <span className="text-slate-600">
+            <span className="font-extrabold text-white">KisanClaim • ಕಿಸಾನ್‌ಕ್ಲೇಮ್</span>
+            <span className="text-slate-600">•</span>
+            <span className="text-slate-400">
               {language === 'kn'
                 ? 'ಪಿಎಂಎಫ್‌ಬಿವೈ ಎಐ ಬೆಳೆ ಹಾನಿ ಪುರಾವೆ ಮತ್ತು ವಿಮಾ ಕ್ಲೇಮ್ ಪರಿಶೀಲನೆ (PMFBY AI Crop Damage Evidence Verification)'
                 : 'PMFBY-Compliant AI Crop Damage Evidence & Claim Verification • ಬೆಳೆ ಹಾನಿ ಪುರಾವೆ ಪರಿಶೀಲನಾ ವೇದಿಕೆ'}

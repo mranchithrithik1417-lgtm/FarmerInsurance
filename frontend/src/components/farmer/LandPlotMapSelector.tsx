@@ -596,25 +596,25 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
   };
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-sm">
+    <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl text-white">
       {/* Top Header & Map Controls */}
-      <div className="p-3.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+      <div className="p-3.5 bg-slate-950/80 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-emerald-100 text-emerald-800">
-            <Crosshair className="w-4 h-4 text-emerald-700" />
+          <div className="p-1.5 rounded-lg bg-cyan-950/80 text-cyan-400 border border-cyan-800/60">
+            <Crosshair className="w-4 h-4 text-cyan-400" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+              <span className="text-xs font-bold text-white uppercase tracking-wider">
                 {b('4-Point Land Boundary Selector', '4-ಬಿಂದುಗಳ ಜಮೀನಿನ ಗಡಿ ಆಯ್ಕೆಗಾರ', language)}
               </span>
-              <span className="text-[10px] bg-emerald-50 text-emerald-800 font-mono px-2 py-0.5 rounded-full border border-emerald-200 font-bold">
+              <span className="text-[10px] bg-cyan-950/80 text-cyan-300 font-mono px-2 py-0.5 rounded-full border border-cyan-800/60 font-bold">
                 {points.length === 4
                   ? b('BOUNDARY FORMED', 'ಗಡಿ ರಚನೆಯಾಗಿದೆ', language)
                   : b(`POINT ${points.length} OF 4`, `ಬಿಂದು ${points.length} / 4`, language)}
               </span>
             </div>
-            <p className="text-[11px] text-slate-600">
+            <p className="text-[11px] text-slate-400">
               {b(
                 'Click 4 corners of your land parcel on the satellite map to form boundary and generate DIGIPIN.',
                 'ಗಡಿ ರಚಿಸಲು ಮತ್ತು ಡಿಜಿಪಿನ್ ಪಡೆಯಲು ಉಪಗ್ರಹ ನಕ್ಷೆಯಲ್ಲಿ ನಿಮ್ಮ ಜಮೀನಿನ 4 ಮೂಲೆಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ.',
@@ -630,10 +630,10 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
             <button
               type="button"
               onClick={handleUndo}
-              className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-200 transition cursor-pointer shadow-sm"
+              className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-700 transition cursor-pointer shadow-sm"
               title="Undo last placed corner point"
             >
-              <Undo2 className="w-3.5 h-3.5 text-slate-600" />
+              <Undo2 className="w-3.5 h-3.5 text-slate-400" />
               <span>{b('Undo', 'ಹಿಂದಕ್ಕೆ', language)}</span>
             </button>
           )}
@@ -641,10 +641,10 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
           <button
             type="button"
             onClick={handleReset}
-            className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-200 transition cursor-pointer shadow-sm"
+            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-700 transition cursor-pointer shadow-sm"
             title="Reset and re-select 4 points"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-amber-600" />
+            <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
             <span>{b('Reset / Pick 4 Points', 'ಮರುಹೊಂದಿಸಿ / 4 ಬಿಂದು ಆಯ್ಕೆ', language)}</span>
           </button>
 
@@ -652,10 +652,10 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
             <button
               type="button"
               onClick={handleAutoFillDefault}
-              className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold rounded-lg flex items-center gap-1 border border-emerald-200 transition cursor-pointer shadow-sm"
+              className="px-2.5 py-1 bg-cyan-950/80 hover:bg-cyan-900/80 text-cyan-300 text-[11px] font-bold rounded-lg flex items-center gap-1 border border-cyan-800/60 transition cursor-pointer shadow-sm"
               title="Auto-fill sample 4 corners around survey center"
             >
-              <Wand2 className="w-3.5 h-3.5 text-emerald-700" />
+              <Wand2 className="w-3.5 h-3.5 text-cyan-400" />
               <span>{b('Sample 4 Corners', 'ಮಾದರಿ 4 ಮೂಲೆಗಳು', language)}</span>
             </button>
           )}
@@ -663,22 +663,22 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
           <button
             type="button"
             onClick={handleRecenter}
-            className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-200 transition cursor-pointer shadow-sm"
+            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-700 transition cursor-pointer shadow-sm"
             title="Recenter view on plot"
           >
-            <LocateFixed className="w-3.5 h-3.5 text-emerald-700" />
+            <LocateFixed className="w-3.5 h-3.5 text-cyan-400" />
             <span>{b('Recenter', 'ಮಧ್ಯಕ್ಕೆ ತನ್ನಿ', language)}</span>
           </button>
 
           {/* Satellite Layer Provider Switcher */}
-          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[11px]">
+          <div className="flex items-center bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px]">
             <button
               type="button"
               onClick={() => setSatelliteProvider('esri')}
               className={`px-2 py-0.5 rounded-md font-bold transition cursor-pointer ${
                 satelliteProvider === 'esri'
-                  ? 'bg-emerald-700 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-cyan-600 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               {b('Esri Satellite', 'ಎಸ್ರಿ ಉಪಗ್ರಹ', language)}
@@ -688,8 +688,8 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
               onClick={() => setSatelliteProvider('google')}
               className={`px-2 py-0.5 rounded-md font-bold transition cursor-pointer ${
                 satelliteProvider === 'google'
-                  ? 'bg-sky-700 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               {b('Google Hybrid', 'ಗೂಗಲ್ ಹೈಬ್ರಿಡ್', language)}
@@ -699,7 +699,7 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
       </div>
 
       {/* 4-Step Selection Progress Banner */}
-      <div className="px-3.5 py-2.5 bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border-b border-emerald-100 flex items-center justify-between text-xs">
+      <div className="px-3.5 py-2.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between text-xs">
         <div className="flex items-center gap-2">
           {/* Step Pill Indicators */}
           <div className="flex items-center gap-1 font-mono">
@@ -711,10 +711,10 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
                   key={stepIdx}
                   className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-[10px] transition-all ${
                     isFilled
-                      ? 'bg-emerald-600 text-white shadow-xs'
+                      ? 'bg-cyan-500 text-white shadow-sm'
                       : isCurrent
-                      ? 'bg-white border-2 border-emerald-600 text-emerald-700 animate-pulse'
-                      : 'bg-slate-200 text-slate-500'
+                      ? 'bg-cyan-950 border border-cyan-400 text-cyan-300 animate-pulse'
+                      : 'bg-slate-850 text-slate-500 border border-slate-800'
                   }`}
                 >
                   {isFilled ? '✓' : `P${stepIdx + 1}`}
@@ -723,7 +723,7 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
             })}
           </div>
 
-          <span className="font-bold text-slate-800 text-xs">
+          <span className="font-bold text-slate-200 text-xs">
             {points.length === 0 &&
               b('👉 Click Corner 1 on the satellite map', '👉 ಉಪಗ್ರಹ ನಕ್ಷೆಯಲ್ಲಿ 1ನೇ ಮೂಲೆಯನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ', language)}
             {points.length === 1 &&
@@ -733,8 +733,8 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
             {points.length === 3 &&
               b('👉 Click Corner 4 to complete boundary & lock DIGIPIN', '👉 ಗಡಿ ಪೂರ್ಣಗೊಳಿಸಲು ಮತ್ತು ಡಿಜಿಪಿನ್ ಲಾಕ್ ಮಾಡಲು 4ನೇ ಮೂಲೆಯನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ', language)}
             {points.length === 4 && (
-              <span className="text-emerald-800 font-extrabold flex items-center gap-1">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span className="text-cyan-300 font-extrabold flex items-center gap-1">
+                <CheckCircle2 className="w-4 h-4 text-cyan-400" />
                 {b('✓ 4 Points Selected — Cadastral Boundary Formed!', '✓ 4 ಬಿಂದುಗಳು ಆಯ್ಕೆಯಾಗಿವೆ — ಕಂದಾಯ ಗಡಿ ರಚನೆಯಾಗಿದೆ!', language)}
               </span>
             )}
@@ -742,7 +742,7 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
         </div>
 
         {points.length === 4 && (
-          <div className="font-mono text-emerald-900 bg-emerald-100/90 border border-emerald-300 px-2.5 py-0.5 rounded-lg text-[11px] font-bold">
+          <div className="font-mono text-cyan-300 bg-cyan-950/90 border border-cyan-800 px-2.5 py-0.5 rounded-lg text-[11px] font-bold">
             DIGIPIN: {liveDigipin}
           </div>
         )}
@@ -753,15 +753,15 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
         <div ref={mapContainerRef} className="w-full h-full z-0 cursor-crosshair" />
 
         {/* Top-Left Cadastral HUD Overlay */}
-        <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl z-10 text-[10px] space-y-0.5 shadow-md pointer-events-none">
-          <div className="flex items-center gap-1.5 font-bold text-slate-900">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <div className="absolute top-2.5 left-2.5 bg-slate-900/90 backdrop-blur-md border border-slate-800 px-3 py-1.5 rounded-xl z-10 text-[10px] space-y-0.5 shadow-lg pointer-events-none">
+          <div className="flex items-center gap-1.5 font-bold text-white">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
             <span>{b('Cadastral Survey #', 'ಕಂದಾಯ ಸರ್ವೆ ಸಂಖ್ಯೆ #', language)}{surveyNumber}</span>
             {points.length === 4 && (
-              <span className="text-emerald-700 font-mono font-bold">({liveAreaAcres} {b('ac', 'ಎಕರೆ', language)})</span>
+              <span className="text-cyan-300 font-mono font-bold">({liveAreaAcres} {b('ac', 'ಎಕರೆ', language)})</span>
             )}
           </div>
-          <div className="text-slate-600 font-mono text-[9px]">
+          <div className="text-slate-400 font-mono text-[9px]">
             {points.length === 4
               ? `GPS: ${liveCentroid[0].toFixed(5)}°N, ${liveCentroid[1].toFixed(5)}°E`
               : b('Tap 4 corners of land on satellite image', 'ಉಪಗ್ರಹ ಚಿತ್ರದ ಮೇಲೆ ಜಮೀನಿನ 4 ಮೂಲೆಗಳನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ', language)}
@@ -770,40 +770,40 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
 
         {/* Bottom Real-Time Telemetry Bar */}
         {points.length === 4 ? (
-          <div className="absolute bottom-2 left-2 right-2 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-2 rounded-xl z-10 flex flex-wrap items-center justify-between gap-2 text-xs shadow-lg animate-fadeIn">
+          <div className="absolute bottom-2 left-2 right-2 bg-slate-900/95 backdrop-blur-md border border-slate-800 px-3 py-2 rounded-xl z-10 flex flex-wrap items-center justify-between gap-2 text-xs shadow-xl animate-fadeIn">
             <div className="flex items-center gap-3">
               <div>
-                <span className="text-[10px] text-slate-500 block font-medium">{b('Marked Land Area', 'ಗುರುತಿಸಲಾದ ಭೂ ವಿಸ್ತೀರ್ಣ', language)}</span>
-                <span className="font-extrabold text-emerald-800 font-mono text-sm">
+                <span className="text-[10px] text-slate-400 block font-medium">{b('Marked Land Area', 'ಗುರುತಿಸಲಾದ ಭೂ ವಿಸ್ತೀರ್ಣ', language)}</span>
+                <span className="font-extrabold text-cyan-300 font-mono text-sm">
                   {liveAreaAcres} {b('Acres', 'ಎಕರೆ', language)}
                 </span>
               </div>
-              <div className="h-6 w-px bg-slate-200" />
+              <div className="h-6 w-px bg-slate-800" />
               <div>
-                <span className="text-[10px] text-slate-500 block font-medium">{b('Perimeter Bunds', 'ಸುತ್ತಳತೆ ಬದುಗಳು', language)}</span>
-                <span className="font-mono text-slate-800 text-[11px] font-semibold">
+                <span className="text-[10px] text-slate-400 block font-medium">{b('Perimeter Bunds', 'ಸುತ್ತಳತೆ ಬದುಗಳು', language)}</span>
+                <span className="font-mono text-slate-300 text-[11px] font-semibold">
                   {livePerimeterMeters}m (4 {b('corners', 'ಮೂಲೆಗಳು', language)})
                 </span>
               </div>
-              <div className="h-6 w-px bg-slate-200" />
+              <div className="h-6 w-px bg-slate-800" />
               <div>
-                <span className="text-[10px] text-slate-500 block font-medium">{b('National DIGIPIN', 'ರಾಷ್ಟ್ರೀಯ ಡಿಜಿಪಿನ್', language)}</span>
-                <span className="font-mono text-emerald-800 font-bold text-[11px]">
+                <span className="text-[10px] text-slate-400 block font-medium">{b('National DIGIPIN', 'ರಾಷ್ಟ್ರೀಯ ಡಿಜಿಪಿನ್', language)}</span>
+                <span className="font-mono text-cyan-300 font-bold text-[11px]">
                   {liveDigipin}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5 text-emerald-800 text-[11px] font-semibold bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+            <div className="flex items-center gap-1.5 text-cyan-300 text-[11px] font-semibold bg-cyan-950/80 border border-cyan-800/80 px-2.5 py-1 rounded-lg">
+              <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
               <span>{b('DIGIPIN & Boundary Linked', 'ಡಿಜಿಪಿನ್ ಮತ್ತು ಗಡಿ ಲಿಂಕ್ ಆಗಿದೆ', language)}</span>
             </div>
           </div>
         ) : (
-          <div className="absolute bottom-2 left-2 right-2 bg-slate-900/85 backdrop-blur-md border border-slate-700 px-3 py-2 rounded-xl z-10 text-white text-xs flex items-center justify-between shadow-lg">
+          <div className="absolute bottom-2 left-2 right-2 bg-slate-950/90 backdrop-blur-md border border-slate-800 px-3 py-2 rounded-xl z-10 text-white text-xs flex items-center justify-between shadow-xl">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" />
-              <span className="text-slate-200">
+              <Sparkles className="w-4 h-4 text-cyan-400 animate-pulse" />
+              <span className="text-slate-300">
                 {b(
                   `Click on the map to place corner ${points.length + 1} of 4. When 4 points are placed, boundary & DIGIPIN will form automatically.`,
                   `4 ಮೂಲೆಗಳಲ್ಲಿ ${points.length + 1} ನೇ ಮೂಲೆಯನ್ನು ನಕ್ಷೆಯಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ. 4 ಬಿಂದುಗಳು ಪೂರ್ಣಗೊಂಡಾಗ ಗಡಿ ಮತ್ತು ಡಿಜಿಪಿನ್ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ರಚನೆಯಾಗುತ್ತದೆ.`,
@@ -811,7 +811,7 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
                 )}
               </span>
             </div>
-            <span className="font-mono text-emerald-300 font-bold text-xs">
+            <span className="font-mono text-cyan-300 font-bold text-xs">
               {points.length} / 4
             </span>
           </div>
@@ -819,9 +819,9 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
       </div>
 
       {/* Guidance Footer */}
-      <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
+      <div className="p-3 bg-slate-950/90 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
         <div className="flex items-center gap-1.5">
-          <Info className="w-4 h-4 text-emerald-700 flex-shrink-0" />
+          <Info className="w-4 h-4 text-cyan-400 flex-shrink-0" />
           <span>
             {b(
               'No need to drag! Simply click the 4 corners of your land parcel directly on the satellite view. Once 4 points are clicked, your boundary and DIGIPIN are locked.',

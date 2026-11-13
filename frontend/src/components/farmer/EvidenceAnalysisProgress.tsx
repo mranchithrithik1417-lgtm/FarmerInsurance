@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Loader2, Sparkles, Satellite, CloudRain, ShieldCheck, FileText, Cpu, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Loader2, Sparkles, Cpu, ArrowRight } from 'lucide-react';
 import { b } from '../../utils/translations';
 
 interface Props {
@@ -42,22 +42,22 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete, language
   const isDone = currentStageIdx >= stages.length - 1;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-2xl bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div className="relative w-full max-w-2xl bg-[#090D16]/95 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col text-slate-100">
         {/* Top Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-emerald-100 text-emerald-800 rounded-2xl border border-emerald-200 animate-pulse">
-              <Cpu className="w-6 h-6 text-emerald-800" />
+            <div className="p-3 bg-cyan-500/10 text-cyan-400 rounded-2xl border border-cyan-500/30 animate-pulse">
+              <Cpu className="w-6 h-6 text-cyan-400" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <h2 className="text-lg font-bold text-white flex items-center gap-2">
                 {b('Automatic Evidence Verification Engine', 'ಸ್ವಯಂಚಾಲಿತ ಪುರಾವೆ ಪರಿಶೀಲನಾ ಎಂಜಿನ್', language)}
-                <span className="text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-200 font-mono font-bold">
+                <span className="text-[10px] bg-cyan-500/10 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/30 font-mono font-bold">
                   {b('LIVE PIPELINE', 'ಲೈವ್ ಪ್ರಕ್ರಿಯೆ', language)}
                 </span>
               </h2>
-              <p className="text-xs text-slate-600">
+              <p className="text-xs text-slate-400">
                 {b(
                   'Fusing Sentinel-2 satellite passes, Open-Meteo radar, and farmer ground evidence',
                   'ಸೆಂಟಿನೆಲ್-2 ಉಪಗ್ರಹ, ಓಪನ್-ಮೀಟಿಯೋ ರೇಡಾರ್ ಮತ್ತು ರೈತರ ಭೂ ಸಾಕ್ಷ್ಯಗಳ ಸಮ್ಮಿಲನ',
@@ -68,7 +68,7 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete, language
           </div>
 
           <div className="text-right">
-            <span className="text-2xl font-black text-emerald-700 font-mono">
+            <span className="text-2xl font-black text-cyan-400 font-mono">
               {Math.round(((currentStageIdx + 1) / stages.length) * 100)}%
             </span>
           </div>
@@ -79,34 +79,33 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete, language
           {stages.map((st, idx) => {
             const isCompleted = idx < currentStageIdx;
             const isCurrent = idx === currentStageIdx;
-            const isPending = idx > currentStageIdx;
 
             return (
               <div
                 key={idx}
                 className={`p-3 rounded-xl border transition-all flex items-center justify-between text-xs ${
                   isCurrent
-                    ? 'bg-emerald-50 border-emerald-500 shadow-sm ring-1 ring-emerald-500'
+                    ? 'bg-cyan-950/40 border-cyan-500/60 shadow-[0_0_15px_rgba(6,182,212,0.2)] ring-1 ring-cyan-500/50'
                     : isCompleted
-                    ? 'bg-slate-50 border-slate-200 text-slate-800'
-                    : 'bg-white border-slate-200 text-slate-400'
+                    ? 'bg-slate-900/70 border-slate-800 text-slate-200'
+                    : 'bg-slate-950/50 border-slate-800/60 text-slate-500'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   {isCompleted ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-700 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-cyan-400 flex-shrink-0" />
                   ) : isCurrent ? (
-                    <Loader2 className="w-4 h-4 text-emerald-700 animate-spin flex-shrink-0" />
+                    <Loader2 className="w-4 h-4 text-cyan-400 animate-spin flex-shrink-0" />
                   ) : (
-                    <div className="w-4 h-4 rounded-full border border-slate-300 flex-shrink-0" />
+                    <div className="w-4 h-4 rounded-full border border-slate-700 flex-shrink-0" />
                   )}
 
                   <div>
-                    <div className={`font-semibold ${isCurrent ? 'text-slate-900' : isCompleted ? 'text-slate-800' : 'text-slate-400'}`}>
+                    <div className={`font-semibold ${isCurrent ? 'text-white' : isCompleted ? 'text-slate-200' : 'text-slate-500'}`}>
                       {idx + 1}. {st.name}
                     </div>
-                    <div className="text-[10px] text-slate-600 flex items-center gap-1.5 mt-0.5">
-                      <span className="text-emerald-700 font-mono font-medium">[{st.source}]</span>
+                    <div className="text-[10px] text-slate-400 flex items-center gap-1.5 mt-0.5">
+                      <span className="text-cyan-400 font-mono font-medium">[{st.source}]</span>
                       <span>{st.desc}</span>
                     </div>
                   </div>
@@ -114,11 +113,11 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete, language
 
                 <div className="text-right font-mono text-[11px] font-bold">
                   {isCompleted ? (
-                    <span className="text-emerald-700">{st.result}</span>
+                    <span className="text-cyan-400">{st.result}</span>
                   ) : isCurrent ? (
-                    <span className="text-emerald-700 animate-pulse">Processing...</span>
+                    <span className="text-cyan-300 animate-pulse">Processing...</span>
                   ) : (
-                    <span className="text-slate-400">Waiting</span>
+                    <span className="text-slate-500">Waiting</span>
                   )}
                 </div>
               </div>
@@ -127,9 +126,9 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete, language
         </div>
 
         {/* Action Button */}
-        <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
-          <div className="text-xs text-slate-600 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-emerald-700" />
+        <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+          <div className="text-xs text-slate-400 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-cyan-400" />
             <span>{b('Deterministic evidence scoring calibrated for PMFBY guidelines', 'ಪಿಎಂಎಫ್‌ಬಿವೈ ನಿಯಮಾವಳಿಗೆ ಅನುಗುಣವಾದ ಪುರಾವೆ ಮೌಲ್ಯಮಾಪನ', language)}</span>
           </div>
 
@@ -138,8 +137,8 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete, language
             onClick={onComplete}
             className={`px-6 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
               isDone
-                ? 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-md cursor-pointer'
-                : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-[0_0_20px_rgba(6,182,212,0.4)] cursor-pointer'
+                : 'bg-slate-800/80 text-slate-500 cursor-not-allowed border border-slate-700/60'
             }`}
           >
             <span>{isDone ? b('View Generated Claim & Dossier', 'ಸಿದ್ಧಪಡಿಸಿದ ಕ್ಲೇಮ್ & ಕಡತ ವೀಕ್ಷಿಸಿ', language) : b('Synthesizing Evidence...', 'ಪುರಾವೆಗಳನ್ನು ಸಂಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ...', language)}</span>

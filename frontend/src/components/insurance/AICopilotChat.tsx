@@ -69,34 +69,34 @@ export const AICopilotChat: React.FC<Props> = ({ claim, language = 'en' }) => {
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200 flex flex-col h-[520px] shadow-xs overflow-hidden">
+    <div className="bg-slate-900/80 rounded-3xl border border-slate-800 flex flex-col h-[520px] shadow-2xl overflow-hidden backdrop-blur-xl text-white">
       {/* Header */}
-      <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+      <div className="p-4 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-blue-100 text-blue-700 rounded-xl border border-blue-200">
+          <div className="p-2 bg-indigo-950/80 text-cyan-400 rounded-xl border border-indigo-800/60">
             <Bot className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
               {b('AI Reviewer Copilot', 'ಎಐ ವಿಮರ್ಶಕ ಕೋಪೈಲಟ್', language)}
-              <span className="text-[10px] bg-blue-50 text-blue-800 font-mono px-2 py-0.5 rounded-full border border-blue-200 font-bold">
+              <span className="text-[10px] bg-cyan-950/80 text-cyan-300 font-mono px-2 py-0.5 rounded-full border border-cyan-800/60 font-bold">
                 {b('Grounded in Claim Data', 'ಕ್ಲೇಮ್ ದತ್ತಾಂಶ ಆಧಾರಿತ', language)}
               </span>
             </h3>
-            <p className="text-[11px] text-slate-500">{b('Context:', 'ಸಂದರ್ಭ:', language)} {claim.claim_number} • {claim.farmer.name}</p>
+            <p className="text-[11px] text-slate-400">{b('Context:', 'ಸಂದರ್ಭ:', language)} {claim.claim_number} • {claim.farmer.name}</p>
           </div>
         </div>
       </div>
 
       {/* Suggested Quick Inquiries */}
-      <div className="p-2.5 bg-slate-100/70 border-b border-slate-200 overflow-x-auto flex items-center gap-2 text-xs no-scrollbar">
-        <span className="text-[10px] text-slate-500 font-bold uppercase whitespace-nowrap pl-1">{b('Ask Copilot:', 'ಕೋಪೈಲಟ್ ಅನ್ನು ಕೇಳಿ:', language)}</span>
+      <div className="p-2.5 bg-slate-950/60 border-b border-slate-800 overflow-x-auto flex items-center gap-2 text-xs no-scrollbar">
+        <span className="text-[10px] text-slate-400 font-bold uppercase whitespace-nowrap pl-1">{b('Ask Copilot:', 'ಕೋಪೈಲಟ್ ಅನ್ನು ಕೇಳಿ:', language)}</span>
         {suggestedQuestions.slice(0, 3).map((sq, idx) => (
           <button
             key={idx}
             type="button"
             onClick={() => handleSend(sq)}
-            className="px-2.5 py-1 bg-white hover:bg-slate-50 text-slate-700 rounded-lg whitespace-nowrap text-[11px] transition border border-slate-200 font-medium cursor-pointer shadow-xs"
+            className="px-2.5 py-1 bg-slate-850 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg whitespace-nowrap text-[11px] transition border border-slate-700/80 font-medium cursor-pointer shadow-sm"
           >
             {sq}
           </button>
@@ -104,7 +104,7 @@ export const AICopilotChat: React.FC<Props> = ({ claim, language = 'en' }) => {
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-950/40">
         {messages.map((m, idx) => {
           const isUser = m.role === 'user';
           return (
@@ -113,7 +113,7 @@ export const AICopilotChat: React.FC<Props> = ({ claim, language = 'en' }) => {
               className={`flex items-start gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}
             >
               {!isUser && (
-                <div className="w-7 h-7 rounded-lg bg-blue-100 border border-blue-200 text-blue-700 flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                <div className="w-7 h-7 rounded-lg bg-indigo-950/80 border border-indigo-700/60 text-cyan-400 flex items-center justify-center flex-shrink-0 text-xs font-bold">
                   AI
                 </div>
               )}
@@ -121,20 +121,20 @@ export const AICopilotChat: React.FC<Props> = ({ claim, language = 'en' }) => {
               <div
                 className={`max-w-[85%] rounded-2xl p-3.5 text-xs leading-relaxed ${
                   isUser
-                    ? 'bg-blue-700 text-white rounded-tr-none'
-                    : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none shadow-xs'
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-tr-none shadow-md shadow-cyan-950/40'
+                    : 'bg-slate-900/90 border border-slate-800 text-slate-200 rounded-tl-none shadow-md'
                 }`}
               >
                 <div className="whitespace-pre-line font-medium">{m.content}</div>
 
                 {/* Grounded facts badge */}
                 {m.groundedFacts && m.groundedFacts.length > 0 && (
-                  <div className="mt-3 pt-2.5 border-t border-slate-100 text-[10px] text-slate-600">
-                    <span className="font-bold text-blue-800 block mb-1">Grounded telemetry cross-checks:</span>
+                  <div className="mt-3 pt-2.5 border-t border-slate-800 text-[10px] text-slate-400">
+                    <span className="font-bold text-cyan-400 block mb-1">Grounded telemetry cross-checks:</span>
                     <ul className="space-y-0.5">
                       {m.groundedFacts.map((f, i) => (
-                        <li key={i} className="flex items-center gap-1 font-mono text-slate-600">
-                          <span className="text-blue-600 font-bold">›</span> {f}
+                        <li key={i} className="flex items-center gap-1 font-mono text-slate-300">
+                          <span className="text-cyan-400 font-bold">›</span> {f}
                         </li>
                       ))}
                     </ul>
@@ -146,28 +146,28 @@ export const AICopilotChat: React.FC<Props> = ({ claim, language = 'en' }) => {
         })}
 
         {loading && (
-          <div className="flex items-center gap-2 text-xs text-blue-700 font-medium italic pl-10">
-            <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
+          <div className="flex items-center gap-2 text-xs text-cyan-400 font-medium italic pl-10">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
             {b('Copilot synthesizing telemetry...', 'ಕೋಪೈಲಟ್ ವಿಶ್ಲೇಷಿಸುತ್ತಿದೆ...', language)}
           </div>
         )}
       </div>
 
       {/* Input bar */}
-      <div className="p-3 bg-white border-t border-slate-200 flex items-center gap-2">
+      <div className="p-3 bg-slate-900/90 border-t border-slate-800 flex items-center gap-2">
         <input
           type="text"
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSend()}
           placeholder={b("Ask copilot about NDVI, rainfall anomaly, fraud checks...", 'NDVI, ಮಳೆ ವ್ಯತ್ಯಾಸ ಅಥವಾ ವಂಚನೆ ತಪಾಸಣೆ ಬಗ್ಗೆ ಕೇಳಿ...', language)}
-          className="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 text-xs outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
+          className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-500 text-xs outline-none focus:bg-slate-900 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/20"
         />
         <button
           type="button"
           onClick={() => handleSend()}
           disabled={loading || !input.trim()}
-          className="p-2.5 bg-blue-700 hover:bg-blue-800 disabled:opacity-50 text-white rounded-xl transition cursor-pointer shadow-xs"
+          className="p-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 text-white rounded-xl transition cursor-pointer shadow-md shadow-cyan-950/50"
         >
           <Send className="w-4 h-4" />
         </button>

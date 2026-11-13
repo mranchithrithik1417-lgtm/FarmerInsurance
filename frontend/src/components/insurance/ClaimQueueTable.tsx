@@ -36,45 +36,45 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, language = 'en', onSe
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'Approved':
-        return 'bg-emerald-50 text-emerald-800 border-emerald-200';
+        return 'bg-cyan-950/80 text-cyan-300 border-cyan-800/60';
       case 'Payment Scheduled':
       case 'Paid':
-        return 'bg-blue-50 text-blue-800 border-blue-200';
+        return 'bg-blue-950/80 text-blue-300 border-blue-800/60';
       case 'Additional Evidence Required':
-        return 'bg-amber-50 text-amber-800 border-amber-200';
+        return 'bg-amber-950/80 text-amber-300 border-amber-800/60';
       case 'Rejected':
-        return 'bg-red-50 text-red-800 border-red-200';
+        return 'bg-red-950/80 text-red-300 border-red-800/60';
       default:
-        return 'bg-slate-100 text-slate-800 border-slate-200';
+        return 'bg-slate-800 text-slate-300 border-slate-700';
     }
   };
 
   const getSeverityBadge = (sev: string) => {
     switch (sev) {
       case 'Severe':
-        return 'text-red-700 font-bold';
+        return 'text-red-400 font-bold';
       case 'High':
-        return 'text-amber-700 font-semibold';
+        return 'text-amber-400 font-semibold';
       case 'Moderate':
-        return 'text-yellow-700 font-medium';
+        return 'text-yellow-400 font-medium';
       default:
-        return 'text-emerald-700 font-medium';
+        return 'text-cyan-400 font-medium';
     }
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs">
+    <div className="bg-slate-900/80 rounded-3xl border border-slate-800 p-6 shadow-xl backdrop-blur-xl text-white">
       {/* Table Filters Bar */}
       <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 mb-6">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
           <input
             type="text"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             placeholder={b('Search claim ID, farmer, survey #, or district...', 'ಕ್ಲೇಮ್ ಐಡಿ, ರೈತರು, ಸರ್ವೆ ಸಂಖ್ಯೆ ಅಥವಾ ಜಿಲ್ಲೆ ಹುಡುಕಿ...', language)}
-            className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
+            className="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none focus:bg-slate-900 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/20"
           />
         </div>
 
@@ -83,49 +83,49 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, language = 'en', onSe
           <select
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
-            className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-700 font-medium outline-none focus:bg-white"
+            className="bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-slate-300 font-medium outline-none focus:border-cyan-500"
           >
-            <option value="all">{b('All Statuses', 'ಎಲ್ಲಾ ಸ್ಥಿತಿಗಳು', language)}</option>
-            <option value="Pending Review">{b('Pending Review', 'ಪರಿಶೀಲನೆ ಬಾಕಿ', language)}</option>
-            <option value="Approved">{b('Approved', 'ಅನುಮೋದಿತ', language)}</option>
-            <option value="Additional Evidence Required">{b('Additional Evidence Required', 'ಹೆಚ್ಚುವರಿ ಪುರಾವೆ ಅಗತ್ಯ', language)}</option>
-            <option value="Payment Scheduled">{b('Payment Scheduled', 'ಪಾವತಿ ನಿಗದಿಯಾಗಿದೆ', language)}</option>
-            <option value="Rejected">{b('Rejected', 'ತಿರಸ್ಕರಿಸಲಾಗಿದೆ', language)}</option>
+            <option value="all" className="bg-slate-900 text-white">{b('All Statuses', 'ಎಲ್ಲಾ ಸ್ಥಿತಿಗಳು', language)}</option>
+            <option value="Pending Review" className="bg-slate-900 text-white">{b('Pending Review', 'ಪರಿಶೀಲನೆ ಬಾಕಿ', language)}</option>
+            <option value="Approved" className="bg-slate-900 text-white">{b('Approved', 'ಅನುಮೋದಿತ', language)}</option>
+            <option value="Additional Evidence Required" className="bg-slate-900 text-white">{b('Additional Evidence Required', 'ಹೆಚ್ಚುವರಿ ಪುರಾವೆ ಅಗತ್ಯ', language)}</option>
+            <option value="Payment Scheduled" className="bg-slate-900 text-white">{b('Payment Scheduled', 'ಪಾವತಿ ನಿಗದಿಯಾಗಿದೆ', language)}</option>
+            <option value="Rejected" className="bg-slate-900 text-white">{b('Rejected', 'ತಿರಸ್ಕರಿಸಲಾಗಿದೆ', language)}</option>
           </select>
 
           <select
             value={cropFilter}
             onChange={e => setCropFilter(e.target.value)}
-            className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-700 font-medium outline-none focus:bg-white"
+            className="bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-slate-300 font-medium outline-none focus:border-cyan-500"
           >
-            <option value="all">{b('All Crops', 'ಎಲ್ಲಾ ಬೆಳೆಗಳು', language)}</option>
-            <option value="Ragi">Ragi (ರಾಗಿ)</option>
-            <option value="Paddy">Paddy (ಭತ್ತ)</option>
-            <option value="Sugarcane">Sugarcane (ಕಬ್ಬು)</option>
-            <option value="Onion">Onion (ಈರುಳ್ಳಿ)</option>
-            <option value="Cotton">Cotton (ಹತ್ತಿ)</option>
-            <option value="Wheat">Wheat (ಗೋಧಿ)</option>
+            <option value="all" className="bg-slate-900 text-white">{b('All Crops', 'ಎಲ್ಲಾ ಬೆಳೆಗಳು', language)}</option>
+            <option value="Ragi" className="bg-slate-900 text-white">Ragi (ರಾಗಿ)</option>
+            <option value="Paddy" className="bg-slate-900 text-white">Paddy (ಭತ್ತ)</option>
+            <option value="Sugarcane" className="bg-slate-900 text-white">Sugarcane (ಕಬ್ಬು)</option>
+            <option value="Onion" className="bg-slate-900 text-white">Onion (ಈರುಳ್ಳಿ)</option>
+            <option value="Cotton" className="bg-slate-900 text-white">Cotton (ಹತ್ತಿ)</option>
+            <option value="Wheat" className="bg-slate-900 text-white">Wheat (ಗೋಧಿ)</option>
           </select>
 
           <select
             value={disasterFilter}
             onChange={e => setDisasterFilter(e.target.value)}
-            className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-700 font-medium outline-none focus:bg-white"
+            className="bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-slate-300 font-medium outline-none focus:border-cyan-500"
           >
-            <option value="all">{b('All Disasters', 'ಎಲ್ಲಾ ವಿಪತ್ತುಗಳು', language)}</option>
-            <option value="Flood">{b('Flood', 'ಪ್ರವಾಹ', language)}</option>
-            <option value="Heavy rainfall">{b('Heavy rainfall', 'ಭಾರಿ ಮಳೆ', language)}</option>
-            <option value="Drought">{b('Drought', 'ಬರಗಾಲ', language)}</option>
-            <option value="Hailstorm">{b('Hailstorm', 'ಆಲಿಕಲ್ಲು ಮಳೆ', language)}</option>
-            <option value="Pest attack">{b('Pest attack', 'ಕೀಟ ಬಾಧೆ', language)}</option>
+            <option value="all" className="bg-slate-900 text-white">{b('All Disasters', 'ಎಲ್ಲಾ ವಿಪತ್ತುಗಳು', language)}</option>
+            <option value="Flood" className="bg-slate-900 text-white">{b('Flood', 'ಪ್ರವಾಹ', language)}</option>
+            <option value="Heavy rainfall" className="bg-slate-900 text-white">{b('Heavy rainfall', 'ಭಾರಿ ಮಳೆ', language)}</option>
+            <option value="Drought" className="bg-slate-900 text-white">{b('Drought', 'ಬರಗಾಲ', language)}</option>
+            <option value="Hailstorm" className="bg-slate-900 text-white">{b('Hailstorm', 'ಆಲಿಕಲ್ಲು ಮಳೆ', language)}</option>
+            <option value="Pest attack" className="bg-slate-900 text-white">{b('Pest attack', 'ಕೀಟ ಬಾಧೆ', language)}</option>
           </select>
         </div>
       </div>
 
       {/* Claims Table */}
-      <div className="overflow-x-auto rounded-2xl border border-slate-200">
+      <div className="overflow-x-auto rounded-2xl border border-slate-800">
         <table className="w-full text-left text-xs">
-          <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-[10px]">
+          <thead className="bg-slate-950/90 text-slate-400 font-bold border-b border-slate-800 uppercase tracking-wider text-[10px]">
             <tr>
               <th className="py-3 px-4">{b('Claim ID', 'ಕ್ಲೇಮ್ ಸಂಖ್ಯೆ', language)}</th>
               <th className="py-3 px-4">{b('Farmer & Village', 'ರೈತರು & ಗ್ರಾಮ', language)}</th>
@@ -138,7 +138,7 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, language = 'en', onSe
               <th className="py-3 px-4 text-right">{b('Review Action', 'ಕ್ರಮ', language)}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 bg-white font-medium">
+          <tbody className="divide-y divide-slate-800/80 bg-slate-900/60 font-medium">
             {filteredClaims.length === 0 ? (
               <tr>
                 <td colSpan={9} className="py-8 text-center text-slate-500">
@@ -150,26 +150,26 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, language = 'en', onSe
                 <tr
                   key={c.id}
                   onClick={() => onSelectClaim(c)}
-                  className="hover:bg-slate-50 transition cursor-pointer group"
+                  className="hover:bg-slate-800/60 transition cursor-pointer group"
                 >
-                  <td className="py-3.5 px-4 font-mono font-bold text-blue-700">
+                  <td className="py-3.5 px-4 font-mono font-bold text-cyan-400">
                     {c.claim_number}
                   </td>
                   <td className="py-3.5 px-4">
-                    <div className="font-bold text-slate-900 group-hover:text-blue-700 transition">
+                    <div className="font-bold text-white group-hover:text-cyan-300 transition">
                       {c.farmer.name}
                     </div>
-                    <div className="text-[11px] text-slate-500">
+                    <div className="text-[11px] text-slate-400">
                       {c.farmer.village}, {c.farmer.district}
                     </div>
                   </td>
-                  <td className="py-3.5 px-4 text-slate-800">
+                  <td className="py-3.5 px-4 text-slate-200">
                     {c.crop.crop_name}
-                    <span className="text-[10px] text-slate-500 block font-normal">({c.land.area_acres} ac)</span>
+                    <span className="text-[10px] text-slate-400 block font-normal">({c.land.area_acres} ac)</span>
                   </td>
                   <td className="py-3.5 px-4">
-                    <span className="text-slate-900 font-semibold">{c.disaster.disaster_type}</span>
-                    <span className="text-[10px] text-slate-500 block">{c.disaster.disaster_date}</span>
+                    <span className="text-white font-semibold">{c.disaster.disaster_type}</span>
+                    <span className="text-[10px] text-slate-400 block">{c.disaster.disaster_date}</span>
                   </td>
                   <td className="py-3.5 px-4">
                     <span className={getSeverityBadge(c.estimated_damage_severity)}>
@@ -177,10 +177,10 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, language = 'en', onSe
                     </span>
                   </td>
                   <td className="py-3.5 px-4 font-mono">
-                    <span className="text-emerald-700 font-bold">{c.evidence_confidence_score}%</span>
-                    <span className="text-[10px] text-slate-500 block font-sans">{c.indicative_likelihood_score}% likelihood</span>
+                    <span className="text-cyan-400 font-bold">{c.evidence_confidence_score}%</span>
+                    <span className="text-[10px] text-slate-400 block font-sans">{c.indicative_likelihood_score}% likelihood</span>
                   </td>
-                  <td className="py-3.5 px-4 font-mono font-bold text-emerald-700">
+                  <td className="py-3.5 px-4 font-mono font-bold text-cyan-300">
                     ₹{c.estimated_payout.toLocaleString('en-IN')}
                   </td>
                   <td className="py-3.5 px-4">
@@ -189,7 +189,7 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, language = 'en', onSe
                     </span>
                   </td>
                   <td className="py-3.5 px-4 text-right">
-                    <button className="px-3 py-1.5 bg-slate-100 group-hover:bg-blue-600 text-slate-700 group-hover:text-white rounded-lg transition font-semibold text-xs flex items-center gap-1 ml-auto">
+                    <button className="px-3 py-1.5 bg-slate-800 group-hover:bg-cyan-600 text-slate-300 group-hover:text-white rounded-lg transition font-semibold text-xs flex items-center gap-1 ml-auto border border-slate-700">
                       <span>{b('Inspect', 'ಪರಿಶೀಲಿಸಿ', language)}</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </button>
