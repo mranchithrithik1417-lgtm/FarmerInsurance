@@ -17,6 +17,7 @@ import {
   LocateFixed
 } from 'lucide-react';
 import { Claim } from '../../types';
+import { b, t } from '../../utils/translations';
 import {
   calculatePolygonCentroid,
   calculatePolygonAreaAcres,
@@ -28,9 +29,10 @@ import {
 interface Props {
   claim: Claim;
   interactiveSlider?: boolean;
+  language?: 'en' | 'kn';
 }
 
-export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider = true }) => {
+export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider = true, language = 'en' }) => {
   const [sliderPos, setSliderPos] = useState<number>(50);
   const [viewMode, setViewMode] = useState<'earth' | 'rgb' | 'ndvi' | 'flood'>('earth');
   const [satelliteFeedType, setSatelliteFeedType] = useState<'interactive' | 'stream' | 'ortho'>('interactive');
@@ -280,7 +282,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-bold text-slate-900 tracking-wide">
-                Geospatial Evidence Twin
+                {b('Geospatial Evidence Twin', 'ಭೂ-ಅಂತರಿಕ್ಷ ಸಾಕ್ಷ್ಯ ದೃಶ್ಯ (ಟ್ವಿನ್)', language)}
               </h3>
               <span className="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full font-mono font-bold flex items-center gap-1">
                 <Crosshair className="w-3 h-3 text-emerald-700" />
@@ -288,7 +290,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
               </span>
             </div>
             <p className="text-xs text-slate-600">
-              Survey #{claim.land.survey_number} • <span className="text-slate-900 font-semibold">{claim.land.land_parcel_id}</span> ({measuredArea} ac) • {claim.farmer.village}, {claim.farmer.district}
+              {b('Survey #', 'ಸರ್ವೆ ಸಂಖ್ಯೆ #', language)}{claim.land.survey_number} • <span className="text-slate-900 font-semibold">{claim.land.land_parcel_id}</span> ({measuredArea} {b('ac', 'ಎಕರೆ', language)}) • {claim.farmer.village}, {claim.farmer.district}
             </p>
           </div>
         </div>
@@ -302,7 +304,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             title="Fetch live satellite pass for this location"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin' : ''}`} />
-            <span>{isFetching ? 'Fetching Pass...' : 'Fetch Live Satellite Scene'}</span>
+            <span>{isFetching ? b('Fetching Pass...', 'ದತ್ತಾಂಶ ಪಡೆಯಲಾಗುತ್ತಿದೆ...', language) : b('Fetch Live Satellite Scene', 'ಲೈವ್ ಉಪಗ್ರಹ ದೃಶ್ಯ ಪಡೆಯಿರಿ', language)}</span>
           </button>
 
           <a
@@ -313,7 +315,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             title="Open in official 3D Google Earth"
           >
             <Globe className="w-3.5 h-3.5 text-emerald-700" />
-            <span className="hidden sm:inline">Open in Google Earth 3D</span>
+            <span className="hidden sm:inline">{b('Open in Google Earth 3D', 'ಗೂಗಲ್ ಅರ್ಥ್ 3D ಯಲ್ಲಿ ವೀಕ್ಷಿಸಿ', language)}</span>
             <ExternalLink className="w-3 h-3 text-slate-400" />
           </a>
         </div>
@@ -331,7 +333,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             }`}
           >
             <Globe className="w-3.5 h-3.5" />
-            <span>Satellite & Marked Plot Boundary</span>
+            <span>{b('Satellite & Marked Plot Boundary', 'ಉಪಗ್ರಹ & ಜಮೀನಿನ ಗಡಿ', language)}</span>
           </button>
 
           <button
@@ -342,7 +344,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                 : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50'
             }`}
           >
-            Sentinel-2 Pre/Post Slider
+            {b('Sentinel-2 Pre/Post Slider', 'ಸೆಂಟಿನೆಲ್-2 ಮುಂಚೆ/ನಂತರದ ಸ್ಲೈಡರ್', language)}
           </button>
 
           <button
@@ -353,7 +355,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                 : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50'
             }`}
           >
-            NDVI Spatial Heatmap
+            {b('NDVI Spatial Heatmap', 'ಎನ್‌ಡಿವಿಐ ಹಸಿರು ನಕ್ಷೆ', language)}
           </button>
 
           <button
@@ -364,14 +366,14 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                 : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50'
             }`}
           >
-            Inundation Mask
+            {b('Inundation Mask', 'ಪ್ರವಾಹ ನೀರಿನ ಮುಸುಕು', language)}
           </button>
         </div>
 
         {/* Live GPS / Cadastral Centroid Badge */}
         <div className="text-[11px] font-mono text-slate-600 flex items-center gap-1.5">
           <Compass className="w-3.5 h-3.5 text-emerald-700" />
-          <span>Centroid: <strong>{lat.toFixed(4)}°N, {lng.toFixed(4)}°E</strong></span>
+          <span>{b('Centroid:', 'ಕೇಂದ್ರ ಬಿಂದು:', language)} <strong>{lat.toFixed(4)}°N, {lng.toFixed(4)}°E</strong></span>
         </div>
       </div>
 
@@ -416,17 +418,17 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-2 rounded-xl shadow-lg z-20 text-xs max-w-xs space-y-1 pointer-events-none">
               <div className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="font-bold text-slate-900">Cadastral Survey #{claim.land.survey_number}</span>
+                <span className="font-bold text-slate-900">{b('Cadastral Survey #', 'ಕಂದಾಯ ಸರ್ವೆ ಸಂಖ್ಯೆ #', language)}{claim.land.survey_number}</span>
                 <span className="text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-1.5 py-0.2 rounded font-mono font-bold">
-                  {measuredArea} Acres
+                  {measuredArea} {b('Acres', 'ಎಕರೆ', language)}
                 </span>
               </div>
               <div className="text-[10px] text-slate-600 font-mono">
-                Centroid: {lat.toFixed(4)}°N, {lng.toFixed(4)}°E • {claim.farmer.village}
+                {b('Centroid:', 'ಕೇಂದ್ರ ಬಿಂದು:', language)} {lat.toFixed(4)}°N, {lng.toFixed(4)}°E • {claim.farmer.village}
               </div>
               <div className="text-[10px] text-emerald-700 font-semibold flex items-center gap-1 pt-0.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-                <span>Physical Field Bunds Aligned ({totalPerimeterMeters}m perimeter)</span>
+                <span>{b('Physical Field Bunds Aligned', 'ಜಮೀನಿನ ಬದುಗಳು ಹೊಂದಾಣಿಕೆಯಾಗಿವೆ', language)} ({totalPerimeterMeters}m)</span>
               </div>
             </div>
 
@@ -442,7 +444,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  Live Satellite Map
+                  {b('Live Satellite Map', 'ಲೈವ್ ಉಪಗ್ರಹ ನಕ್ಷೆ', language)}
                 </button>
                 <button
                   type="button"
@@ -453,7 +455,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  Google Maps Feed
+                  {b('Google Maps Feed', 'ಗೂಗಲ್ ನಕ್ಷೆ ಸ್ಟ್ರೀಮ್', language)}
                 </button>
               </div>
 
@@ -611,27 +613,27 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
       {/* KPI & Metrics Bar below the map */}
       <div className="p-4 bg-slate-50 border-t border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
         <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-500 block">Pre-Disaster NDVI</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">{b('Pre-Disaster NDVI', 'ವಿಪತ್ತಿಗೂ ಮುಂಚಿನ NDVI', language)}</span>
           <span className="text-xl font-black text-emerald-700 font-mono">{preNDVI}</span>
-          <span className="text-[10px] text-emerald-800 block">Healthy vegetative</span>
+          <span className="text-[10px] text-emerald-800 block">{b('Healthy vegetative', 'ಆರೋಗ್ಯಕರ ಹಸಿರು ಬೆಳೆ', language)}</span>
         </div>
 
         <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-500 block">Post-Disaster NDVI</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">{b('Post-Disaster NDVI', 'ವಿಪತ್ತಿನ ನಂತರದ NDVI', language)}</span>
           <span className="text-xl font-black text-red-700 font-mono">{postNDVI}</span>
-          <span className="text-[10px] text-red-800 block">Submerged / Lodged</span>
+          <span className="text-[10px] text-red-800 block">{b('Submerged / Lodged', 'ನೀರಲ್ಲಿ ಮುಳುಗಿದ / ನೆಲಕಚ್ಚಿದ', language)}</span>
         </div>
 
         <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-500 block">Net Vegetation Drop</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">{b('Net Vegetation Drop', 'ಒಟ್ಟು ಹಸಿರು ಇಳಿಕೆ', language)}</span>
           <span className="text-xl font-black text-amber-700 font-mono">{ndviDiff}</span>
-          <span className="text-[10px] text-amber-800 block">-{claim.satellite.vegetation_drop_pct}% loss</span>
+          <span className="text-[10px] text-amber-800 block">-{claim.satellite.vegetation_drop_pct}% {b('loss', 'ನಷ್ಟ', language)}</span>
         </div>
 
         <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-500 block">NDWI Water Index</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">{b('NDWI Water Index', 'NDWI ನೀರಿನ ಸೂಚ್ಯಂಕ', language)}</span>
           <span className="text-xl font-black text-sky-700 font-mono">+{claim.satellite.flood_water_index_ndwi || 0.48}</span>
-          <span className="text-[10px] text-sky-800 block">Flood Inundation Confirmed</span>
+          <span className="text-[10px] text-sky-800 block">{b('Flood Inundation Confirmed', 'ಪ್ರವಾಹ ದೃಢಪಟ್ಟಿದೆ', language)}</span>
         </div>
       </div>
 
@@ -648,10 +650,10 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             </div>
             <div>
               <span className="text-xs font-bold text-slate-900 uppercase tracking-wider block">
-                Marked Land Plot Boundary & DIGIPIN Square Match Verification Audit
+                {b('Marked Land Plot Boundary & DIGIPIN Square Match Verification Audit', 'ಗುರುತಿಸಲಾದ ಭೂಮಿ ಗಡಿ & ಡಿಜಿಪಿನ್ ಚೌಕ ಹೊಂದಾಣಿಕೆ ಆಡಿಟ್', language)}
               </span>
               <span className="text-[11px] text-slate-600">
-                {polygonCoords.length} corner vertices verified • {measuredArea} Acres • DIGIPIN: <strong className="text-emerald-800 font-mono">{claim.land.digipin}</strong>
+                {polygonCoords.length} {b('corner vertices verified', 'ಮೂಲೆಯ ಬಿಂದುಗಳು ಪರಿಶೀಲಿಸಲಾಗಿದೆ', language)} • {measuredArea} {b('Acres', 'ಎಕರೆ', language)} • DIGIPIN: <strong className="text-emerald-800 font-mono">{claim.land.digipin}</strong>
               </span>
             </div>
           </div>
@@ -659,7 +661,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
           <div className="flex items-center gap-2">
             <span className="text-[11px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-              <span>100% GIS Ground Match</span>
+              <span>{b('100% GIS Ground Match', '100% ಜಿಐಎಸ್ ಭೂ ಸಾಕ್ಷ್ಯ ಹೊಂದಾಣಿಕೆ', language)}</span>
             </span>
             {showBoundaryAudit ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
           </div>
@@ -676,7 +678,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                       {cornerLabels[idx] || `Corner P${idx + 1}`}
                     </span>
                     <span className="text-[9px] bg-white border border-slate-200 text-slate-600 px-1.5 py-0.2 rounded font-mono">
-                      Vertex #{idx + 1}
+                      {b('Vertex #', 'ಬಿಂದು #', language)}{idx + 1}
                     </span>
                   </div>
                   <div className="text-[11px] font-mono text-slate-900 font-semibold">
@@ -694,11 +696,11 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-700 flex-shrink-0" />
                 <span>
-                  <strong>National DIGIPIN Alignment:</strong> The polygon centroid maps to 4m×4m cell <span className="text-emerald-800 font-mono font-bold">{claim.land.digipin}</span>, precisely corroborating Cadastral Survey #{claim.land.survey_number}.
+                  <strong>{b('National DIGIPIN Alignment:', 'ರಾಷ್ಟ್ರೀಯ ಡಿಜಿಪಿನ್ ಜೋಡಣೆ:', language)}</strong> {b(`The polygon centroid maps to 4m×4m cell `, `ಕೇಂದ್ರ ಬಿಂದುವು 4ಮೀ×4ಮೀ ಕೋಶಕ್ಕೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ `, language)}<span className="text-emerald-800 font-mono font-bold">{claim.land.digipin}</span>{b(`, precisely corroborating Cadastral Survey #${claim.land.survey_number}.`, `, ಇದು ಸರ್ವೆ #${claim.land.survey_number} ಗೆ ನಿಖರವಾಗಿ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ.`, language)}
                 </span>
               </div>
               <div className="text-[11px] text-slate-600 font-mono">
-                Perimeter: <strong>{totalPerimeterMeters}m</strong> across {polygonCoords.length} bunds
+                {b('Perimeter:', 'ಸುತ್ತಳತೆ:', language)} <strong>{totalPerimeterMeters}m</strong> {b(`across ${polygonCoords.length} bunds`, `${polygonCoords.length} ಬದುಗಳಲ್ಲಿ`, language)}
               </div>
             </div>
           </div>

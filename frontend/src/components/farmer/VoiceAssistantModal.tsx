@@ -28,6 +28,7 @@ import {
 import { encodeDigipin } from '../../utils/digipin';
 import { generateDefaultParcelCoordinates } from '../../utils/geo';
 import { LandPlotMapSelector } from './LandPlotMapSelector';
+import { b, t } from '../../utils/translations';
 import {
   speakAloud,
   stopSpeaking,
@@ -566,13 +567,13 @@ export const VoiceAssistantModal: React.FC<Props> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-slate-900">KisanClaim Assessment Assistant</h2>
+                <h2 className="text-base font-bold text-slate-900">{b('KisanClaim Assessment Assistant', 'ಕಿಸಾನ್‌ಕ್ಲೇಮ್ ಬೆಳೆ ಹಾನಿ ಮೌಲ್ಯಮಾಪನ ಸಹಾಯಕ', language)}</h2>
                 <span className="text-[10px] bg-emerald-50 text-emerald-800 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-200">
-                  AI GUIDED MODE
+                  {b('AI GUIDED MODE', 'ಎಐ ಮಾರ್ಗದರ್ಶಿತ ಮೋಡ್', language)}
                 </span>
               </div>
               <p className="text-xs text-slate-600">
-                Step {currentStep} of 5 • Land parcel verified (ULPIN: <span className="font-mono text-emerald-800 font-bold">{formData.landParcelId}</span>)
+                {b(`Step ${currentStep} of 5 • Land parcel verified`, `ಹಂತ ${currentStep} / 5 • ಜಮೀನು ಪರಿಶೀಲಿಸಲಾಗಿದೆ`, language)} (ULPIN: <span className="font-mono text-emerald-800 font-bold">{formData.landParcelId}</span>)
               </p>
             </div>
           </div>
@@ -638,13 +639,13 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                   <span className="w-1 h-2.5 bg-emerald-600 rounded-full animate-bounce" />
                 </div>
                 <span className="text-[10px] text-emerald-800 font-extrabold uppercase whitespace-nowrap font-mono">
-                  Speaking
+                  {b('Speaking', 'ಮಾತನಾಡುತ್ತಿದೆ', language)}
                 </span>
               </>
             ) : (
               <>
                 <Volume2 className="w-5 h-5 text-emerald-700" />
-                <span className="text-[10px] text-slate-600 font-bold uppercase whitespace-nowrap">Listen</span>
+                <span className="text-[10px] text-slate-600 font-bold uppercase whitespace-nowrap">{b('Listen', 'ಕೇಳಿಸಿಕೊಳ್ಳಿ', language)}</span>
               </>
             )}
           </button>
@@ -657,7 +658,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-700 block mb-1">Survey Number</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">{b('Survey Number', 'ಸರ್ವೆ ಸಂಖ್ಯೆ', language)}</label>
                   <input
                     type="text"
                     value={formData.surveyNumber}
@@ -666,7 +667,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-700 block mb-1">Land Area (Acres)</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">{b('Land Area (Acres)', 'ಭೂ ವಿಸ್ತೀರ್ಣ (ಎಕರೆ)', language)}</label>
                   <input
                     type="number"
                     step="0.1"
@@ -682,7 +683,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-700 block mb-1">DIGIPIN (National Grid)</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">{b('DIGIPIN (National Grid)', 'ಡಿಜಿಪಿನ್ (ರಾಷ್ಟ್ರೀಯ ಗ್ರಿಡ್)', language)}</label>
                   <input
                     type="text"
                     readOnly
@@ -698,7 +699,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-emerald-700" />
                     <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                      Ground Parcel Geo-Location
+                      {b('Ground Parcel Geo-Location', 'ಜಮೀನಿನ ಜಿಯೋ-ಸ್ಥಳ', language)}
                     </span>
                   </div>
 
@@ -714,7 +715,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                       }`}
                     >
                       <Layers className="w-3 h-3" />
-                      <span>Option 1: Drag on Satellite Map (Recommended)</span>
+                      <span>{b('Option 1: Drag on Satellite Map (Recommended)', 'ಆಯ್ಕೆ 1: ಉಪಗ್ರಹ ನಕ್ಷೆಯಲ್ಲಿ ಎಳೆಯಿರಿ (ಶಿಫಾರಸು)', language)}</span>
                     </button>
 
                     <button
@@ -727,7 +728,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                       }`}
                     >
                       <Navigation className="w-3 h-3" />
-                      <span>Option 2: Auto-Fetch GPS</span>
+                      <span>{b('Option 2: Auto-Fetch GPS', 'ಆಯ್ಕೆ 2: ಜಿಪಿಎಸ್ ಸ್ವಯಂ-ಪಡೆಯಿರಿ', language)}</span>
                     </button>
 
                     <button
@@ -740,7 +741,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                       }`}
                     >
                       <Edit3 className="w-3 h-3" />
-                      <span>Option 3: Enter Lat/Long</span>
+                      <span>{b('Option 3: Enter Lat/Long', 'ಆಯ್ಕೆ 3: ಅಕ್ಷಾಂಶ/ರೇಖಾಂಶ ನಮೂದಿಸಿ', language)}</span>
                     </button>
                   </div>
                 </div>
@@ -753,6 +754,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                       initialCenterLon={formData.longitude}
                       initialCoords={formData.polygonCoordinates}
                       surveyNumber={formData.surveyNumber}
+                      language={language}
                       onPlotChange={handlePlotChange}
                     />
                   </div>
@@ -1149,7 +1151,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                 onClick={handleBack}
                 className="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer transition shadow-sm"
               >
-                <ArrowLeft className="w-3.5 h-3.5" /> Back
+                <ArrowLeft className="w-3.5 h-3.5" /> {b('Back', 'ಹಿಂದೆ', language)}
               </button>
             )}
 
@@ -1157,14 +1159,14 @@ export const VoiceAssistantModal: React.FC<Props> = ({
               onClick={handleNext}
               className="px-3 py-2 bg-white hover:bg-slate-100 text-slate-500 hover:text-slate-800 border border-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer transition"
             >
-              <SkipForward className="w-3.5 h-3.5" /> Skip
+              <SkipForward className="w-3.5 h-3.5" /> {b('Skip', 'ಬಿಟ್ಟುಬಿಡಿ', language)}
             </button>
 
             <button
               onClick={handleNext}
               className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
             >
-              <span>{currentStep === 5 ? 'Submit Claim & Analyze' : 'Continue'}</span>
+              <span>{currentStep === 5 ? b('Submit Claim & Analyze', 'ಕ್ಲೇಮ್ ಸಲ್ಲಿಸಿ & ವಿಶ್ಲೇಷಿಸಿ', language) : b('Continue', 'ಮುಂದುವರಿಯಿರಿ', language)}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -1183,6 +1185,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
           longitude={formData.longitude}
           village={formData.village}
           district={formData.district}
+          language={language}
         />
       )}
 

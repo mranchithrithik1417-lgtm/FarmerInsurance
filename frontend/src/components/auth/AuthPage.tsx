@@ -21,6 +21,7 @@ import {
   sendInsurerOTP,
   verifyInsurerOTP
 } from '../../services/api';
+import { b, t } from '../../utils/translations';
 
 interface Props {
   onLoginSuccess: (session: UserSession) => void;
@@ -242,7 +243,7 @@ export const AuthPage: React.FC<Props> = ({
               </span>
             </div>
             <p className="text-xs text-slate-600 font-medium">
-              National AI-Powered Crop Damage Evidence & Insurance Verification
+              {b('National AI-Powered Crop Damage Evidence & Insurance Verification', 'ರಾಷ್ಟ್ರೀಯ ಎಐ ಆಧಾರಿತ ಬೆಳೆ ಹಾನಿ ಪುರಾವೆ ಮತ್ತು ವಿಮಾ ಪರಿಶೀಲನಾ ವೇದಿಕೆ', language)}
             </p>
           </div>
         </div>
@@ -283,14 +284,17 @@ export const AuthPage: React.FC<Props> = ({
         <div className="text-center max-w-2xl mx-auto mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold mb-2">
             <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
-            <span>Secure Role-Based Agricultural Insurance Access</span>
+            <span>{b('Secure Role-Based Agricultural Insurance Access', 'ಸುರಕ್ಷಿತ ಪಾತ್ರ-ಆಧಾರಿತ ಕೃಷಿ ವಿಮಾ ಪ್ರವೇಶ', language)}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Sign In to KisanClaim
+            {b('Sign In to KisanClaim', 'ಕಿಸಾನ್‌ಕ್ಲೇಮ್‌ಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ', language)}
           </h1>
           <p className="text-sm text-slate-600 mt-2 leading-relaxed">
-            Select your portal below. Farmers authenticate via Mobile OTP to access the ULPIN Cadastral Dashboard.
-            Insurers authenticate via Company ID & Officer OTP to access the Claim Adjudication Console.
+            {b(
+              'Select your portal below. Farmers authenticate via Mobile OTP to access the ULPIN Cadastral Dashboard. Insurers authenticate via Company ID & Officer OTP to access the Claim Adjudication Console.',
+              'ಕೆಳಗೆ ನಿಮ್ಮ ಪೋರ್ಟಲ್ ಆಯ್ಕೆಮಾಡಿ. ರೈತರು ULPIN ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗಾಗಿ ಮೊಬೈಲ್ OTP ಬಳಸಿ ಲಾಗಿನ್ ಆಗಬಹುದು. ವಿಮಾ ಅಧಿಕಾರಿಗಳು ಕಂಪನಿ ಐಡಿ & OTP ಬಳಸಿ ಲಾಗಿನ್ ಆಗಬಹುದು.',
+              language
+            )}
           </p>
         </div>
 
@@ -307,12 +311,12 @@ export const AuthPage: React.FC<Props> = ({
                   <span className="text-2xl">🌾</span>
                 </div>
                 <div>
-                  <h2 className="text-xl font-extrabold text-slate-900">Farmer Login</h2>
-                  <p className="text-xs text-emerald-700 font-medium">Bhu-Aadhaar & ULPIN Portal</p>
+                  <h2 className="text-xl font-extrabold text-slate-900">{b('Farmer Login', 'ರೈತರ ಲಾಗಿನ್', language)}</h2>
+                  <p className="text-xs text-emerald-700 font-medium">{b('Bhu-Aadhaar & ULPIN Portal', 'ಭೂ-ಆಧಾರ್ & ULPIN ಪೋರ್ಟಲ್', language)}</p>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold uppercase tracking-wider border border-emerald-300">
-                ROLE: FARMER
+                {b('ROLE: FARMER', 'ಪಾತ್ರ: ರೈತರು', language)}
               </span>
             </div>
 
@@ -324,7 +328,7 @@ export const AuthPage: React.FC<Props> = ({
                   <label htmlFor="farmer-mobile" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between mb-1.5">
                     <span className="flex items-center gap-1.5">
                       <Phone className="w-3.5 h-3.5 text-emerald-700" />
-                      <span>Mobile Number</span>
+                      <span>{b('Mobile Number', 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ', language)}</span>
                     </span>
                     <span className="text-[10px] text-emerald-700 font-mono font-bold">10 DIGITS</span>
                   </label>
@@ -362,7 +366,7 @@ export const AuthPage: React.FC<Props> = ({
                       ) : (
                         <Send className="w-3.5 h-3.5" />
                       )}
-                      <span>{farmerTimer > 0 ? `Resend (${farmerTimer}s)` : 'Send OTP'}</span>
+                      <span>{farmerTimer > 0 ? `${b('Resend', 'ಮರುಕಳುಹಿಸಿ', language)} (${farmerTimer}s)` : b('Send OTP', 'OTP ಕಳುಹಿಸಿ', language)}</span>
                     </button>
                   </div>
                 </div>
@@ -372,11 +376,11 @@ export const AuthPage: React.FC<Props> = ({
                   <div className="flex items-center justify-between mb-1.5">
                     <label htmlFor="farmer-otp" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
                       <KeyRound className="w-3.5 h-3.5 text-emerald-700" />
-                      <span>Enter OTP Code</span>
+                      <span>{b('Enter OTP Code', 'OTP ಕೋಡ್ ನಮೂದಿಸಿ', language)}</span>
                     </label>
                     {farmerDemoOtp && (
                       <span className="text-[11px] font-mono text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                        ⚡ Demo OTP: {farmerDemoOtp}
+                        ⚡ {b('Demo OTP:', 'ಡೆಮೊ OTP:', language)} {farmerDemoOtp}
                       </span>
                     )}
                   </div>
@@ -392,7 +396,7 @@ export const AuthPage: React.FC<Props> = ({
                       setFarmerOtp(e.target.value.replace(/\D/g, ''));
                       setFarmerError(null);
                     }}
-                    placeholder="Enter 4 or 6 digit OTP"
+                    placeholder={b('Enter 4 or 6 digit OTP', '೪ ಅಥವಾ ೬ ಅಂಕಿಯ OTP ನಮೂದಿಸಿ', language)}
                     className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-4 py-2.5 sm:py-3 text-slate-900 text-base font-mono tracking-widest text-center placeholder:text-sm placeholder:tracking-normal transition outline-none"
                   />
                 </div>
@@ -407,7 +411,7 @@ export const AuthPage: React.FC<Props> = ({
                     }}
                     className="text-[11px] text-emerald-700 hover:text-emerald-800 font-medium underline flex items-center gap-1 cursor-pointer"
                   >
-                    <span>⚡ Quick-fill: 9876543210 (Ravi Kumar - Karnataka)</span>
+                    <span>⚡ {b('Quick-fill: 9876543210 (Ravi Kumar - Karnataka)', 'ತ್ವರಿತ-ಭರ್ತಿ: 9876543210 (ರವಿ ಕುಮಾರ್ - ಕರ್ನಾಟಕ)', language)}</span>
                   </button>
                 </div>
 
@@ -438,17 +442,17 @@ export const AuthPage: React.FC<Props> = ({
                   {farmerVerifyingOtp ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      <span>Verifying Farmer OTP...</span>
+                      <span>{b('Verifying Farmer OTP...', 'ರೈತರ OTP ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ...', language)}</span>
                     </>
                   ) : (
                     <>
-                      <span>Verify OTP & Open Farmer Dashboard</span>
+                      <span>{b('Verify OTP & Open Farmer Dashboard', 'OTP ಪರಿಶೀಲಿಸಿ & ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ತೆರೆಯಿರಿ', language)}</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
                 </button>
                 <p className="text-[11px] text-slate-500 text-center mt-2.5">
-                  Redirects to land parcel identification & ULPIN linking
+                  {b('Redirects to land parcel identification & ULPIN linking', 'ಭೂಮಿ ಗುರುತಿಸುವಿಕೆ ಮತ್ತು ULPIN ಲಿಂಕ್‌ಗೆ ತೆರಳುತ್ತದೆ', language)}
                 </p>
               </div>
             </form>
@@ -465,12 +469,12 @@ export const AuthPage: React.FC<Props> = ({
                   <Building2 className="w-6 h-6" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-extrabold text-slate-900">Insurer Login</h2>
-                  <p className="text-xs text-blue-700 font-medium">PMFBY Adjudication Console</p>
+                  <h2 className="text-xl font-extrabold text-slate-900">{b('Insurer Login', 'ವಿಮಾಧಿಕಾರಿ ಲಾಗಿನ್', language)}</h2>
+                  <p className="text-xs text-blue-700 font-medium">{b('PMFBY Adjudication Console', 'PMFBY ತೀರ್ಪು ನೀಡಿಕೆ ಕನ್ಸೋಲ್', language)}</p>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 text-[10px] font-extrabold uppercase tracking-wider border border-blue-300">
-                ROLE: INSURER
+                {b('ROLE: INSURER', 'ಪಾತ್ರ: ವಿಮಾಧಿಕಾರಿ', language)}
               </span>
             </div>
 
@@ -482,9 +486,9 @@ export const AuthPage: React.FC<Props> = ({
                   <label htmlFor="company-id" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between mb-1.5">
                     <span className="flex items-center gap-1.5">
                       <ShieldCheck className="w-3.5 h-3.5 text-blue-700" />
-                      <span>Company ID</span>
+                      <span>{b('Company ID', 'ಕಂಪನಿ ಐಡಿ', language)}</span>
                     </span>
-                    <span className="text-[10px] text-blue-700 font-mono font-bold">OFFICIAL ID</span>
+                    <span className="text-[10px] text-blue-700 font-mono font-bold">{b('OFFICIAL ID', 'ಅಧಿಕೃತ ಐಡಿ', language)}</span>
                   </label>
                   <input
                     id="company-id"
@@ -495,7 +499,7 @@ export const AuthPage: React.FC<Props> = ({
                       setCompanyId(e.target.value.toUpperCase());
                       setInsurerError(null);
                     }}
-                    placeholder="e.g. AGRI-INS-409"
+                    placeholder={b('e.g. AGRI-INS-409', 'ಉದಾ: AGRI-INS-409', language)}
                     className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 rounded-xl px-4 py-2.5 sm:py-3 text-slate-900 text-sm font-mono tracking-wider transition outline-none"
                   />
                 </div>
@@ -505,9 +509,9 @@ export const AuthPage: React.FC<Props> = ({
                   <label htmlFor="insurer-mobile" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between mb-1.5">
                     <span className="flex items-center gap-1.5">
                       <Phone className="w-3.5 h-3.5 text-blue-700" />
-                      <span>Officer Mobile Number</span>
+                      <span>{b('Officer Mobile Number', 'ಅಧಿಕಾರಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ', language)}</span>
                     </span>
-                    <span className="text-[10px] text-slate-500 font-mono">10 DIGITS</span>
+                    <span className="text-[10px] text-slate-500 font-mono">{b('10 DIGITS', '೧೦ ಅಂಕಿಗಳು', language)}</span>
                   </label>
                   <div className="flex gap-2">
                     <div className="relative flex-1">
@@ -543,7 +547,7 @@ export const AuthPage: React.FC<Props> = ({
                       ) : (
                         <Send className="w-3.5 h-3.5" />
                       )}
-                      <span>{insurerTimer > 0 ? `Resend (${insurerTimer}s)` : 'Send OTP'}</span>
+                      <span>{insurerTimer > 0 ? b(`Resend (${insurerTimer}s)`, `ಮರುಕಳುಹಿಸಿ (${insurerTimer}ಸೆ)`, language) : b('Send OTP', 'OTP ಕಳುಹಿಸಿ', language)}</span>
                     </button>
                   </div>
                 </div>
@@ -553,11 +557,11 @@ export const AuthPage: React.FC<Props> = ({
                   <div className="flex items-center justify-between mb-1.5">
                     <label htmlFor="insurer-otp" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
                       <KeyRound className="w-3.5 h-3.5 text-blue-700" />
-                      <span>Officer Authorization OTP</span>
+                      <span>{b('Officer Authorization OTP', 'ಅಧಿಕಾರಿ ದೃಢೀಕರಣ OTP', language)}</span>
                     </label>
                     {insurerDemoOtp && (
                       <span className="text-[11px] font-mono text-blue-800 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                        ⚡ Demo OTP: {insurerDemoOtp}
+                        ⚡ {b('Demo OTP:', 'ಡೆಮೊ OTP:', language)} {insurerDemoOtp}
                       </span>
                     )}
                   </div>
@@ -573,7 +577,7 @@ export const AuthPage: React.FC<Props> = ({
                       setInsurerOtp(e.target.value.replace(/\D/g, ''));
                       setInsurerError(null);
                     }}
-                    placeholder="Enter 4 or 6 digit officer OTP"
+                    placeholder={b('Enter 4 or 6 digit officer OTP', '೪ ಅಥವಾ ೬ ಅಂಕಿಯ ಅಧಿಕಾರಿ OTP ನಮೂದಿಸಿ', language)}
                     className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 rounded-xl px-4 py-2.5 sm:py-3 text-slate-900 text-base font-mono tracking-widest text-center placeholder:text-sm placeholder:tracking-normal transition outline-none"
                   />
                 </div>
@@ -589,7 +593,7 @@ export const AuthPage: React.FC<Props> = ({
                     }}
                     className="text-[11px] text-blue-700 hover:text-blue-800 font-medium underline flex items-center gap-1 cursor-pointer"
                   >
-                    <span>⚡ Quick-fill: AGRI-INS-409 (Ananya Sharma - AIC PMFBY)</span>
+                    <span>{b('⚡ Quick-fill: AGRI-INS-409 (Ananya Sharma - AIC PMFBY)', '⚡ ತ್ವರಿತ-ಭರ್ತಿ: AGRI-INS-409 (ಅನನ್ಯಾ ಶರ್ಮಾ - AIC PMFBY)', language)}</span>
                   </button>
                 </div>
 
@@ -620,17 +624,17 @@ export const AuthPage: React.FC<Props> = ({
                   {insurerVerifyingOtp ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      <span>Verifying Insurer Credentials...</span>
+                      <span>{b('Verifying Insurer Credentials...', 'ವಿಮಾಧಿಕಾರಿ ರುಜುವಾತುಗಳನ್ನು ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ...', language)}</span>
                     </>
                   ) : (
                     <>
-                      <span>Verify OTP & Enter Reviewer Console</span>
+                      <span>{b('Verify OTP & Enter Reviewer Console', 'OTP ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಪರಿಶೀಲನಾ ಕನ್ಸೋಲ್‌ಗೆ ಪ್ರವೇಶಿಸಿ', language)}</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
                 </button>
                 <p className="text-[11px] text-slate-500 text-center mt-2.5">
-                  Accesses satellite verification swarm, AI agents & claim approval
+                  {b('Accesses satellite verification swarm, AI agents & claim approval', 'ಉಪಗ್ರಹ ಪರಿಶೀಲನಾ ಸ್ವಾರ್ಮ್, AI ಏಜೆಂಟ್‌ಗಳು ಮತ್ತು ಕ್ಲೈಮ್ ಅನುಮೋದನೆಯ ಪ್ರವೇಶ', language)}
                 </p>
               </div>
             </form>
@@ -646,10 +650,10 @@ export const AuthPage: React.FC<Props> = ({
           <div className="flex items-center gap-2">
             <span className="font-extrabold text-slate-800">KisanClaim</span>
             <span className="text-slate-400">•</span>
-            <span>Government of India PMFBY Adjudication Standard</span>
+            <span>{b('Government of India PMFBY Adjudication Standard', 'ಭಾರತ ಸರ್ಕಾರ PMFBY ತೀರ್ಪು ಮಾನದಂಡ', language)}</span>
           </div>
           <div className="font-mono text-[11px] text-slate-500">
-            Powered by Copernicus Sentinel-2 MSI • Open-Meteo • DoLR ULPIN Bhu-Aadhaar
+            {b('Powered by Copernicus Sentinel-2 MSI • Open-Meteo • DoLR ULPIN Bhu-Aadhaar', 'ಕೋಪರ್ನಿಕಸ್ ಸೆಂಟಿನೆಲ್-2 MSI • ಓಪನ್-ಮೀಟಿಯೋ • DoLR ULPIN ಭೂ-ಆಧಾರ್ ನಿಂದ ನಿಯಂತ್ರಿಸಲ್ಪಡುತ್ತದೆ', language)}
           </div>
         </div>
       </footer>

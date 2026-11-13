@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Search, ChevronRight } from 'lucide-react';
 import { Claim } from '../../types';
+import { b, t } from '../../utils/translations';
 
 interface Props {
   claims: Claim[];
+  language?: 'en' | 'kn';
   onSelectClaim: (claim: Claim) => void;
 }
 
-export const ClaimQueueTable: React.FC<Props> = ({ claims, onSelectClaim }) => {
+export const ClaimQueueTable: React.FC<Props> = ({ claims, language = 'en', onSelectClaim }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [cropFilter, setCropFilter] = useState<string>('all');
@@ -71,7 +73,7 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, onSelectClaim }) => {
             type="text"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            placeholder="Search claim ID, farmer, survey #, or district..."
+            placeholder={b('Search claim ID, farmer, survey #, or district...', 'ಕ್ಲೇಮ್ ಐಡಿ, ರೈತರು, ಸರ್ವೆ ಸಂಖ್ಯೆ ಅಥವಾ ಜಿಲ್ಲೆ ಹುಡುಕಿ...', language)}
             className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
           />
         </div>
@@ -83,12 +85,12 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, onSelectClaim }) => {
             onChange={e => setStatusFilter(e.target.value)}
             className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-700 font-medium outline-none focus:bg-white"
           >
-            <option value="all">All Statuses</option>
-            <option value="Pending Review">Pending Review</option>
-            <option value="Approved">Approved</option>
-            <option value="Additional Evidence Required">Additional Evidence Required</option>
-            <option value="Payment Scheduled">Payment Scheduled</option>
-            <option value="Rejected">Rejected</option>
+            <option value="all">{b('All Statuses', 'ಎಲ್ಲಾ ಸ್ಥಿತಿಗಳು', language)}</option>
+            <option value="Pending Review">{b('Pending Review', 'ಪರಿಶೀಲನೆ ಬಾಕಿ', language)}</option>
+            <option value="Approved">{b('Approved', 'ಅನುಮೋದಿತ', language)}</option>
+            <option value="Additional Evidence Required">{b('Additional Evidence Required', 'ಹೆಚ್ಚುವರಿ ಪುರಾವೆ ಅಗತ್ಯ', language)}</option>
+            <option value="Payment Scheduled">{b('Payment Scheduled', 'ಪಾವತಿ ನಿಗದಿಯಾಗಿದೆ', language)}</option>
+            <option value="Rejected">{b('Rejected', 'ತಿರಸ್ಕರಿಸಲಾಗಿದೆ', language)}</option>
           </select>
 
           <select
@@ -96,13 +98,13 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, onSelectClaim }) => {
             onChange={e => setCropFilter(e.target.value)}
             className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-700 font-medium outline-none focus:bg-white"
           >
-            <option value="all">All Crops</option>
-            <option value="Ragi">Ragi</option>
-            <option value="Paddy">Paddy</option>
-            <option value="Sugarcane">Sugarcane</option>
-            <option value="Onion">Onion</option>
-            <option value="Cotton">Cotton</option>
-            <option value="Wheat">Wheat</option>
+            <option value="all">{b('All Crops', 'ಎಲ್ಲಾ ಬೆಳೆಗಳು', language)}</option>
+            <option value="Ragi">Ragi (ರಾಗಿ)</option>
+            <option value="Paddy">Paddy (ಭತ್ತ)</option>
+            <option value="Sugarcane">Sugarcane (ಕಬ್ಬು)</option>
+            <option value="Onion">Onion (ಈರುಳ್ಳಿ)</option>
+            <option value="Cotton">Cotton (ಹತ್ತಿ)</option>
+            <option value="Wheat">Wheat (ಗೋಧಿ)</option>
           </select>
 
           <select
@@ -110,12 +112,12 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, onSelectClaim }) => {
             onChange={e => setDisasterFilter(e.target.value)}
             className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-700 font-medium outline-none focus:bg-white"
           >
-            <option value="all">All Disasters</option>
-            <option value="Flood">Flood</option>
-            <option value="Heavy rainfall">Heavy rainfall</option>
-            <option value="Drought">Drought</option>
-            <option value="Hailstorm">Hailstorm</option>
-            <option value="Pest attack">Pest attack</option>
+            <option value="all">{b('All Disasters', 'ಎಲ್ಲಾ ವಿಪತ್ತುಗಳು', language)}</option>
+            <option value="Flood">{b('Flood', 'ಪ್ರವಾಹ', language)}</option>
+            <option value="Heavy rainfall">{b('Heavy rainfall', 'ಭಾರಿ ಮಳೆ', language)}</option>
+            <option value="Drought">{b('Drought', 'ಬರಗಾಲ', language)}</option>
+            <option value="Hailstorm">{b('Hailstorm', 'ಆಲಿಕಲ್ಲು ಮಳೆ', language)}</option>
+            <option value="Pest attack">{b('Pest attack', 'ಕೀಟ ಬಾಧೆ', language)}</option>
           </select>
         </div>
       </div>
@@ -125,22 +127,22 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, onSelectClaim }) => {
         <table className="w-full text-left text-xs">
           <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 uppercase tracking-wider text-[10px]">
             <tr>
-              <th className="py-3 px-4">Claim ID</th>
-              <th className="py-3 px-4">Farmer & Village</th>
-              <th className="py-3 px-4">Crop</th>
-              <th className="py-3 px-4">Peril & Date</th>
-              <th className="py-3 px-4">Severity</th>
-              <th className="py-3 px-4">Confidence</th>
-              <th className="py-3 px-4">Estimated Payout</th>
-              <th className="py-3 px-4">Adjudication Status</th>
-              <th className="py-3 px-4 text-right">Review Action</th>
+              <th className="py-3 px-4">{b('Claim ID', 'ಕ್ಲೇಮ್ ಸಂಖ್ಯೆ', language)}</th>
+              <th className="py-3 px-4">{b('Farmer & Village', 'ರೈತರು & ಗ್ರಾಮ', language)}</th>
+              <th className="py-3 px-4">{b('Crop', 'ಬೆಳೆ', language)}</th>
+              <th className="py-3 px-4">{b('Peril & Date', 'ವಿಪತ್ತು & ದಿನಾಂಕ', language)}</th>
+              <th className="py-3 px-4">{b('Severity', 'ತೀವ್ರತೆ', language)}</th>
+              <th className="py-3 px-4">{b('Confidence', 'ವಿಶ್ವಾಸಾರ್ಹತೆ', language)}</th>
+              <th className="py-3 px-4">{b('Estimated Payout', 'ಅಂದಾಜು ಪರಿಹಾರ', language)}</th>
+              <th className="py-3 px-4">{b('Adjudication Status', 'ವಿಮಾ ತೀರ್ಪು ಸ್ಥಿತಿ', language)}</th>
+              <th className="py-3 px-4 text-right">{b('Review Action', 'ಕ್ರಮ', language)}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 bg-white font-medium">
             {filteredClaims.length === 0 ? (
               <tr>
                 <td colSpan={9} className="py-8 text-center text-slate-500">
-                  No insurance claims match the selected criteria.
+                  {b('No insurance claims match the selected criteria.', 'ಯಾವುದೇ ಕ್ಲೇಮ್‌ಗಳು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ.', language)}
                 </td>
               </tr>
             ) : (
@@ -188,7 +190,7 @@ export const ClaimQueueTable: React.FC<Props> = ({ claims, onSelectClaim }) => {
                   </td>
                   <td className="py-3.5 px-4 text-right">
                     <button className="px-3 py-1.5 bg-slate-100 group-hover:bg-blue-600 text-slate-700 group-hover:text-white rounded-lg transition font-semibold text-xs flex items-center gap-1 ml-auto">
-                      <span>Inspect</span>
+                      <span>{b('Inspect', 'ಪರಿಶೀಲಿಸಿ', language)}</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </button>
                   </td>

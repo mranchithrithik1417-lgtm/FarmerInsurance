@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { ShieldAlert, FileCheck, Satellite, Calculator, Award, ChevronDown, ChevronUp, Play, CheckCircle2, AlertTriangle, RefreshCw, Sparkles, Check, ArrowRight, Zap, Loader2, RotateCcw } from 'lucide-react';
 import { AIAgentFinding, Claim } from '../../types';
+import { b, t } from '../../utils/translations';
 
 interface Props {
   claim: Claim;
+  language?: 'en' | 'kn';
   onRunAgents: () => Promise<void>;
 }
 
-export const MultiAgentPanel: React.FC<Props> = ({ claim, onRunAgents }) => {
+export const MultiAgentPanel: React.FC<Props> = ({ claim, language = 'en', onRunAgents }) => {
   const [expandedAgentId, setExpandedAgentId] = useState<string | null>(null);
   
   // Independent verification execution state for each agent: 'idle' | 'checking' | 'verified'
@@ -121,17 +123,21 @@ export const MultiAgentPanel: React.FC<Props> = ({ claim, onRunAgents }) => {
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">
-              Autonomous Verification Swarm
+              {b('Autonomous Verification Swarm', 'ಸ್ವಾಯತ್ತ ಪರಿಶೀಲನಾ ಸಮಿತಿ (ಸ್ವಾರ್ಮ್)', language)}
             </span>
             <span className="text-xs bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-0.5 rounded-full font-mono font-bold">
-              On-Demand Agent Audit
+              {b('On-Demand Agent Audit', 'ಬೇಡಿಕೆಯ ಮೇರೆಗೆ ಏಜೆಂಟ್ ಆಡಿಟ್', language)}
             </span>
           </div>
           <h3 className="text-xl font-extrabold text-slate-900 mt-1">
-            Multi-Agent AI Verification & Scoring Console
+            {b('Multi-Agent AI Verification & Scoring Console', 'ಬಹು-ಏಜೆಂಟ್ ಎಐ ಪರಿಶೀಲನೆ & ಸ್ಕೋರಿಂಗ್ ಕನ್ಸೋಲ್', language)}
           </h3>
           <p className="text-xs text-slate-500">
-            Submit each agent independently to compute and reveal live forensic scores, or execute the full swarm sequentially.
+            {b(
+              'Submit each agent independently to compute and reveal live forensic scores, or execute the full swarm sequentially.',
+              'ಲೈವ್ ಸ್ಕೋರ್‌ಗಳನ್ನು ಲೆಕ್ಕಹಾಕಲು ಪ್ರತಿಯೊಂದು ಏಜೆಂಟ್ ಅನ್ನು ಪ್ರತ್ಯೇಕವಾಗಿ ಅಥವಾ ಒಟ್ಟಾಗಿ ರನ್ ಮಾಡಿ.',
+              language
+            )}
           </p>
         </div>
 
@@ -144,7 +150,7 @@ export const MultiAgentPanel: React.FC<Props> = ({ claim, onRunAgents }) => {
             title="Reset verification states"
           >
             <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-            <span>Reset</span>
+            <span>{b('Reset', 'ಮರುಹೊಂದಿಸಿ', language)}</span>
           </button>
 
           <button
@@ -153,7 +159,7 @@ export const MultiAgentPanel: React.FC<Props> = ({ claim, onRunAgents }) => {
             className="px-4 py-2 bg-blue-700 hover:bg-blue-800 disabled:opacity-50 text-white text-xs font-bold rounded-xl flex items-center gap-2 shadow-xs transition cursor-pointer"
           >
             <Zap className={`w-3.5 h-3.5 ${isBatchRunning ? 'animate-bounce text-amber-300' : 'text-amber-200'}`} />
-            <span>{isBatchRunning ? 'Running Swarm Audit...' : '⚡ Run All Agents Sequentially'}</span>
+            <span>{isBatchRunning ? b('Running Swarm Audit...', 'ಸಮಿತಿ ಪರಿಶೀಲನೆ ನಡೆಯುತ್ತಿದೆ...', language) : b('⚡ Run All Agents Sequentially', '⚡ ಎಲ್ಲಾ ಏಜೆಂಟ್‌ಗಳನ್ನು ರನ್ ಮಾಡಿ', language)}</span>
           </button>
         </div>
       </div>
@@ -166,26 +172,26 @@ export const MultiAgentPanel: React.FC<Props> = ({ claim, onRunAgents }) => {
           </div>
           <div>
             <div className="font-bold text-slate-900">
-              Swarm Audit Progress: <span className="text-blue-700 font-mono">{verifiedCount} / {claim.ai_agents.length} Agents Executed</span>
+              {b('Swarm Audit Progress:', 'ಸಮಿತಿ ಪರಿಶೀಲನೆ ಪ್ರಗತಿ:', language)} <span className="text-blue-700 font-mono">{verifiedCount} / {claim.ai_agents.length} {b('Agents Executed', 'ಏಜೆಂಟ್‌ಗಳು ಪೂರ್ಣಗೊಂಡಿವೆ', language)}</span>
             </div>
             <div className="text-[11px] text-slate-500 font-medium">
               {verifiedCount === 0 
-                ? 'Press "Submit & Check Score" on any agent card below to analyze evidence.' 
-                : `${passedCount} passed integrity audit • ${flaggedCount > 0 ? `${flaggedCount} flagged anomalies` : 'Zero anomalies detected'}`}
+                ? b('Press "Submit & Check" on any agent card below to analyze evidence.', 'ಸಾಕ್ಷ್ಯ ವಿಶ್ಲೇಷಿಸಲು ಕೆಳಗಿನ ಯಾವುದೇ ಏಜೆಂಟ್ ಕಾರ್ಡ್‌ನಲ್ಲಿ "ಸಲ್ಲಿಸಿ & ಪರಿಶೀಲಿಸಿ" ಒತ್ತಿ.', language)
+                : `${passedCount} ${b('passed integrity audit', 'ಆಡಿಟ್ ಉತ್ತೀರ್ಣ', language)} • ${flaggedCount > 0 ? `${flaggedCount} ${b('flagged anomalies', 'ವ್ಯತ್ಯಾಸಗಳು ಪತ್ತೆಯಾಗಿವೆ', language)}` : b('Zero anomalies detected', 'ಯಾವುದೇ ವ್ಯತ್ಯಾಸಗಳಿಲ್ಲ', language)}`}
             </div>
           </div>
         </div>
 
         {/* Live Swarm Likelihood Score */}
         <div className="text-right">
-          <span className="text-[10px] text-slate-500 uppercase font-semibold block">Consensus Confidence</span>
+          <span className="text-[10px] text-slate-500 uppercase font-semibold block">{b('Consensus Confidence', 'ಒಮ್ಮತದ ವಿಶ್ವಾಸಾರ್ಹತೆ', language)}</span>
           {verifiedCount > 0 ? (
             <span className={`text-base font-black font-mono ${flaggedCount > 0 ? 'text-red-700' : 'text-emerald-700'}`}>
               {Math.round((verifiedAgents.reduce((acc, a) => acc + a.score, 0)) / verifiedCount)}%
-              <span className="text-xs font-medium text-slate-500 ml-1">({flaggedCount > 0 ? 'High Risk' : 'High Confidence'})</span>
+              <span className="text-xs font-medium text-slate-500 ml-1">({flaggedCount > 0 ? b('High Risk', 'ಹೆಚ್ಚಿನ ಅಪಾಯ', language) : b('High Confidence', 'ಉತ್ತಮ ವಿಶ್ವಾಸಾರ್ಹತೆ', language)})</span>
             </span>
           ) : (
-            <span className="text-sm font-mono text-slate-400 font-medium">Awaiting Verification</span>
+            <span className="text-sm font-mono text-slate-400 font-medium">{b('Awaiting Verification', 'ಪರಿಶೀಲನೆಗೆ ಕಾಯುತ್ತಿದೆ', language)}</span>
           )}
         </div>
       </div>

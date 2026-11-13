@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Bot, Send, Sparkles } from 'lucide-react';
 import { Claim } from '../../types';
 import { askCopilot } from '../../services/api';
+import { b, t } from '../../utils/translations';
 
 interface Props {
   claim: Claim;
+  language?: 'en' | 'kn';
 }
 
 interface Message {
@@ -13,11 +15,13 @@ interface Message {
   groundedFacts?: string[];
 }
 
-export const AICopilotChat: React.FC<Props> = ({ claim }) => {
+export const AICopilotChat: React.FC<Props> = ({ claim, language = 'en' }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `Hello Officer. I am your AI Claim Intelligence Copilot for claim **${claim.claim_number}** (Farmer: ${claim.farmer.name}). I am grounded directly in this claim's Sentinel-2 NDVI telemetry, Open-Meteo rainfall records, Bhoomi cadastral records, and photographic EXIF sensors. How can I assist your review?`,
+      content: language === 'kn'
+        ? `ನಮಸ್ಕಾರ ಅಧಿಕಾರಿಗಳೇ. ನಾನು ಕ್ಲೇಮ್ **${claim.claim_number}** (ರೈತರು: ${claim.farmer.name}) ಗಾಗಿ ನಿಮ್ಮ ಎಐ ಬೆಳೆ ವಿಮಾ ತೀರ್ಪು ಕೋಪೈಲಟ್. ಸೆಂಟಿನೆಲ್-2 NDVI, ಓಪನ್-ಮೀಟಿಯೋ ಮಳೆ ದತ್ತಾಂಶ ಮತ್ತು ಭೂಮಿ ದಾಖಲೆಗಳ ಆಧಾರದ ಮೇಲೆ ನಾನು ನಿಮಗೆ ಸಹಾಯ ಮಾಡಲು ಸಿದ್ಧನಾಗಿದ್ದೇನೆ. ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ.`
+        : `Hello Officer. I am your AI Claim Intelligence Copilot for claim **${claim.claim_number}** (Farmer: ${claim.farmer.name}). I am grounded directly in this claim's Sentinel-2 NDVI telemetry, Open-Meteo rainfall records, Bhoomi cadastral records, and photographic EXIF sensors. How can I assist your review?`,
       groundedFacts: [
         `Crop: ${claim.crop.crop_name} (${claim.crop.growth_stage})`,
         `NDVI Delta: ${claim.satellite.ndvi_diff} (-${claim.satellite.vegetation_drop_pct}%)`,
@@ -30,11 +34,11 @@ export const AICopilotChat: React.FC<Props> = ({ claim }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const suggestedQuestions = [
-    'Why is this claim considered high priority?',
-    'Explain the NDVI difference and satellite evidence.',
-    'Is the rainfall consistent with the reported flood?',
-    'What are the possible inconsistencies or fraud risks?',
-    'How was the indicative claim payout calculated?'
+    language === 'kn' ? 'ಈ ಕ್ಲೇಮ್ ಏಕೆ ಹೆಚ್ಚಿನ ಆದ್ಯತೆಯದ್ದಾಗಿದೆ?' : 'Why is this claim considered high priority?',
+    language === 'kn' ? 'NDVI ವ್ಯತ್ಯಾಸ ಮತ್ತು ಉಪಗ್ರಹ ಪುರಾವೆಯನ್ನು ವಿವರಿಸಿ.' : 'Explain the NDVI difference and satellite evidence.',
+    language === 'kn' ? 'ವರದಿ ಮಾಡಿದ ಪ್ರವಾಹಕ್ಕೆ ಮಳೆ ಸ್ಥಿರವಾಗಿದೆಯೇ?' : 'Is the rainfall consistent with the reported flood?',
+    language === 'kn' ? 'ಯಾವುದಾದರೂ ವಂಚನೆ ಅಥವಾ ವಿರೋಧಾಭಾಸಗಳಿವೆಯೇ?' : 'What are the possible inconsistencies or fraud risks?',
+    language === 'kn' ? 'ಅಂದಾಜು ಪರಿಹಾರವನ್ನು ಹೇಗೆ ಲೆಕ್ಕಹಾಕಲಾಗಿದೆ?' : 'How was the indicative claim payout calculated?'
   ];
 
   const handleSend = async (queryText?: string) => {
@@ -74,19 +78,19 @@ export const AICopilotChat: React.FC<Props> = ({ claim }) => {
           </div>
           <div>
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              AI Reviewer Copilot
+              {b('AI Reviewer Copilot', 'ಎಐ ವಿಮರ್ಶಕ ಕೋಪೈಲಟ್', language)}
               <span className="text-[10px] bg-blue-50 text-blue-800 font-mono px-2 py-0.5 rounded-full border border-blue-200 font-bold">
-                Grounded in Claim Data
+                {b('Grounded in Claim Data', 'ಕ್ಲೇಮ್ ದತ್ತಾಂಶ ಆಧಾರಿತ', language)}
               </span>
             </h3>
-            <p className="text-[11px] text-slate-500">Context: {claim.claim_number} • {claim.farmer.name}</p>
+            <p className="text-[11px] text-slate-500">{b('Context:', 'ಸಂದರ್ಭ:', language)} {claim.claim_number} • {claim.farmer.name}</p>
           </div>
         </div>
       </div>
 
       {/* Suggested Quick Inquiries */}
       <div className="p-2.5 bg-slate-100/70 border-b border-slate-200 overflow-x-auto flex items-center gap-2 text-xs no-scrollbar">
-        <span className="text-[10px] text-slate-500 font-bold uppercase whitespace-nowrap pl-1">Ask Copilot:</span>
+        <span className="text-[10px] text-slate-500 font-bold uppercase whitespace-nowrap pl-1">{b('Ask Copilot:', 'ಕೋಪೈಲಟ್ ಅನ್ನು ಕೇಳಿ:', language)}</span>
         {suggestedQuestions.slice(0, 3).map((sq, idx) => (
           <button
             key={idx}
@@ -144,7 +148,7 @@ export const AICopilotChat: React.FC<Props> = ({ claim }) => {
         {loading && (
           <div className="flex items-center gap-2 text-xs text-blue-700 font-medium italic pl-10">
             <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
-            Copilot synthesizing telemetry...
+            {b('Copilot synthesizing telemetry...', 'ಕೋಪೈಲಟ್ ವಿಶ್ಲೇಷಿಸುತ್ತಿದೆ...', language)}
           </div>
         )}
       </div>
@@ -156,7 +160,7 @@ export const AICopilotChat: React.FC<Props> = ({ claim }) => {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSend()}
-          placeholder="Ask copilot about NDVI, rainfall anomaly, fraud checks..."
+          placeholder={b("Ask copilot about NDVI, rainfall anomaly, fraud checks...", 'NDVI, ಮಳೆ ವ್ಯತ್ಯಾಸ ಅಥವಾ ವಂಚನೆ ತಪಾಸಣೆ ಬಗ್ಗೆ ಕೇಳಿ...', language)}
           className="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 text-xs outline-none focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
         />
         <button

@@ -254,8 +254,10 @@ export function App() {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32 space-y-4">
             <div className="w-12 h-12 rounded-full border-4 border-emerald-600 border-t-transparent animate-spin" />
-            <p className="text-sm text-slate-600 font-medium">
-              Connecting to KisanClaim Geospatial Telemetry...
+            <p className="text-sm text-slate-700 font-medium">
+              {language === 'kn'
+                ? 'ಕಿಸಾನ್‌ಕ್ಲೇಮ್ ಉಪಗ್ರಹ ದತ್ತಾಂಶಕ್ಕೆ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ... (Connecting to KisanClaim Geospatial Telemetry...)'
+                : 'Connecting to KisanClaim Geospatial Telemetry... / ಕಿಸಾನ್‌ಕ್ಲೇಮ್ ದತ್ತಾಂಶ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ...'}
             </p>
           </div>
         ) : session.role === 'farmer' ? (
@@ -271,6 +273,7 @@ export function App() {
           <InsuranceDashboard
             claims={claims}
             stats={stats}
+            language={language}
             onOpenReport={setReportClaim}
             onRunAgents={handleRunAgents}
             onSubmitReviewAction={handleSubmitReviewAction}
@@ -282,12 +285,16 @@ export function App() {
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-600">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-extrabold text-slate-800">KisanClaim</span>
+            <span className="font-extrabold text-slate-900">KisanClaim • ಕಿಸಾನ್‌ಕ್ಲೇಮ್</span>
             <span className="text-slate-400">•</span>
-            <span className="text-slate-600">PMFBY-Compliant AI Crop Damage Evidence & Claim Verification</span>
+            <span className="text-slate-600">
+              {language === 'kn'
+                ? 'ಪಿಎಂಎಫ್‌ಬಿವೈ ಎಐ ಬೆಳೆ ಹಾನಿ ಪುರಾವೆ ಮತ್ತು ವಿಮಾ ಕ್ಲೇಮ್ ಪರಿಶೀಲನೆ (PMFBY AI Crop Damage Evidence Verification)'
+                : 'PMFBY-Compliant AI Crop Damage Evidence & Claim Verification • ಬೆಳೆ ಹಾನಿ ಪುರಾವೆ ಪರಿಶೀಲನಾ ವೇದಿಕೆ'}
+            </span>
           </div>
           <div className="font-mono text-[11px] text-slate-500">
-            Govt. of India PMFBY • ISRO Bhuvan • Sentinel-2 MSI • DIGIPIN
+            Govt. of India PMFBY • Bhoomi Karnataka • ISRO Bhuvan • Sentinel-2 MSI • DIGIPIN
           </div>
         </div>
       </footer>
@@ -296,6 +303,7 @@ export function App() {
       <ReportViewerModal
         claim={reportClaim}
         isOpen={Boolean(reportClaim)}
+        language={language}
         onClose={() => setReportClaim(null)}
       />
     </div>

@@ -22,12 +22,14 @@ import {
   generateDefaultParcelCoordinates,
   haversineDistanceMeters
 } from '../../utils/geo';
+import { b, t } from '../../utils/translations';
 
 interface LandPlotMapSelectorProps {
   initialCenterLat?: number;
   initialCenterLon?: number;
   initialCoords?: [number, number][];
   surveyNumber?: string;
+  language?: 'en' | 'kn';
   onPlotChange?: (data: {
     coords: [number, number][];
     areaAcres: number;
@@ -42,6 +44,7 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
   initialCenterLon = 77.7123,
   initialCoords,
   surveyNumber = '125/2',
+  language = 'en',
   onPlotChange
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -505,14 +508,18 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                Live Satellite Plot Boundary Selector
+                {b('Live Satellite Plot Boundary Selector', 'ಲೈವ್ ಉಪಗ್ರಹ ಜಮೀನಿನ ಗಡಿ ಆಯ್ಕೆಗಾರ', language)}
               </span>
               <span className="text-[10px] bg-emerald-50 text-emerald-800 font-mono px-2 py-0.5 rounded-full border border-emerald-200 font-bold">
-                LIVE SATELLITE TILES • ZOOM LEVEL 18
+                {b('LIVE SATELLITE TILES • ZOOM 18', 'ಲೈವ್ ಉಪಗ್ರಹ ಚಿತ್ರಣ • ಜೂಮ್ 18', language)}
               </span>
             </div>
             <p className="text-[11px] text-slate-600">
-              Drag green pins (P1–P4) directly onto your real farm parcel visible from space.
+              {b(
+                'Drag green pins (P1–P4) directly onto your real farm parcel visible from space.',
+                'ಅಂತರಿಕ್ಷದಿಂದ ಕಾಣುವ ನಿಮ್ಮ ನೈಜ ಜಮೀನಿನ ಬದುಗಳ ಮೇಲೆ ಹಸಿರು ಪಿನ್ (P1–P4) ಗಳನ್ನು ಎಳೆಯಿರಿ.',
+                language
+              )}
             </p>
           </div>
         </div>
@@ -527,7 +534,7 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
             title="Add boundary corner point"
           >
             <Plus className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Add Corner</span>
+            <span>{b('Add Corner', 'ಮೂಲೆ ಸೇರಿಸಿ', language)}</span>
           </button>
 
           <button
@@ -537,7 +544,7 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
             title="Recenter view on plot"
           >
             <LocateFixed className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Recenter</span>
+            <span>{b('Recenter', 'ಮಧ್ಯಕ್ಕೆ ತನ್ನಿ', language)}</span>
           </button>
 
           <button
@@ -547,7 +554,7 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
             title="Reset to survey standard boundary"
           >
             <RotateCcw className="w-3.5 h-3.5 text-amber-600" />
-            <span>Reset</span>
+            <span>{b('Reset', 'ಮರುಹೊಂದಿಸಿ', language)}</span>
           </button>
 
           {/* Satellite Layer Provider Switcher */}
@@ -561,7 +568,7 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Esri Satellite
+              {b('Esri Satellite', 'ಎಸ್ರಿ ಉಪಗ್ರಹ', language)}
             </button>
             <button
               type="button"
@@ -572,7 +579,7 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Google Hybrid
+              {b('Google Hybrid', 'ಗೂಗಲ್ ಹೈಬ್ರಿಡ್', language)}
             </button>
           </div>
         </div>
@@ -586,8 +593,8 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
         <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl z-10 text-[10px] space-y-0.5 shadow-md pointer-events-none">
           <div className="flex items-center gap-1.5 font-bold text-slate-900">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Cadastral Survey #{surveyNumber}</span>
-            <span className="text-emerald-700 font-mono font-bold">({liveAreaAcres} ac)</span>
+            <span>{b('Cadastral Survey #', 'ಕಂದಾಯ ಸರ್ವೆ ಸಂಖ್ಯೆ #', language)}{surveyNumber}</span>
+            <span className="text-emerald-700 font-mono font-bold">({liveAreaAcres} {b('ac', 'ಎಕರೆ', language)})</span>
           </div>
           <div className="text-slate-600 font-mono text-[9px]">
             GPS: {liveCentroid[0].toFixed(5)}°N, {liveCentroid[1].toFixed(5)}°E
@@ -598,8 +605,8 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
         <div className="absolute top-2.5 right-12 bg-white/95 backdrop-blur-md border border-slate-200 px-2.5 py-1 rounded-xl z-10 text-[10px] flex items-center gap-1.5 shadow-md pointer-events-none">
           <span className="text-emerald-800 font-medium">
             {activeCornerIdx !== null
-              ? `Dragging Corner P${activeCornerIdx + 1}...`
-              : 'Drag pins P1–P4 to align with farm bunds'}
+              ? b(`Dragging Corner P${activeCornerIdx + 1}...`, `ಮೂಲೆ P${activeCornerIdx + 1} ಎಳೆಯಲಾಗುತ್ತಿದೆ...`, language)
+              : b('Drag pins P1–P4 to align with farm bunds', 'ಜಮೀನಿನ ಬದುಗಳಿಗೆ ಹೊಂದಿಸಲು P1–P4 ಪಿನ್‌ಗಳನ್ನು ಎಳೆಯಿರಿ', language)}
           </span>
         </div>
 
@@ -607,21 +614,21 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
         <div className="absolute bottom-2 left-2 right-2 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-2 rounded-xl z-10 flex flex-wrap items-center justify-between gap-2 text-xs shadow-lg">
           <div className="flex items-center gap-3">
             <div>
-              <span className="text-[10px] text-slate-500 block font-medium">Marked Land Area</span>
+              <span className="text-[10px] text-slate-500 block font-medium">{b('Marked Land Area', 'ಗುರುತಿಸಲಾದ ಭೂ ವಿಸ್ತೀರ್ಣ', language)}</span>
               <span className="font-extrabold text-emerald-800 font-mono text-sm">
-                {liveAreaAcres} Acres
+                {liveAreaAcres} {b('Acres', 'ಎಕರೆ', language)}
               </span>
             </div>
             <div className="h-6 w-px bg-slate-200" />
             <div>
-              <span className="text-[10px] text-slate-500 block font-medium">Perimeter Bunds</span>
+              <span className="text-[10px] text-slate-500 block font-medium">{b('Perimeter Bunds', 'ಸುತ್ತಳತೆ ಬದುಗಳು', language)}</span>
               <span className="font-mono text-slate-800 text-[11px] font-semibold">
-                {livePerimeterMeters}m ({coords.length} corners)
+                {livePerimeterMeters}m ({coords.length} {b('corners', 'ಮೂಲೆಗಳು', language)})
               </span>
             </div>
             <div className="h-6 w-px bg-slate-200" />
             <div>
-              <span className="text-[10px] text-slate-500 block font-medium">National DIGIPIN</span>
+              <span className="text-[10px] text-slate-500 block font-medium">{b('National DIGIPIN', 'ರಾಷ್ಟ್ರೀಯ ಡಿಜಿಪಿನ್', language)}</span>
               <span className="font-mono text-emerald-800 font-bold text-[11px]">
                 {liveDigipin}
               </span>
@@ -630,7 +637,7 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
 
           <div className="flex items-center gap-1.5 text-emerald-800 text-[11px] font-semibold bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-            <span>4m×4m National Grid Cell Locked</span>
+            <span>{b('4m×4m National Grid Cell Locked', '4ಮೀ×4ಮೀ ರಾಷ್ಟ್ರೀಯ ಗ್ರಿಡ್ ಲಾಕ್ ಆಗಿದೆ', language)}</span>
           </div>
         </div>
       </div>
@@ -640,7 +647,11 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
         <div className="flex items-center gap-1.5">
           <Info className="w-4 h-4 text-emerald-700 flex-shrink-0" />
           <span>
-            Click and drag pins P1–P4 along the visible physical field bunds to define your exact farm parcel boundary.
+            {b(
+              'Click and drag pins P1–P4 along the visible physical field bunds to define your exact farm parcel boundary.',
+              'ನಿಮ್ಮ ಕೃಷಿ ಜಮೀನಿನ ನಿಖರ ಗಡಿಯನ್ನು ನಿರ್ಧರಿಸಲು ಗೋಚರಿಸುವ ಬದುಗಳ ಮೇಲೆ P1–P4 ಪಿನ್‌ಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ ಎಳೆಯಿರಿ.',
+              language
+            )}
           </span>
         </div>
       </div>

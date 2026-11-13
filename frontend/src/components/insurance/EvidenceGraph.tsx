@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Network, Sparkles, CheckCircle2, ChevronRight, Info, Layers, Eye, Satellite, CloudRain, MapPin, ShieldCheck, ShieldAlert, BarChart3, Activity, ArrowRight, TrendingDown, TrendingUp, AlertTriangle, Cpu } from 'lucide-react';
 import { Claim } from '../../types';
+import { b, t } from '../../utils/translations';
 
 interface Props {
   claim: Claim;
+  language?: 'en' | 'kn';
 }
 
 interface EvidenceNode {
@@ -19,7 +21,7 @@ interface EvidenceNode {
   y: number;
 }
 
-export const EvidenceGraph: React.FC<Props> = ({ claim }) => {
+export const EvidenceGraph: React.FC<Props> = ({ claim, language = 'en' }) => {
   const [selectedNodeId, setSelectedNodeId] = useState<string>('ndvi');
   const [activeLayerFilter, setActiveLayerFilter] = useState<'all' | 'satellite' | 'weather' | 'ground' | 'actuarial'>('all');
 
@@ -177,28 +179,32 @@ export const EvidenceGraph: React.FC<Props> = ({ claim }) => {
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">
-              Explainable AI (XAI)
+              {b('Explainable AI (XAI)', 'ವಿವರಣಾತ್ಮಕ ಎಐ (XAI)', language)}
             </span>
             <span className="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full font-mono font-medium">
-              Knowledge Graph & Causal Lineage
+              {b('Knowledge Graph & Causal Lineage', 'ಜ್ಞಾನ ಗ್ರಾಫ್ & ಕಾರಣಾತ್ಮಕ ಸಂಬಂಧ', language)}
             </span>
           </div>
           <h3 className="text-xl font-bold text-slate-900 mt-1">
-            Explainable AI Multi-Sensor Evidence Graph
+            {b('Explainable AI Multi-Sensor Evidence Graph', 'ವಿವರಣಾತ್ಮಕ ಬಹು-ಸಂವೇದಕ ಪುರಾವೆ ಗ್ರಾಫ್', language)}
           </h3>
           <p className="text-xs text-slate-600">
-            Interactive causal evidence network showing how physical sensors, orbital telemetry, and actuarial models arrive at the claim verdict.
+            {b(
+              'Interactive causal evidence network showing how physical sensors, orbital telemetry, and actuarial models arrive at the claim verdict.',
+              'ಭೌತಿಕ ಸಂವೇದಕಗಳು, ಉಪಗ್ರಹ ದತ್ತಾಂಶ ಮತ್ತು ವಿಮಾ ಮಾದರಿಗಳು ಹೇಗೆ ಒಮ್ಮತದ ತೀರ್ಪಿಗೆ ಬರುತ್ತವೆ ಎಂಬುದನ್ನು ತೋರಿಸುವ ಗ್ರಾಫ್.',
+              language
+            )}
           </p>
         </div>
 
         {/* Layer Filter Pills */}
         <div className="flex flex-wrap items-center gap-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 text-xs">
           {[
-            { id: 'all', label: 'All Layers' },
-            { id: 'satellite', label: '🛰️ Satellite' },
-            { id: 'weather', label: '🌧️ Weather' },
-            { id: 'ground', label: '📍 Ground Truth' },
-            { id: 'actuarial', label: '⚖️ Actuarial' }
+            { id: 'all', label: b('All Layers', 'ಎಲ್ಲಾ ಹಂತಗಳು', language) },
+            { id: 'satellite', label: b('🛰️ Satellite', '🛰️ ಉಪಗ್ರಹ', language) },
+            { id: 'weather', label: b('🌧️ Weather', '🌧️ ಹವಾಮಾನ', language) },
+            { id: 'ground', label: b('📍 Ground Truth', '📍 ಭೂಮಿ ಸಾಕ್ಷ್ಯ', language) },
+            { id: 'actuarial', label: b('⚖️ Actuarial', '⚖️ ವಿಮಾ ತೀರ್ಪು', language) }
           ].map(f => (
             <button
               key={f.id}
@@ -222,10 +228,10 @@ export const EvidenceGraph: React.FC<Props> = ({ claim }) => {
         <div className="flex items-center justify-between mb-2 px-2 text-xs text-slate-600">
           <span className="flex items-center gap-1.5 font-mono">
             <Network className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Interactive Node-Link Causal Topology • Click any node to inspect telemetry</span>
+            <span>{b('Interactive Node-Link Causal Topology • Click any node to inspect telemetry', 'ಸಂವಾದಾತ್ಮಕ ನೋಡ್ ಟೋಪಾಲಜಿ • ವಿವರಗಳಿಗೆ ಯಾವುದೇ ನೋಡ್ ಕ್ಲಿಕ್ ಮಾಡಿ', language)}</span>
           </span>
           <span className={`text-[11px] font-mono font-bold ${isFraud ? 'text-red-600' : 'text-emerald-700'}`}>
-            {isFraud ? '🚨 Contradictory Edges Active' : '✓ Unanimous Edge Consensus'}
+            {isFraud ? b('🚨 Contradictory Edges Active', '🚨 ವಿರೋಧಾಭಾಸದ ಲಿಂಕ್ ಸಕ್ರಿಯವಾಗಿದೆ', language) : b('✓ Unanimous Edge Consensus', '✓ ಸರ್ವಾನುಮತದ ಒಮ್ಮತ', language)}
           </span>
         </div>
 
@@ -355,18 +361,18 @@ export const EvidenceGraph: React.FC<Props> = ({ claim }) => {
 
             <div className="text-[11px] font-mono text-emerald-800 pt-1 flex items-center gap-2">
               <Sparkles className="w-3 h-3 text-emerald-700" />
-              <span>Raw Sensor Telemetry: <strong>{selectedNode.telemetry}</strong></span>
+              <span>{b('Raw Sensor Telemetry:', 'ನೈಜ ಸಂವೇದಕ ಟೆಲಿಮೆಟ್ರಿ:', language)} <strong>{selectedNode.telemetry}</strong></span>
             </div>
           </div>
 
           <div className="flex-shrink-0 text-right p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
-            <span className="text-[10px] text-slate-500 uppercase font-semibold block">Node Verified Value</span>
+            <span className="text-[10px] text-slate-500 uppercase font-semibold block">{b('Node Verified Value', 'ದೃಢೀಕರಿಸಿದ ಮೌಲ್ಯ', language)}</span>
             <span className={`text-xl font-black font-mono block mt-0.5 ${
               selectedNode.status === 'critical' ? 'text-red-700' : 'text-emerald-700'
             }`}>
               {selectedNode.value}
             </span>
-            <span className="text-[9px] text-slate-500 block">Causal Weight: {selectedNode.weight}%</span>
+            <span className="text-[9px] text-slate-500 block">{b('Causal Weight:', 'ಕಾರಣಾತ್ಮಕ ತೂಕ:', language)} {selectedNode.weight}%</span>
           </div>
         </div>
       </div>
@@ -380,28 +386,28 @@ export const EvidenceGraph: React.FC<Props> = ({ claim }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4 text-emerald-700" />
-              <h4 className="text-sm font-bold text-slate-900">Tri-Sensor Cross-Validation Convergence</h4>
+              <h4 className="text-sm font-bold text-slate-900">{b('Tri-Sensor Cross-Validation Convergence', 'ತ್ರಿ-ಸಂವೇದಕ ದೃಢೀಕರಣ ಒಮ್ಮುಖತೆ', language)}</h4>
             </div>
             <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
               isFraud 
                 ? 'bg-red-50 text-red-800 border-red-200' 
                 : 'bg-emerald-50 text-emerald-800 border-emerald-200'
             }`}>
-              {isFraud ? '🚨 88% Sensor Conflict' : '✓ 94% Multi-Sensor Convergence'}
+              {isFraud ? b('🚨 88% Sensor Conflict', '🚨 88% ಸಂವೇದಕ ಸಂಘರ್ಷ', language) : b('✓ 94% Multi-Sensor Convergence', '✓ 94% ಬಹು-ಸಂವೇದಕ ಒಮ್ಮುಖತೆ', language)}
             </span>
           </div>
 
           <p className="text-xs text-slate-600 leading-relaxed">
             {isFraud
-              ? 'Orbital satellite and meteorological radar severely contradict the claimant declaration. Sensors diverge outside valid physical limits.'
-              : 'All 3 independent physical telemetry sources corroborate the reported disaster within a tight 6% margin of error.'}
+              ? b('Orbital satellite and meteorological radar severely contradict the claimant declaration. Sensors diverge outside valid physical limits.', 'ಉಪಗ್ರಹ ಮತ್ತು ಹವಾಮಾನ ರೇಡಾರ್ ರೈತರ ಘೋಷಣೆಗೆ ತೀವ್ರ ವಿರುದ್ಧವಾಗಿವೆ. ಭೌತಿಕ ಮಿತಿಗಳಿಂದ ಸಂವೇದಕಗಳು ಭಿನ್ನವಾಗಿವೆ.', language)
+              : b('All 3 independent physical telemetry sources corroborate the reported disaster within a tight 6% margin of error.', 'ಎಲ್ಲಾ ೩ ಸ್ವತಂತ್ರ ಭೌತಿಕ ಸಂವೇದಕ ಮೂಲಗಳು ಕೇವಲ ೬% ವ್ಯತ್ಯಾಸದೊಂದಿಗೆ ವರದಿ ಮಾಡಿದ ವಿಪತ್ತನ್ನು ದೃಢೀಕರಿಸುತ್ತವೆ.', language)}
           </p>
 
           <div className="space-y-3 pt-1">
             {/* 1. Declared Loss */}
             <div>
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-slate-700 font-semibold">1. Farmer Declared Loss</span>
+                <span className="text-slate-700 font-semibold">{b('1. Farmer Declared Loss', '1. ರೈತರು ವರದಿ ಮಾಡಿದ ನಷ್ಟ', language)}</span>
                 <span className="text-slate-900 font-mono font-bold">{declaredLoss}%</span>
               </div>
               <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">

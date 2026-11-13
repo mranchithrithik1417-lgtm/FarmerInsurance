@@ -48,7 +48,9 @@ export const Navbar: React.FC<Props> = ({
               </span>
             </div>
             <p className="text-[10px] text-slate-500 hidden sm:block font-medium">
-              Evidence Twin & Insurance Claim Verification Platform
+              {language === 'kn'
+                ? 'ಪುರಾವೆ ಅವಳಿ ಮತ್ತು ಬೆಳೆ ವಿಮಾ ಕ್ಲೇಮ್ ಪರಿಶೀಲನಾ ವೇದಿಕೆ'
+                : 'Evidence Twin & Insurance Claim Verification Platform'}
             </p>
           </div>
         </div>
@@ -67,7 +69,7 @@ export const Navbar: React.FC<Props> = ({
                     </span>
                   </div>
                   <div className="text-[10px] text-emerald-700 font-semibold hidden lg:block">
-                    {language === 'kn' ? 'ರೈತರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್' : 'Farmer Dashboard (Active)'}
+                    {language === 'kn' ? 'ರೈತರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ (Farmer Dashboard)' : 'Farmer Dashboard / ರೈತರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್'}
                   </div>
                 </div>
               </div>
@@ -84,7 +86,7 @@ export const Navbar: React.FC<Props> = ({
                     </span>
                   </div>
                   <div className="text-[10px] text-blue-700 font-semibold hidden lg:block">
-                    {language === 'kn' ? 'ವಿಮಾ ಕಂಪನಿ ಕನ್ಸೋಲ್' : 'Insurance Console (Active)'}
+                    {language === 'kn' ? 'ವಿಮಾ ಕಂಪನಿ ಕನ್ಸೋಲ್ (Insurance Console)' : 'Insurance Console / ವಿಮಾ ಕನ್ಸೋಲ್'}
                   </div>
                 </div>
               </div>
@@ -100,7 +102,9 @@ export const Navbar: React.FC<Props> = ({
           >
             <ArrowRightLeft className="w-3.5 h-3.5 text-emerald-700" />
             <span className="hidden sm:inline">
-              {role === 'farmer' ? 'Switch to Insurer' : 'Switch to Farmer'}
+              {role === 'farmer'
+                ? (language === 'kn' ? 'ವಿಮಾದಾರರಿಗೆ ಬದಲಾಯಿಸಿ' : 'Switch to Insurer')
+                : (language === 'kn' ? 'ರೈತರಿಗೆ ಬದಲಾಯಿಸಿ' : 'Switch to Farmer')}
             </span>
           </button>
 
@@ -113,7 +117,7 @@ export const Navbar: React.FC<Props> = ({
                 title="Direct Farmer Customer Support Helpline"
               >
                 <PhoneCall className="w-3.5 h-3.5 animate-pulse text-white" />
-                <span className="hidden md:inline">Support:</span>
+                <span className="hidden md:inline">{language === 'kn' ? 'ಸಹಾಯವಾಣಿ:' : 'Support:'}</span>
                 <span className="font-mono tracking-tight font-extrabold">9019715931</span>
               </a>
 
@@ -124,7 +128,9 @@ export const Navbar: React.FC<Props> = ({
                 title="Customer Support Help & FAQs"
               >
                 <HelpCircle className="w-4 h-4 text-emerald-700" />
-                <span className="hidden lg:inline text-xs font-semibold text-emerald-900">Help & FAQs</span>
+                <span className="hidden lg:inline text-xs font-semibold text-emerald-900">
+                  {language === 'kn' ? 'ಸಹಾಯ & FAQ' : 'Help & FAQs'}
+                </span>
               </button>
             </div>
           )}
@@ -136,11 +142,11 @@ export const Navbar: React.FC<Props> = ({
           <button
             type="button"
             onClick={() => onLanguageChange(language === 'en' ? 'kn' : 'en')}
-            className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-xl border border-slate-200 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+            className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-xl border border-slate-200 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
             title="Switch Language (English / ಕನ್ನಡ)"
           >
             <Globe className="w-3.5 h-3.5 text-emerald-700" />
-            <span>{language === 'en' ? 'ಕನ್ನಡ' : 'English'}</span>
+            <span className="font-semibold">{language === 'en' ? 'ಕನ್ನಡ (KN)' : 'English (EN)'}</span>
           </button>
 
           {/* Notifications Bell */}
@@ -163,13 +169,17 @@ export const Navbar: React.FC<Props> = ({
             {showNotifs && (
               <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden z-50">
                 <div className="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-900">Live Telemetry Alerts</span>
-                  <span className="text-[10px] text-emerald-700 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">WebSocket Active</span>
+                  <span className="font-bold text-slate-900">
+                    {language === 'kn' ? 'ಲೈವ್ ಅಧಿಸೂಚನೆಗಳು (Alerts)' : 'Live Telemetry Alerts'}
+                  </span>
+                  <span className="text-[10px] text-emerald-700 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    {language === 'kn' ? 'ಸಕ್ರಿಯ (Live)' : 'WebSocket Active'}
+                  </span>
                 </div>
                 <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
                   {notifications.length === 0 ? (
                     <div className="p-4 text-center text-xs text-slate-500">
-                      No notifications received yet.
+                      {language === 'kn' ? 'ಯಾವುದೇ ಹೊಸ ಅಧಿಸೂಚನೆಗಳಿಲ್ಲ (No notifications)' : 'No notifications received yet.'}
                     </div>
                   ) : (
                     notifications.map((n) => (
@@ -192,10 +202,12 @@ export const Navbar: React.FC<Props> = ({
             type="button"
             onClick={onLogout}
             className="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-xl border border-red-200 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
-            title="Sign Out"
+            title="Sign Out / ನಿರ್ಗಮಿಸಿ"
           >
             <LogOut className="w-3.5 h-3.5 text-red-600" />
-            <span className="hidden sm:inline">Sign Out</span>
+            <span className="hidden sm:inline">
+              {language === 'kn' ? 'ನಿರ್ಗಮಿಸಿ (Sign Out)' : 'Sign Out'}
+            </span>
           </button>
         </div>
       </div>

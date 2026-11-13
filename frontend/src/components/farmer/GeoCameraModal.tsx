@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Camera, RefreshCw, X, Check, ShieldCheck, MapPin, Sparkles, Upload, AlertCircle, Maximize2 } from 'lucide-react';
 import { playChime } from '../../utils/speech';
+import { b } from '../../utils/translations';
 
 export interface GeoPhoto {
   photo_url: string;
@@ -21,6 +22,7 @@ interface Props {
   longitude: number;
   village: string;
   district: string;
+  language?: 'en' | 'kn';
 }
 
 export const GeoCameraModal: React.FC<Props> = ({
@@ -32,7 +34,8 @@ export const GeoCameraModal: React.FC<Props> = ({
   latitude,
   longitude,
   village,
-  district
+  district,
+  language = 'en'
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -360,13 +363,17 @@ export const GeoCameraModal: React.FC<Props> = ({
             </div>
             <div>
               <h2 className="text-base font-bold text-slate-900 flex items-center gap-2 tracking-wide">
-                <span>Website Camera • Live Geotag Capture</span>
+                <span>{b('Website Camera • Live Geotag Capture', 'ವೆಬ್‌ಸೈಟ್ ಕ್ಯಾಮೆರಾ • ಲೈವ್ ಜಿಯೋಟ್ಯಾಗ್ ಫೋಟೋ', language)}</span>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-mono font-bold">
-                  SAT-VERIFIED
+                  {b('SAT-VERIFIED', 'ಉಪಗ್ರಹ ಪರಿಶೀಲಿತ', language)}
                 </span>
               </h2>
               <p className="text-xs text-slate-600">
-                Ground photos are burned with verified GPS, Survey #{surveyNumber}, and DIGIPIN
+                {b(
+                  `Ground photos are burned with verified GPS, Survey #${surveyNumber}, and DIGIPIN`,
+                  `ಫೋಟೋಗಳ ಮೇಲೆ ಅಧಿಕೃತ ಜಿಪಿಎಸ್, ಸರ್ವೆ #${surveyNumber} ಮತ್ತು ಡಿಜಿಪಿನ್ ಮುದ್ರಿಸಲಾಗುತ್ತದೆ`,
+                  language
+                )}
               </p>
             </div>
           </div>
@@ -382,13 +389,13 @@ export const GeoCameraModal: React.FC<Props> = ({
         {/* Category Selector Tabs */}
         <div className="px-4 py-2.5 bg-slate-100/70 border-b border-slate-200 flex items-center gap-2 overflow-x-auto no-scrollbar">
           <span className="text-[11px] font-bold text-emerald-800 font-mono uppercase tracking-wider whitespace-nowrap">
-            Photo Type:
+            {b('Photo Type:', 'ಫೋಟೋ ವಿಧ:', language)}
           </span>
           {[
-            { id: 'damaged_crop', label: '🌾 Damaged Crop' },
-            { id: 'waterlogging', label: '🌊 Waterlogging' },
-            { id: 'field_overview', label: '🗺️ Field Overview' },
-            { id: 'soil_damage', label: '🚜 Soil/Erosion' }
+            { id: 'damaged_crop', label: b('🌾 Damaged Crop', '🌾 ಹಾನಿಗೊಳಗಾದ ಬೆಳೆ', language) },
+            { id: 'waterlogging', label: b('🌊 Waterlogging', '🌊 ಜಲಾವೃತ ನೀರು', language) },
+            { id: 'field_overview', label: b('🗺️ Field Overview', '🗺️ ಹೊಲದ ನೋಟ', language) },
+            { id: 'soil_damage', label: b('🚜 Soil/Erosion', '🚜 ಮಣ್ಣಿನ ಸವೆತ', language) }
           ].map(tab => (
             <button
               key={tab.id}
@@ -521,7 +528,7 @@ export const GeoCameraModal: React.FC<Props> = ({
           <div className="flex items-center gap-2">
             <input
               type="text"
-              placeholder="Add optional note or landmark (e.g. Near north irrigation canal)..."
+              placeholder={b('Add optional note or landmark (e.g. Near north irrigation canal)...', 'ಟಿಪ್ಪಣಿ ಅಥವಾ ಹೆಗ್ಗುರುತು ಸೇರಿಸಿ (ಉದಾ: ಉತ್ತರದ ಕಾಲುವೆಯ ಬಳಿ)...', language)}
               value={customCaption}
               onChange={e => setCustomCaption(e.target.value)}
               className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 text-xs outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
@@ -538,7 +545,7 @@ export const GeoCameraModal: React.FC<Props> = ({
                 title="Upload photo from disk or gallery and apply verified geotag"
               >
                 <Upload className="w-3.5 h-3.5 text-emerald-700" />
-                <span className="hidden sm:inline">Upload Photo File</span>
+                <span className="hidden sm:inline">{b('Upload Photo File', 'ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ', language)}</span>
               </button>
 
               {devices.length > 1 && !previewImage && (
@@ -553,7 +560,7 @@ export const GeoCameraModal: React.FC<Props> = ({
                   title="Switch front/rear camera"
                 >
                   <RefreshCw className="w-3.5 h-3.5 text-emerald-700" />
-                  <span className="hidden sm:inline">Switch Lens</span>
+                  <span className="hidden sm:inline">{b('Switch Lens', 'ಕ್ಯಾಮೆರಾ ಬದಲಾಯಿಸಿ', language)}</span>
                 </button>
               )}
             </div>
@@ -569,14 +576,14 @@ export const GeoCameraModal: React.FC<Props> = ({
                     }}
                     className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition cursor-pointer shadow-sm"
                   >
-                    Retake
+                    {b('Retake', 'ಮತ್ತೆ ತೆಗೆಯಿರಿ', language)}
                   </button>
                   <button
                     onClick={handleAcceptPhoto}
                     className="px-5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition cursor-pointer"
                   >
                     <Check className="w-4 h-4" />
-                    <span>Add to Claim Evidence</span>
+                    <span>{b('Add to Claim Evidence', 'ಕ್ಲೇಮ್ ಸಾಕ್ಷ್ಯಕ್ಕೆ ಸೇರಿಸಿ', language)}</span>
                   </button>
                 </div>
               ) : (
@@ -586,7 +593,7 @@ export const GeoCameraModal: React.FC<Props> = ({
                   className="px-6 py-2.5 rounded-2xl bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all transform active:scale-95 cursor-pointer"
                 >
                   <Camera className="w-4 h-4 text-white" />
-                  <span>📸 Snap & Geotag Photo</span>
+                  <span>{b('📸 Snap & Geotag Photo', '📸 ಫೋಟೋ ಸೆರೆಹಿಡಿಯಿರಿ', language)}</span>
                 </button>
               )}
             </div>

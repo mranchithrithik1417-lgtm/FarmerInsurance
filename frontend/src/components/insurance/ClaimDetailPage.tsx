@@ -6,9 +6,11 @@ import { MultiAgentPanel } from './MultiAgentPanel';
 import { AICopilotChat } from './AICopilotChat';
 import { EvidenceGraph } from './EvidenceGraph';
 import { ReviewActionModal } from './ReviewActionModal';
+import { b, t } from '../../utils/translations';
 
 interface Props {
   claim: Claim;
+  language?: 'en' | 'kn';
   onBack: () => void;
   onOpenReport: (claim: Claim) => void;
   onRunAgents: () => Promise<void>;
@@ -17,6 +19,7 @@ interface Props {
 
 export const ClaimDetailPage: React.FC<Props> = ({
   claim,
+  language = 'en',
   onBack,
   onOpenReport,
   onRunAgents,
@@ -44,14 +47,14 @@ export const ClaimDetailPage: React.FC<Props> = ({
                 {claim.claim_number}
               </span>
               <span className="text-xs text-slate-500">
-                Filed on {claim.created_at.slice(0, 10)}
+                {b('Filed on', 'ಸಲ್ಲಿಸಿದ ದಿನಾಂಕ', language)} {claim.created_at.slice(0, 10)}
               </span>
             </div>
             <h1 className="text-2xl font-extrabold text-slate-900 mt-1">
-              {claim.farmer.name} • {claim.crop.crop_name} Claim Adjudication
+              {claim.farmer.name} • {claim.crop.crop_name} {b('Claim Adjudication', 'ಕ್ಲೇಮ್ ತೀರ್ಪು & ಪರಿಶೀಲನೆ', language)}
             </h1>
             <p className="text-xs text-slate-500">
-              {claim.farmer.village}, {claim.farmer.district}, {claim.farmer.state} • Land Parcel: {claim.land.land_parcel_id} (Survey {claim.land.survey_number})
+              {claim.farmer.village}, {claim.farmer.district}, {claim.farmer.state} • {b('Land Parcel:', 'ಜಮೀನು:', language)} {claim.land.land_parcel_id} ({b('Survey #', 'ಸರ್ವೆ ಸಂಖ್ಯೆ #', language)}{claim.land.survey_number})
             </p>
           </div>
         </div>
@@ -63,7 +66,7 @@ export const ClaimDetailPage: React.FC<Props> = ({
             className="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-300 shadow-xs flex items-center gap-2 transition cursor-pointer"
           >
             <FileText className="w-4 h-4 text-emerald-700" />
-            <span>View Full Report</span>
+            <span>{b('View Full Report', 'ಸಂಪೂರ್ಣ ವರದಿ ವೀಕ್ಷಿಸಿ', language)}</span>
           </button>
 
           <button
@@ -71,7 +74,7 @@ export const ClaimDetailPage: React.FC<Props> = ({
             className="px-5 py-2.5 bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold rounded-xl shadow-xs hover:shadow flex items-center gap-2 transition cursor-pointer"
           >
             <ShieldCheck className="w-4 h-4" />
-            <span>Adjudicate / Review Decision</span>
+            <span>{b('Adjudicate / Review Decision', 'ತೀರ್ಪು ನೀಡಿ / ತೀರ್ಮಾನ ಪರಿಶೀಲಿಸಿ', language)}</span>
           </button>
         </div>
       </div>
@@ -79,40 +82,40 @@ export const ClaimDetailPage: React.FC<Props> = ({
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-          <span className="text-[10px] uppercase font-bold text-slate-500 block">Farmer Declared Loss</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">{b('Farmer Declared Loss', 'ರೈತರು ವರದಿ ಮಾಡಿದ ನಷ್ಟ', language)}</span>
           <span className="text-xl font-black text-slate-900 font-mono mt-1 block">
             ₹{claim.farmer_reported_loss.toLocaleString('en-IN')}
           </span>
-          <span className="text-[10px] text-slate-500">Out of pocket estimate</span>
+          <span className="text-[10px] text-slate-500">{b('Out of pocket estimate', 'ಅಂದಾಜು ಹಾನಿ ಮೊತ್ತ', language)}</span>
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-          <span className="text-[10px] uppercase font-bold text-emerald-800 block">Indicative Payout</span>
+          <span className="text-[10px] uppercase font-bold text-emerald-800 block">{b('Indicative Payout', 'ಅಂದಾಜು ಪರಿಹಾರ', language)}</span>
           <span className="text-xl font-black text-emerald-700 font-mono mt-1 block">
             ₹{claim.estimated_payout.toLocaleString('en-IN')}
           </span>
-          <span className="text-[10px] text-emerald-700 font-medium">Scale of finance capped</span>
+          <span className="text-[10px] text-emerald-700 font-medium">{b('Scale of finance capped', 'ಪಿಎಂಎಫ್‌ಬಿವೈ ಮಿತಿಗೊಳಪಟ್ಟಿದೆ', language)}</span>
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-          <span className="text-[10px] uppercase font-bold text-blue-800 block">Evidence Confidence</span>
+          <span className="text-[10px] uppercase font-bold text-blue-800 block">{b('Evidence Confidence', 'ಪುರಾವೆ ವಿಶ್ವಾಸಾರ್ಹತೆ', language)}</span>
           <span className="text-xl font-black text-blue-700 font-mono mt-1 block">
             {claim.evidence_confidence_score}%
           </span>
-          <span className="text-[10px] text-blue-700 font-medium">Sentinel & radar coherence</span>
+          <span className="text-[10px] text-blue-700 font-medium">{b('Sentinel & radar coherence', 'ಉಪಗ್ರಹ & ರೇಡಾರ್ ಒಮ್ಮುಖತೆ', language)}</span>
         </div>
 
         <div className={`rounded-2xl border p-4 shadow-xs ${
           claim.current_status === 'Flagged Fraud' ? 'border-red-400 bg-red-50/60' : 'bg-white border-slate-200'
         }`}>
-          <span className="text-[10px] uppercase font-bold text-slate-500 block">Current Status</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">{b('Current Status', 'ಪ್ರಸ್ತುತ ಸ್ಥಿತಿ', language)}</span>
           <span className={`text-sm font-black uppercase mt-1 block ${
             claim.current_status === 'Flagged Fraud' ? 'text-red-700 animate-pulse' : 'text-amber-700'
           }`}>
             {claim.current_status}
           </span>
           <span className="text-[10px] text-slate-500 font-medium">
-            {claim.current_status === 'Flagged Fraud' ? '🚨 Intercepted by AI Swarm' : 'Human adjudication pending'}
+            {claim.current_status === 'Flagged Fraud' ? b('🚨 Intercepted by AI Swarm', '🚨 ಎಐ ಸಮಿತಿಯಿಂದ ತಡೆಹಿಡಿಯಲಾಗಿದೆ', language) : b('Human adjudication pending', 'ಮಾನವ ತೀರ್ಪು ಬಾಕಿಯಿದೆ', language)}
           </span>
         </div>
       </div>
@@ -128,7 +131,7 @@ export const ClaimDetailPage: React.FC<Props> = ({
           }`}
         >
           <Layers className="w-4 h-4" />
-          <span>Geospatial Evidence Twin</span>
+          <span>{b('Geospatial Evidence Twin', 'ಭೂ-ಅಂತರಿಕ್ಷ ಸಾಕ್ಷ್ಯ ದೃಶ್ಯ', language)}</span>
         </button>
 
         <button
@@ -140,7 +143,7 @@ export const ClaimDetailPage: React.FC<Props> = ({
           }`}
         >
           <Sparkles className="w-4 h-4" />
-          <span>AI Verification Agents ({claim.ai_agents.length})</span>
+          <span>{b('AI Verification Agents', 'ಎಐ ಪರಿಶೀಲನಾ ಏಜೆಂಟ್‌ಗಳು', language)} ({claim.ai_agents.length})</span>
         </button>
 
         <button
@@ -152,7 +155,7 @@ export const ClaimDetailPage: React.FC<Props> = ({
           }`}
         >
           <span>🌐</span>
-          <span>Explainable Evidence Graph</span>
+          <span>{b('Explainable Evidence Graph', 'ವಿವರಣಾತ್ಮಕ ಪುರಾವೆ ಗ್ರಾಫ್', language)}</span>
         </button>
 
         <button
@@ -164,14 +167,14 @@ export const ClaimDetailPage: React.FC<Props> = ({
           }`}
         >
           <Bot className="w-4 h-4" />
-          <span>AI Reviewer Copilot</span>
+          <span>{b('AI Reviewer Copilot', 'ಎಐ ವಿಮರ್ಶಕ ಕೋಪೈಲಟ್', language)}</span>
         </button>
       </div>
 
       {/* Tab Panels */}
       {activeTab === 'twin' && (
         <div className="space-y-6">
-          <GeospatialTwinViewer claim={claim} />
+          <GeospatialTwinViewer claim={claim} language={language} />
 
           {/* Meteorological and Ground Truth Gallery Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -180,36 +183,36 @@ export const ClaimDetailPage: React.FC<Props> = ({
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                   <span>🌧️</span>
-                  <span>Open-Meteo & IMD Rainfall Radar</span>
+                  <span>{b('Open-Meteo & IMD Rainfall Radar', 'ಓಪನ್-ಮೀಟಿಯೋ & ಐಎಂಡಿ ಮಳೆ ರೇಡಾರ್', language)}</span>
                 </h4>
                 <span className="text-[10px] text-red-800 font-mono font-bold bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
-                  {claim.weather.anomaly_ratio}x Normal August
+                  {claim.weather.anomaly_ratio}x {b('Normal August', 'ಸಾಮಾನ್ಯ ಆಗಸ್ಟ್ ಸರಾಸರಿ', language)}
                 </span>
               </div>
 
               <div className="space-y-3 text-xs">
                 <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-500">Peak Precipitation (Disaster Day)</span>
+                  <span className="text-slate-500">{b('Peak Precipitation (Disaster Day)', 'ಗರಿಷ್ಠ ಮಳೆ (ವಿಪತ್ತಿನ ದಿನ)', language)}</span>
                   <span className="text-slate-900 font-mono font-bold">{claim.weather.rainfall_disaster_day_mm} mm</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-500">7-Day Cumulative Runoff</span>
+                  <span className="text-slate-500">{b('7-Day Cumulative Runoff', '೭ ದಿನಗಳ ಒಟ್ಟು ಹರಿವು', language)}</span>
                   <span className="text-slate-900 font-mono font-bold">{claim.weather.rainfall_7day_cumulative_mm} mm</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-slate-100">
-                  <span className="text-slate-500">Soil Saturation Threshold</span>
-                  <span className="text-blue-700 font-mono font-bold">{claim.weather.soil_saturation_pct}% (Supersaturated)</span>
+                  <span className="text-slate-500">{b('Soil Saturation Threshold', 'ಮಣ್ಣಿನ ತೇವಾಂಶ ಮಿತಿ', language)}</span>
+                  <span className="text-blue-700 font-mono font-bold">{claim.weather.soil_saturation_pct}% ({b('Supersaturated', 'ಅತಿಯಾದ ತೇವಾಂಶ', language)})</span>
                 </div>
                 <div className="flex justify-between py-2">
-                  <span className="text-slate-500">Meteorological Corroboration</span>
+                  <span className="text-slate-500">{b('Meteorological Corroboration', 'ಹವಾಮಾನ ದೃಢೀಕರಣ', language)}</span>
                   <span className={`font-bold ${
                     claim.weather.rainfall_disaster_day_mm < 5.0 && claim.disaster.damage_percentage_reported > 30.0
                       ? 'text-red-700'
                       : 'text-emerald-700'
                   }`}>
                     {claim.weather.rainfall_disaster_day_mm < 5.0 && claim.disaster.damage_percentage_reported > 30.0
-                      ? '🚨 Contradiction: Dry Week (1.2 mm)'
-                      : 'Conclusive Extreme Weather'}
+                      ? b('🚨 Contradiction: Dry Week (1.2 mm)', '🚨 ವಿರೋಧಾಭಾಸ: ಒಣ ವಾರ (1.2 ಮಿಮೀ)', language)
+                      : b('Conclusive Extreme Weather', 'ತೀವ್ರ ಹವಾಮಾನ ಸಾಬೀತಾಗಿದೆ', language)}
                   </span>
                 </div>
               </div>
@@ -220,15 +223,15 @@ export const ClaimDetailPage: React.FC<Props> = ({
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                   <span>📸</span>
-                  <span>Geotagged Farmer Evidence Photos</span>
+                  <span>{b('Geotagged Farmer Evidence Photos', 'ಜಿಯೋಟ್ಯಾಗ್ ಮಾಡಿದ ರೈತರ ಸಾಕ್ಷ್ಯ ಫೋಟೋಗಳು', language)}</span>
                 </h4>
                 {claim.photos.some(p => !p.metadata_verified) ? (
                   <span className="text-[10px] text-red-800 font-mono font-bold bg-red-50 px-2 py-0.5 rounded-full border border-red-200 animate-pulse">
-                    🚨 EXIF Spoofed / Geofence Breach
+                    {b('🚨 EXIF Spoofed / Geofence Breach', '🚨 ಜಿಯೋಫೆನ್ಸ್ ಉಲ್ಲಂಘನೆ ಪತ್ತೆ', language)}
                   </span>
                 ) : (
                   <span className="text-[10px] text-emerald-800 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                    ✓ EXIF Validated
+                    {b('✓ EXIF Validated', '✓ ಎಕ್ಸಿಫ್ ದೃಢಪಟ್ಟಿದೆ', language)}
                   </span>
                 )}
               </div>
@@ -253,15 +256,15 @@ export const ClaimDetailPage: React.FC<Props> = ({
       )}
 
       {activeTab === 'agents' && (
-        <MultiAgentPanel claim={claim} onRunAgents={onRunAgents} />
+        <MultiAgentPanel claim={claim} onRunAgents={onRunAgents} language={language} />
       )}
 
       {activeTab === 'graph' && (
-        <EvidenceGraph claim={claim} />
+        <EvidenceGraph claim={claim} language={language} />
       )}
 
       {activeTab === 'copilot' && (
-        <AICopilotChat claim={claim} />
+        <AICopilotChat claim={claim} language={language} />
       )}
 
       {/* Enlarged Forensic Photo Viewer Modal */}
@@ -273,7 +276,7 @@ export const ClaimDetailPage: React.FC<Props> = ({
                 <span className="text-base">📸</span>
                 <span className="font-bold text-slate-900 capitalize">{expandedPhoto.photo_type.replace('_', ' ')}</span>
                 <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-mono font-bold">
-                  GPS & EXIF MATCHED
+                  {b('GPS & EXIF MATCHED', 'ಜಿಪಿಎಸ್ & ಎಕ್ಸಿಫ್ ಹೊಂದಾಣಿಕೆಯಾಗಿದೆ', language)}
                 </span>
               </div>
               <button
@@ -303,7 +306,7 @@ export const ClaimDetailPage: React.FC<Props> = ({
                 onClick={() => setExpandedPhoto(null)}
                 className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold cursor-pointer"
               >
-                Close
+                {b('Close', 'ಮುಚ್ಚಿ', language)}
               </button>
             </div>
           </div>
@@ -314,6 +317,7 @@ export const ClaimDetailPage: React.FC<Props> = ({
       <ReviewActionModal
         claim={claim}
         isOpen={showReviewModal}
+        language={language}
         onClose={() => setShowReviewModal(false)}
         onSubmitAction={onSubmitReviewAction}
       />

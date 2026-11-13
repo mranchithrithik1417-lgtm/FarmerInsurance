@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle2, Loader2, Sparkles, Satellite, CloudRain, ShieldCheck, FileText, Cpu, ArrowRight } from 'lucide-react';
+import { b } from '../../utils/translations';
 
 interface Props {
   onComplete: () => void;
+  language?: 'en' | 'kn';
 }
 
-export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete }) => {
+export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete, language = 'en' }) => {
   const [currentStageIdx, setCurrentStageIdx] = useState<number>(0);
 
   const stages = [
@@ -50,13 +52,17 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete }) => {
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                Automatic Evidence Verification Engine
+                {b('Automatic Evidence Verification Engine', 'ಸ್ವಯಂಚಾಲಿತ ಪುರಾವೆ ಪರಿಶೀಲನಾ ಎಂಜಿನ್', language)}
                 <span className="text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-200 font-mono font-bold">
-                  LIVE PIPELINE
+                  {b('LIVE PIPELINE', 'ಲೈವ್ ಪ್ರಕ್ರಿಯೆ', language)}
                 </span>
               </h2>
               <p className="text-xs text-slate-600">
-                Fusing Sentinel-2 satellite passes, Open-Meteo radar, and farmer ground evidence
+                {b(
+                  'Fusing Sentinel-2 satellite passes, Open-Meteo radar, and farmer ground evidence',
+                  'ಸೆಂಟಿನೆಲ್-2 ಉಪಗ್ರಹ, ಓಪನ್-ಮೀಟಿಯೋ ರೇಡಾರ್ ಮತ್ತು ರೈತರ ಭೂ ಸಾಕ್ಷ್ಯಗಳ ಸಮ್ಮಿಲನ',
+                  language
+                )}
               </p>
             </div>
           </div>
@@ -124,7 +130,7 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete }) => {
         <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
           <div className="text-xs text-slate-600 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-emerald-700" />
-            <span>Deterministic evidence scoring calibrated for PMFBY guidelines</span>
+            <span>{b('Deterministic evidence scoring calibrated for PMFBY guidelines', 'ಪಿಎಂಎಫ್‌ಬಿವೈ ನಿಯಮಾವಳಿಗೆ ಅನುಗುಣವಾದ ಪುರಾವೆ ಮೌಲ್ಯಮಾಪನ', language)}</span>
           </div>
 
           <button
@@ -136,7 +142,7 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete }) => {
                 : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
             }`}
           >
-            <span>{isDone ? 'View Generated Claim & Dossier' : 'Synthesizing Evidence...'}</span>
+            <span>{isDone ? b('View Generated Claim & Dossier', 'ಸಿದ್ಧಪಡಿಸಿದ ಕ್ಲೇಮ್ & ಕಡತ ವೀಕ್ಷಿಸಿ', language) : b('Synthesizing Evidence...', 'ಪುರಾವೆಗಳನ್ನು ಸಂಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ...', language)}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>

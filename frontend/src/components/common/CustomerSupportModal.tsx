@@ -16,6 +16,7 @@ import {
   FileText
 } from 'lucide-react';
 import { playChime } from '../../utils/speech';
+import { b } from '../../utils/translations';
 
 interface Props {
   isOpen: boolean;
@@ -126,12 +127,12 @@ export const CustomerSupportModal: React.FC<Props> = ({
           <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-emerald-50 via-white to-green-50/70 border-2 border-emerald-400 shadow-sm space-y-3 sm:space-y-4 text-center">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold font-mono border border-emerald-200">
               <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
-              <span>DIRECT FARMER HELPLINE</span>
+              <span>{b('DIRECT FARMER HELPLINE', 'ರೈತ ನೇರ ಸಹಾಯವಾಣಿ', language)}</span>
             </div>
 
             <div>
               <div className="text-xs text-slate-600 uppercase tracking-wider font-semibold">
-                {language === 'kn' ? 'ನೇರ ಸಂಪರ್ಕ ಸಂಖ್ಯೆ' : 'Call Support Officer Directly'}
+                {b('Call Support Officer Directly', 'ಸಹಾಯ ಅಧಿಕಾರಿಗೆ ನೇರವಾಗಿ ಕರೆ ಮಾಡಿ', language)}
               </div>
               <a
                 href={`tel:${supportNumber}`}
@@ -140,7 +141,7 @@ export const CustomerSupportModal: React.FC<Props> = ({
                 {supportNumberFormatted}
               </a>
               <div className="text-[11px] text-slate-500 mt-1">
-                Toll-free routing • Senior Agronomist on call
+                {b('Toll-free routing • Senior Agronomist on call', 'ಶುಲ್ಕ ರಹಿತ ಕರೆ ಮಾರ್ಗ • ಹಿರಿಯ ಕೃಷಿ ತಜ್ಞರು ಲಭ್ಯ', language)}
               </div>
             </div>
 
@@ -151,7 +152,7 @@ export const CustomerSupportModal: React.FC<Props> = ({
                 className="px-4 py-2.5 sm:py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition transform hover:-translate-y-0.5 cursor-pointer"
               >
                 <Phone className="w-4 h-4 text-white" />
-                <span>Call: {supportNumber}</span>
+                <span>{b('Call', 'ಕರೆ ಮಾಡಿ', language)}: {supportNumber}</span>
               </a>
 
               <a
@@ -161,7 +162,7 @@ export const CustomerSupportModal: React.FC<Props> = ({
                 className="px-4 py-2.5 sm:py-3 bg-white hover:bg-slate-50 text-emerald-800 rounded-xl text-xs font-bold border border-emerald-300 flex items-center justify-center gap-2 shadow-xs transition hover:border-emerald-500 cursor-pointer"
               >
                 <MessageSquare className="w-4 h-4 text-emerald-700" />
-                <span>Chat on WhatsApp</span>
+                <span>{b('Chat on WhatsApp', 'ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಚಾಟ್ ಮಾಡಿ', language)}</span>
               </a>
             </div>
           </div>
@@ -171,10 +172,14 @@ export const CustomerSupportModal: React.FC<Props> = ({
             <div>
               <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-emerald-700" />
-                <span>Request Instant Officer Callback</span>
+                <span>{b('Request Instant Officer Callback', 'ಅಧಿಕಾರಿಯಿಂದ ತಕ್ಷಣ ಮರುಕರೆ ಕೋರಿ', language)}</span>
               </div>
               <p className="text-[11px] text-slate-600 mt-0.5">
-                We will call your registered number (<strong className="text-slate-900">+91 {farmerMobile}</strong>) in 5 mins.
+                {b(
+                  `We will call your registered number (+91 ${farmerMobile}) in 5 mins.`,
+                  `ನಿಮ್ಮ ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಗೆ (+91 ${farmerMobile}) 5 ನಿಮಿಷಗಳಲ್ಲಿ ಕರೆ ಮಾಡುತ್ತೇವೆ.`,
+                  language
+                )}
               </p>
             </div>
 
@@ -191,10 +196,10 @@ export const CustomerSupportModal: React.FC<Props> = ({
               {callbackRequested ? (
                 <>
                   <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-                  <span>Callback Requested!</span>
+                  <span>{b('Callback Requested!', 'ಮರುಕರೆ ಕೋರಲಾಗಿದೆ!', language)}</span>
                 </>
               ) : (
-                <span>Request Callback</span>
+                <span>{b('Request Callback', 'ಮರುಕರೆ ಕೋರಿ', language)}</span>
               )}
             </button>
           </div>
@@ -203,39 +208,47 @@ export const CustomerSupportModal: React.FC<Props> = ({
           <div className="space-y-2.5">
             <div className="text-xs font-bold text-slate-600 uppercase tracking-wider font-mono flex items-center gap-1.5">
               <HelpCircle className="w-3.5 h-3.5 text-emerald-700" />
-              <span>{language === 'kn' ? 'ಸಹಾಯ ವಿಷಯಗಳು ಮತ್ತು ಪ್ರಶ್ನೋತ್ತರ' : 'Help Topics & FAQs'}</span>
+              <span>{b('Help Topics & FAQs', 'ಸಹಾಯ ವಿಷಯಗಳು ಮತ್ತು FAQ ಗಳು', language)}</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
               <div className="p-3 bg-white rounded-xl border border-slate-200 flex items-start gap-2.5 shadow-xs">
                 <MapPin className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-bold text-slate-900">Find Your ULPIN</div>
-                  <div className="text-[11px] text-slate-500">Search Bhoomi records by name, district, and village.</div>
+                  <div className="font-bold text-slate-900">{b('Find Your ULPIN', 'ನಿಮ್ಮ ULPIN ಹುಡುಕಿ', language)}</div>
+                  <div className="text-[11px] text-slate-500">
+                    {b('Search Bhoomi records by name, district, and village.', 'ಹೆಸರು, ಜಿಲ್ಲೆ ಮತ್ತು ಗ್ರಾಮದ ಮೂಲಕ ಭೂಮಿ ದಾಖಲೆಗಳನ್ನು ಹುಡುಕಿ.', language)}
+                  </div>
                 </div>
               </div>
 
               <div className="p-3 bg-white rounded-xl border border-slate-200 flex items-start gap-2.5 shadow-xs">
                 <Layers className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-bold text-slate-900">Satellite Land Map</div>
-                  <div className="text-[11px] text-slate-500">Help dragging corner pins to align with your farm bunds.</div>
+                  <div className="font-bold text-slate-900">{b('Satellite Land Map', 'ಉಪಗ್ರಹ ಭೂಮಿ ನಕ್ಷೆ', language)}</div>
+                  <div className="text-[11px] text-slate-500">
+                    {b('Help dragging corner pins to align with your farm bunds.', 'ಜಮೀನಿನ ಬದುಗಳಿಗೆ ತಕ್ಕಂತೆ ಪಿನ್‌ಗಳನ್ನು ಎಳೆಯಲು ಸಹಾಯ.', language)}
+                  </div>
                 </div>
               </div>
 
               <div className="p-3 bg-white rounded-xl border border-slate-200 flex items-start gap-2.5 shadow-xs">
                 <Camera className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-bold text-slate-900">GeoCamera Evidence</div>
-                  <div className="text-[11px] text-slate-500">Capturing geotagged photos of flooded or damaged crops.</div>
+                  <div className="font-bold text-slate-900">{b('GeoCamera Evidence', 'ಜಿಯೋ-ಕ್ಯಾಮೆರಾ ಪುರಾವೆ', language)}</div>
+                  <div className="text-[11px] text-slate-500">
+                    {b('Capturing geotagged photos of flooded or damaged crops.', 'ನೀರು ನಿಂತ ಅಥವಾ ಹಾನಿಗೊಳಗಾದ ಬೆಳೆಗಳ ಫೋಟೋಗಳನ್ನು ಸೆರೆಹಿಡಿಯುವುದು.', language)}
+                  </div>
                 </div>
               </div>
 
               <div className="p-3 bg-white rounded-xl border border-slate-200 flex items-start gap-2.5 shadow-xs">
                 <FileText className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-bold text-slate-900">Claim Settlement</div>
-                  <div className="text-[11px] text-slate-500">PMFBY scale of finance and DBT payout tracking.</div>
+                  <div className="font-bold text-slate-900">{b('Claim Settlement', 'ಕ್ಲೈಮ್ ಇತ್ಯರ್ಥ', language)}</div>
+                  <div className="text-[11px] text-slate-500">
+                    {b('PMFBY scale of finance and DBT payout tracking.', 'PMFBY ಆರ್ಥಿಕ ಮಾನದಂಡ ಮತ್ತು DBT ಪಾವತಿ ಪರಿಶೀಲನೆ.', language)}
+                  </div>
                 </div>
               </div>
             </div>
@@ -246,14 +259,16 @@ export const CustomerSupportModal: React.FC<Props> = ({
         <div className="shrink-0 p-3.5 sm:p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-emerald-700" />
-            <span className="truncate max-w-[200px] sm:max-w-none font-medium">KisanClaim Support Cell • 9019715931</span>
+            <span className="truncate max-w-[200px] sm:max-w-none font-medium">
+              {b('KisanClaim Support Cell • 9019715931', 'ಕಿಸಾನ್‌ಕ್ಲೇಮ್ ಸಹಾಯವಾಣಿ ಕೋಶ • 9019715931', language)}
+            </span>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-semibold cursor-pointer"
           >
-            Close
+            {b('Close', 'ಮುಚ್ಚಿ', language)}
           </button>
         </div>
       </div>

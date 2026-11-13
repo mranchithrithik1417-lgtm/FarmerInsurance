@@ -28,6 +28,7 @@ import { VoiceAssistantModal } from './VoiceAssistantModal';
 import { EvidenceAnalysisProgress } from './EvidenceAnalysisProgress';
 import { FarmerULPINDashboard } from './FarmerULPINDashboard';
 import { ForgotULPINDashboard } from './ForgotULPINDashboard';
+import { b, t } from '../../utils/translations';
 
 interface Props {
   claims: Claim[];
@@ -133,7 +134,7 @@ export const FarmerDashboard: React.FC<Props> = ({
             }`}
           >
             <span>🌾</span>
-            <span>Identify Land (ULPIN)</span>
+            <span>{b('Identify Land (ULPIN)', 'ಭೂಮಿ ಗುರುತಿಸಿ (ULPIN)', language)}</span>
           </button>
 
           {activeClaim && (
@@ -147,7 +148,7 @@ export const FarmerDashboard: React.FC<Props> = ({
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>Claim Dossiers & Satellite Twin</span>
+              <span>{b('Claim Dossiers & Satellite Twin', 'ಕ್ಲೇಮ್ ಕಡತ & ಉಪಗ್ರಹ ದೃಶ್ಯ', language)}</span>
               <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${
                 viewMode === 'dossier' ? 'bg-emerald-800 text-white' : 'bg-slate-100 text-emerald-800'
               }`}>
@@ -167,7 +168,7 @@ export const FarmerDashboard: React.FC<Props> = ({
             className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs"
           >
             <FilePlus className="w-3.5 h-3.5" />
-            <span>File New Claim via ULPIN</span>
+            <span>{b('File New Claim via ULPIN', 'ULPIN ಮೂಲಕ ಹೊಸ ಕ್ಲೇಮ್ ಸಲ್ಲಿಸಿ', language)}</span>
           </button>
         )}
       </div>
@@ -210,16 +211,16 @@ export const FarmerDashboard: React.FC<Props> = ({
               className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl flex items-center gap-2 transition cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4 text-emerald-700" />
-              <span>Back to Land Identification (ULPIN)</span>
+              <span>{b('Back to Land Identification (ULPIN)', 'ಭೂಮಿ ಗುರುತಿಸುವಿಕೆಗೆ ಹಿಂತಿರುಗಿ (ULPIN)', language)}</span>
             </button>
 
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono text-slate-500">
-                Claim: <strong className="text-slate-900">{activeClaim.claim_number}</strong>
+                {b('Claim:', 'ಕ್ಲೇಮ್:', language)} <strong className="text-slate-900">{activeClaim.claim_number}</strong>
               </span>
               <span className="text-slate-300">•</span>
               <span className="text-xs text-slate-500">
-                Status: <strong className="text-emerald-700">{activeClaim.current_status}</strong>
+                {b('Status:', 'ಸ್ಥಿತಿ:', language)} <strong className="text-emerald-700">{activeClaim.current_status}</strong>
               </span>
             </div>
           </div>
@@ -233,7 +234,7 @@ export const FarmerDashboard: React.FC<Props> = ({
                     {activeClaim.claim_number}
                   </span>
                   <span className="text-xs text-slate-500 font-mono">
-                    Filed on {activeClaim.created_at.slice(0, 10)}
+                    {b('Filed on', 'ಸಲ್ಲಿಸಿದ ದಿನಾಂಕ', language)} {activeClaim.created_at.slice(0, 10)}
                   </span>
                   <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${
                     activeClaim.current_status === 'Approved'
@@ -247,12 +248,12 @@ export const FarmerDashboard: React.FC<Props> = ({
                 </div>
 
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-                  {activeClaim.crop.crop_name} Crop Damage Claim Dossier
+                  {activeClaim.crop.crop_name} {b('Crop Damage Claim Dossier', 'ಬೆಳೆ ಹಾನಿ ಕ್ಲೇಮ್ ಕಡತ', language)}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-600 flex flex-wrap items-center gap-2">
                   <span>📍 {activeClaim.farmer.village}, {activeClaim.farmer.district}</span>
                   <span className="text-slate-400">•</span>
-                  <span>Survey #{activeClaim.land.survey_number}</span>
+                  <span>{b('Survey #', 'ಸರ್ವೆ ಸಂಖ್ಯೆ #', language)}{activeClaim.land.survey_number}</span>
                   <span className="text-slate-400">•</span>
                   <span>DIGIPIN: <span className="font-mono text-emerald-800 font-semibold">{activeClaim.land.digipin}</span></span>
                 </p>
@@ -265,7 +266,7 @@ export const FarmerDashboard: React.FC<Props> = ({
                   className="px-5 py-3 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-2 shadow-xs transition cursor-pointer"
                 >
                   <FileText className="w-4 h-4" />
-                  <span>View Official Verification Report</span>
+                  <span>{b('View Official Verification Report', 'ಅಧಿಕೃತ ಪರಿಶೀಲನಾ ವರದಿ ವೀಕ್ಷಿಸಿ', language)}</span>
                 </button>
               </div>
             </div>
@@ -273,35 +274,51 @@ export const FarmerDashboard: React.FC<Props> = ({
             {/* Quick Metrics Strip */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-100">
               <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
-                <span className="text-[11px] text-slate-500 font-medium block">Reported Disaster</span>
+                <span className="text-[11px] text-slate-500 font-medium block">
+                  {b('Reported Disaster', 'ವರದಿ ಮಾಡಿದ ವಿಪತ್ತು', language)}
+                </span>
                 <strong className="text-sm font-bold text-red-700 mt-0.5 block">
                   {activeClaim.disaster.disaster_type} ({activeClaim.disaster.damage_percentage_reported}%)
                 </strong>
-                <span className="text-[10px] text-slate-500 font-mono">Date: {activeClaim.disaster.disaster_date}</span>
+                <span className="text-[10px] text-slate-500 font-mono">
+                  {b('Date:', 'ದಿನಾಂಕ:', language)} {activeClaim.disaster.disaster_date}
+                </span>
               </div>
 
               <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
-                <span className="text-[11px] text-slate-500 font-medium block">Sentinel-2 NDVI Drop</span>
+                <span className="text-[11px] text-slate-500 font-medium block">
+                  {b('Sentinel-2 NDVI Drop', 'ಸೆಂಟಿನೆಲ್-2 ಹಸಿರು ಇಳಿಕೆ', language)}
+                </span>
                 <strong className="text-sm font-bold text-amber-700 mt-0.5 block">
-                  -{activeClaim.satellite.vegetation_drop_pct.toFixed(1)}% Canopy
+                  -{activeClaim.satellite.vegetation_drop_pct.toFixed(1)}% {b('Canopy', 'ಹಂದರ', language)}
                 </strong>
-                <span className="text-[10px] text-slate-500 font-mono">Pre: {activeClaim.satellite.ndvi_pre_avg} ➔ Post: {activeClaim.satellite.ndvi_post_avg}</span>
+                <span className="text-[10px] text-slate-500 font-mono">
+                  {b('Pre:', 'ಮೊದಲು:', language)} {activeClaim.satellite.ndvi_pre_avg} ➔ {b('Post:', 'ನಂತರ:', language)} {activeClaim.satellite.ndvi_post_avg}
+                </span>
               </div>
 
               <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
-                <span className="text-[11px] text-slate-500 font-medium block">Peak 24h Rainfall</span>
+                <span className="text-[11px] text-slate-500 font-medium block">
+                  {b('Peak 24h Rainfall', 'ಗರಿಷ್ಠ 24ಗಂ ಮಳೆ', language)}
+                </span>
                 <strong className="text-sm font-bold text-blue-700 mt-0.5 block">
                   {activeClaim.weather.rainfall_disaster_day_mm} mm
                 </strong>
-                <span className="text-[10px] text-slate-500 font-mono">Soil Saturation: {activeClaim.weather.soil_saturation_pct}%</span>
+                <span className="text-[10px] text-slate-500 font-mono">
+                  {b('Soil Saturation:', 'ಮಣ್ಣಿನ ತೇವಾಂಶ:', language)} {activeClaim.weather.soil_saturation_pct}%
+                </span>
               </div>
 
               <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
-                <span className="text-[11px] text-slate-500 font-medium block">Indicative PMFBY Payout</span>
+                <span className="text-[11px] text-slate-500 font-medium block">
+                  {b('Indicative PMFBY Payout', 'ಅಂದಾಜು ಪಿಎಂಎಫ್‌ಬಿವೈ ಪರಿಹಾರ', language)}
+                </span>
                 <strong className="text-base font-black text-emerald-700 mt-0.5 block">
                   ₹{activeClaim.estimated_payout.toLocaleString('en-IN')}
                 </strong>
-                <span className="text-[10px] text-slate-500 font-mono">Confidence: {activeClaim.evidence_confidence_score}%</span>
+                <span className="text-[10px] text-slate-500 font-mono">
+                  {b('Confidence:', 'ವಿಶ್ವಾಸಾರ್ಹತೆ:', language)} {activeClaim.evidence_confidence_score}%
+                </span>
               </div>
             </div>
           </div>
@@ -312,7 +329,7 @@ export const FarmerDashboard: React.FC<Props> = ({
               <ShieldCheck className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
               <div>
                 <strong className="text-xs text-slate-900 block font-bold">
-                  Official Reviewer Remarks ({activeClaim.reviewer_name || 'Senior Agronomist'} • {activeClaim.reviewer_id || 'REV-EMP-409'}):
+                  {b('Official Reviewer Remarks', 'ಅಧಿಕೃತ ವಿಮರ್ಶಕರ ಟಿಪ್ಪಣಿಗಳು', language)} ({activeClaim.reviewer_name || 'Senior Agronomist'} • {activeClaim.reviewer_id || 'REV-EMP-409'}):
                 </strong>
                 <p className="text-xs text-slate-700 mt-1 leading-relaxed">
                   "{activeClaim.reviewer_comments}"
@@ -326,14 +343,14 @@ export const FarmerDashboard: React.FC<Props> = ({
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <span>🌾</span>
-                <span>Your Land Parcel Geospatial Evidence Twin</span>
+                <span>{b('Your Land Parcel Geospatial Evidence Twin', 'ನಿಮ್ಮ ಜಮೀನಿನ ಭೂ-ಅಂತರಿಕ್ಷ ಪುರಾವೆ ದೃಶ್ಯ (ಟ್ವಿನ್)', language)}</span>
               </h3>
               <span className="text-xs text-slate-500 font-mono">
-                Sentinel-2 MSI Multi-Band Imagery
+                {b('Sentinel-2 MSI Multi-Band Imagery', 'ಸೆಂಟಿನೆಲ್-2 ಎಂಎಸ್‌ಐ ಮಲ್ಟಿ-ಬ್ಯಾಂಡ್ ಚಿತ್ರಣ', language)}
               </span>
             </div>
 
-            <GeospatialTwinViewer claim={activeClaim} />
+            <GeospatialTwinViewer claim={activeClaim} language={language} />
           </div>
         </div>
       )}
@@ -353,6 +370,7 @@ export const FarmerDashboard: React.FC<Props> = ({
       {showAnalysisScreen && (
         <EvidenceAnalysisProgress
           onComplete={handleAnalysisComplete}
+          language={language}
         />
       )}
     </div>
