@@ -270,25 +270,25 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
   };
 
   return (
-    <div className="bg-slate-900/90 rounded-2xl border border-slate-700/60 overflow-hidden shadow-2xl backdrop-blur-md">
+    <div className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm">
       {/* Header bar */}
-      <div className="p-4 bg-slate-800/80 border-b border-slate-700/60 flex flex-wrap items-center justify-between gap-3">
+      <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg border border-emerald-500/30">
+          <div className="p-2 bg-emerald-100 text-emerald-800 rounded-lg border border-emerald-200">
             <Layers className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-bold text-white tracking-wide">
+              <h3 className="text-base font-bold text-slate-900 tracking-wide">
                 Geospatial Evidence Twin
               </h3>
-              <span className="text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 px-2.5 py-0.5 rounded-full font-mono font-bold flex items-center gap-1">
-                <Crosshair className="w-3 h-3 text-cyan-400" />
+              <span className="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full font-mono font-bold flex items-center gap-1">
+                <Crosshair className="w-3 h-3 text-emerald-700" />
                 <span>DIGIPIN: {claim.land.digipin}</span>
               </span>
             </div>
-            <p className="text-xs text-slate-400">
-              Survey #{claim.land.survey_number} • <span className="text-slate-200 font-semibold">{claim.land.land_parcel_id}</span> ({measuredArea} ac) • {claim.farmer.village}, {claim.farmer.district}
+            <p className="text-xs text-slate-600">
+              Survey #{claim.land.survey_number} • <span className="text-slate-900 font-semibold">{claim.land.land_parcel_id}</span> ({measuredArea} ac) • {claim.farmer.village}, {claim.farmer.district}
             </p>
           </div>
         </div>
@@ -298,7 +298,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
           <button
             onClick={handleFetchDynamicSatellite}
             disabled={isFetching}
-            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm cursor-pointer"
+            className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-slate-200 disabled:text-slate-400 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm cursor-pointer"
             title="Fetch live satellite pass for this location"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin' : ''}`} />
@@ -309,25 +309,25 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             href={googleEarthWebUrl}
             target="_blank"
             rel="noreferrer"
-            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-xl text-xs font-bold border border-cyan-500/30 flex items-center gap-1.5 transition"
+            className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold border border-slate-200 flex items-center gap-1.5 transition shadow-sm"
             title="Open in official 3D Google Earth"
           >
-            <Globe className="w-3.5 h-3.5 text-cyan-400" />
+            <Globe className="w-3.5 h-3.5 text-emerald-700" />
             <span className="hidden sm:inline">Open in Google Earth 3D</span>
-            <ExternalLink className="w-3 h-3 text-cyan-400" />
+            <ExternalLink className="w-3 h-3 text-slate-400" />
           </a>
         </div>
       </div>
 
       {/* View Mode Toggle Sub-bar */}
-      <div className="px-4 py-2 bg-slate-950/70 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
+      <div className="px-4 py-2 bg-white border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 text-xs">
           <button
             onClick={() => setViewMode('earth')}
             className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
               viewMode === 'earth'
-                ? 'bg-gradient-to-r from-emerald-600 to-teal-500 text-white shadow-md'
-                : 'text-slate-400 hover:text-white bg-slate-900 border border-slate-800'
+                ? 'bg-emerald-700 text-white shadow-sm'
+                : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50'
             }`}
           >
             <Globe className="w-3.5 h-3.5" />
@@ -338,8 +338,8 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             onClick={() => setViewMode('rgb')}
             className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
               viewMode === 'rgb'
-                ? 'bg-emerald-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white bg-slate-900 border border-slate-800'
+                ? 'bg-emerald-700 text-white shadow-sm'
+                : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50'
             }`}
           >
             Sentinel-2 Pre/Post Slider
@@ -349,8 +349,8 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             onClick={() => setViewMode('ndvi')}
             className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
               viewMode === 'ndvi'
-                ? 'bg-emerald-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white bg-slate-900 border border-slate-800'
+                ? 'bg-emerald-700 text-white shadow-sm'
+                : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50'
             }`}
           >
             NDVI Spatial Heatmap
@@ -360,8 +360,8 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             onClick={() => setViewMode('flood')}
             className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
               viewMode === 'flood'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white bg-slate-900 border border-slate-800'
+                ? 'bg-sky-700 text-white shadow-sm'
+                : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-50'
             }`}
           >
             Inundation Mask
@@ -369,16 +369,16 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
         </div>
 
         {/* Live GPS / Cadastral Centroid Badge */}
-        <div className="text-[11px] font-mono text-slate-300 flex items-center gap-1.5">
-          <Compass className="w-3.5 h-3.5 text-cyan-400" />
+        <div className="text-[11px] font-mono text-slate-600 flex items-center gap-1.5">
+          <Compass className="w-3.5 h-3.5 text-emerald-700" />
           <span>Centroid: <strong>{lat.toFixed(4)}°N, {lng.toFixed(4)}°E</strong></span>
         </div>
       </div>
 
       {/* Dynamic Status Toast Banner */}
       {fetchStatus && (
-        <div className="px-4 py-2 bg-emerald-950/80 border-b border-emerald-500/40 text-emerald-200 text-xs flex items-center gap-2 animate-fadeIn">
-          <Sparkles className="w-4 h-4 text-emerald-400 flex-shrink-0 animate-spin" />
+        <div className="px-4 py-2 bg-emerald-50 border-b border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 animate-fadeIn">
+          <Sparkles className="w-4 h-4 text-emerald-700 flex-shrink-0 animate-spin" />
           <span>{fetchStatus}</span>
         </div>
       )}
@@ -413,33 +413,33 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             )}
 
             {/* Top Left: Cadastral Survey HUD Overlay */}
-            <div className="absolute top-3 left-3 bg-slate-950/90 backdrop-blur-md border border-slate-700 px-3 py-2 rounded-xl shadow-xl z-20 text-xs max-w-xs space-y-1 pointer-events-none">
+            <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-2 rounded-xl shadow-lg z-20 text-xs max-w-xs space-y-1 pointer-events-none">
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="font-bold text-white">Cadastral Survey #{claim.land.survey_number}</span>
-                <span className="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded font-mono font-bold">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="font-bold text-slate-900">Cadastral Survey #{claim.land.survey_number}</span>
+                <span className="text-[9px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-1.5 py-0.2 rounded font-mono font-bold">
                   {measuredArea} Acres
                 </span>
               </div>
-              <div className="text-[10px] text-slate-400 font-mono">
+              <div className="text-[10px] text-slate-600 font-mono">
                 Centroid: {lat.toFixed(4)}°N, {lng.toFixed(4)}°E • {claim.farmer.village}
               </div>
-              <div className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 pt-0.5">
-                <CheckCircle2 className="w-3.5 h-3.5" />
+              <div className="text-[10px] text-emerald-700 font-semibold flex items-center gap-1 pt-0.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
                 <span>Physical Field Bunds Aligned ({totalPerimeterMeters}m perimeter)</span>
               </div>
             </div>
 
             {/* Top Right: Layer Toggle & 3D Earth Link */}
             <div className="absolute top-3 right-12 flex items-center gap-1.5 z-20">
-              <div className="bg-slate-950/90 backdrop-blur-md border border-slate-700 p-1 rounded-xl flex items-center gap-1 text-[11px]">
+              <div className="bg-white/95 backdrop-blur-md border border-slate-200 p-1 rounded-xl flex items-center gap-1 text-[11px] shadow-lg">
                 <button
                   type="button"
                   onClick={() => setSatelliteFeedType('interactive')}
                   className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
                     satelliteFeedType === 'interactive'
-                      ? 'bg-emerald-600 text-white'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-emerald-700 text-white'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   Live Satellite Map
@@ -449,8 +449,8 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                   onClick={() => setSatelliteFeedType('stream')}
                   className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
                     satelliteFeedType === 'stream'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-sky-700 text-white'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   Google Maps Feed
@@ -461,7 +461,7 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
                 href={googleEarthWebUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5 transition cursor-pointer"
+                className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5 transition cursor-pointer"
               >
                 <span>3D Earth</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -469,14 +469,14 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             </div>
 
             {/* Bottom Telemetry Ticker */}
-            <div className="absolute bottom-2 left-3 right-3 bg-slate-950/90 backdrop-blur-md border border-slate-800 px-3 py-1.5 rounded-xl text-[10px] text-slate-300 flex flex-wrap items-center justify-between gap-2 z-20 font-mono">
+            <div className="absolute bottom-2 left-3 right-3 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl text-[10px] text-slate-700 flex flex-wrap items-center justify-between gap-2 z-20 font-mono shadow-lg">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
                 <span>DIGIPIN Reticle: <strong>{claim.land.digipin}</strong></span>
               </div>
               <span>Location: {lat.toFixed(4)}°N, {lng.toFixed(4)}°E ({claim.farmer.village})</span>
               <span>Acquisition: {sceneAcquiredTime}</span>
-              <span className="text-emerald-400 font-bold">Boundary Verification: 100% Match</span>
+              <span className="text-emerald-700 font-bold">Boundary Verification: 100% Match</span>
             </div>
           </div>
         )}
@@ -609,80 +609,80 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
       </div>
 
       {/* KPI & Metrics Bar below the map */}
-      <div className="p-4 bg-slate-950/80 border-t border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-        <div className="p-2.5 bg-slate-900/90 rounded-xl border border-slate-800">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Pre-Disaster NDVI</span>
-          <span className="text-xl font-black text-emerald-400 font-mono">{preNDVI}</span>
-          <span className="text-[10px] text-emerald-500 block">Healthy vegetative</span>
+      <div className="p-4 bg-slate-50 border-t border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+        <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">Pre-Disaster NDVI</span>
+          <span className="text-xl font-black text-emerald-700 font-mono">{preNDVI}</span>
+          <span className="text-[10px] text-emerald-800 block">Healthy vegetative</span>
         </div>
 
-        <div className="p-2.5 bg-slate-900/90 rounded-xl border border-slate-800">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Post-Disaster NDVI</span>
-          <span className="text-xl font-black text-red-400 font-mono">{postNDVI}</span>
-          <span className="text-[10px] text-red-500 block">Submerged / Lodged</span>
+        <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">Post-Disaster NDVI</span>
+          <span className="text-xl font-black text-red-700 font-mono">{postNDVI}</span>
+          <span className="text-[10px] text-red-800 block">Submerged / Lodged</span>
         </div>
 
-        <div className="p-2.5 bg-slate-900/90 rounded-xl border border-slate-800">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Net Vegetation Drop</span>
-          <span className="text-xl font-black text-amber-400 font-mono">{ndviDiff}</span>
-          <span className="text-[10px] text-amber-500 block">-{claim.satellite.vegetation_drop_pct}% loss</span>
+        <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">Net Vegetation Drop</span>
+          <span className="text-xl font-black text-amber-700 font-mono">{ndviDiff}</span>
+          <span className="text-[10px] text-amber-800 block">-{claim.satellite.vegetation_drop_pct}% loss</span>
         </div>
 
-        <div className="p-2.5 bg-slate-900/90 rounded-xl border border-slate-800">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">NDWI Water Index</span>
-          <span className="text-xl font-black text-blue-400 font-mono">+{claim.satellite.flood_water_index_ndwi || 0.48}</span>
-          <span className="text-[10px] text-blue-400 block">Flood Inundation Confirmed</span>
+        <div className="p-2.5 bg-white rounded-xl border border-slate-200 shadow-sm">
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">NDWI Water Index</span>
+          <span className="text-xl font-black text-sky-700 font-mono">+{claim.satellite.flood_water_index_ndwi || 0.48}</span>
+          <span className="text-[10px] text-sky-800 block">Flood Inundation Confirmed</span>
         </div>
       </div>
 
       {/* Expandable Marked Land Plot Boundary & DIGIPIN Match Verification Audit */}
-      <div className="border-t border-slate-800 bg-slate-950/90">
+      <div className="border-t border-slate-200 bg-white">
         <button
           type="button"
           onClick={() => setShowBoundaryAudit(!showBoundaryAudit)}
-          className="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-900/50 transition cursor-pointer"
+          className="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-50 transition cursor-pointer"
         >
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-300">
-              <Crosshair className="w-4 h-4" />
+            <div className="p-1.5 rounded-lg bg-emerald-100 text-emerald-800">
+              <Crosshair className="w-4 h-4 text-emerald-700" />
             </div>
             <div>
-              <span className="text-xs font-bold text-white uppercase tracking-wider block">
+              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider block">
                 Marked Land Plot Boundary & DIGIPIN Square Match Verification Audit
               </span>
-              <span className="text-[11px] text-slate-400">
-                {polygonCoords.length} corner vertices verified • {measuredArea} Acres • DIGIPIN: <strong className="text-cyan-300 font-mono">{claim.land.digipin}</strong>
+              <span className="text-[11px] text-slate-600">
+                {polygonCoords.length} corner vertices verified • {measuredArea} Acres • DIGIPIN: <strong className="text-emerald-800 font-mono">{claim.land.digipin}</strong>
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" />
+            <span className="text-[11px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
               <span>100% GIS Ground Match</span>
             </span>
-            {showBoundaryAudit ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+            {showBoundaryAudit ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
           </div>
         </button>
 
         {showBoundaryAudit && (
-          <div className="px-4 pb-4 pt-1 space-y-3 border-t border-slate-800/60">
+          <div className="px-4 pb-4 pt-1 space-y-3 border-t border-slate-200">
             {/* Boundary Corners Table */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {polygonCoords.map((pt, idx) => (
-                <div key={`audit-pt-${idx}`} className="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
+                <div key={`audit-pt-${idx}`} className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-extrabold text-emerald-400 font-mono">
+                    <span className="text-[10px] font-extrabold text-emerald-800 font-mono">
                       {cornerLabels[idx] || `Corner P${idx + 1}`}
                     </span>
-                    <span className="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.2 rounded font-mono">
+                    <span className="text-[9px] bg-white border border-slate-200 text-slate-600 px-1.5 py-0.2 rounded font-mono">
                       Vertex #{idx + 1}
                     </span>
                   </div>
-                  <div className="text-[11px] font-mono text-white">
+                  <div className="text-[11px] font-mono text-slate-900 font-semibold">
                     {pt[0].toFixed(5)}°N
                   </div>
-                  <div className="text-[11px] font-mono text-slate-300">
+                  <div className="text-[11px] font-mono text-slate-600">
                     {pt[1].toFixed(5)}°E
                   </div>
                 </div>
@@ -690,14 +690,14 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
             </div>
 
             {/* Verification Metadata Ticker */}
-            <div className="p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2 text-slate-200">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs text-emerald-950">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-700 flex-shrink-0" />
                 <span>
-                  <strong>National DIGIPIN Alignment:</strong> The polygon centroid maps to 4m×4m cell <span className="text-cyan-300 font-mono font-bold">{claim.land.digipin}</span>, precisely corroborating Cadastral Survey #{claim.land.survey_number}.
+                  <strong>National DIGIPIN Alignment:</strong> The polygon centroid maps to 4m×4m cell <span className="text-emerald-800 font-mono font-bold">{claim.land.digipin}</span>, precisely corroborating Cadastral Survey #{claim.land.survey_number}.
                 </span>
               </div>
-              <div className="text-[11px] text-slate-400 font-mono">
+              <div className="text-[11px] text-slate-600 font-mono">
                 Perimeter: <strong>{totalPerimeterMeters}m</strong> across {polygonCoords.length} bunds
               </div>
             </div>
@@ -707,20 +707,20 @@ export const GeospatialTwinViewer: React.FC<Props> = ({ claim, interactiveSlider
 
       {/* Photo Popup Modal if clicked */}
       {selectedPhoto && (
-        <div className="p-4 bg-slate-800/95 border-t border-slate-700 flex items-center justify-between gap-4">
+        <div className="p-4 bg-white border-t border-slate-200 flex items-center justify-between gap-4 shadow-lg">
           <div className="flex items-center gap-3">
-            <img src={selectedPhoto.photo_url} alt="Evidence" className="w-16 h-12 object-cover rounded-lg border border-slate-600" />
+            <img src={selectedPhoto.photo_url} alt="Evidence" className="w-16 h-12 object-cover rounded-lg border border-slate-200 shadow-sm" />
             <div className="text-xs">
-              <div className="font-bold text-white capitalize">{selectedPhoto.photo_type.replace('_', ' ')}</div>
-              <div className="text-slate-400 font-mono">GPS: {selectedPhoto.latitude.toFixed(4)}°N, {selectedPhoto.longitude.toFixed(4)}°E</div>
-              <div className="text-emerald-400 font-semibold flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5" /> EXIF Geotag Timestamp Verified: {selectedPhoto.timestamp.replace('T', ' ')}
+              <div className="font-bold text-slate-900 capitalize">{selectedPhoto.photo_type.replace('_', ' ')}</div>
+              <div className="text-slate-600 font-mono">GPS: {selectedPhoto.latitude.toFixed(4)}°N, {selectedPhoto.longitude.toFixed(4)}°E</div>
+              <div className="text-emerald-700 font-semibold flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" /> EXIF Geotag Timestamp Verified: {selectedPhoto.timestamp.replace('T', ' ')}
               </div>
             </div>
           </div>
           <button
             onClick={() => setSelectedPhoto(null)}
-            className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg text-white cursor-pointer"
+            className="text-xs bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg text-slate-700 transition cursor-pointer"
           >
             Close
           </button>

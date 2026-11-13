@@ -349,23 +349,23 @@ export const GeoCameraModal: React.FC<Props> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[94vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+      <div className="relative w-full max-w-2xl bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[94vh]">
         
         {/* Header */}
-        <div className="p-4 bg-slate-850 border-b border-slate-800 flex items-center justify-between">
+        <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-              <Camera className="w-5 h-5" />
+            <div className="p-2 rounded-xl bg-emerald-100 text-emerald-800 border border-emerald-200">
+              <Camera className="w-5 h-5 text-emerald-700" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2 tracking-wide">
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2 tracking-wide">
                 <span>Website Camera • Live Geotag Capture</span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono font-bold">
+                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-mono font-bold">
                   SAT-VERIFIED
                 </span>
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-600">
                 Ground photos are burned with verified GPS, Survey #{surveyNumber}, and DIGIPIN
               </p>
             </div>
@@ -373,15 +373,15 @@ export const GeoCameraModal: React.FC<Props> = ({
 
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition cursor-pointer"
+            className="p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Category Selector Tabs */}
-        <div className="px-4 py-2.5 bg-slate-950 border-b border-slate-800 flex items-center gap-2 overflow-x-auto no-scrollbar">
-          <span className="text-[11px] font-bold text-emerald-400 font-mono uppercase tracking-wider whitespace-nowrap">
+        <div className="px-4 py-2.5 bg-slate-100/70 border-b border-slate-200 flex items-center gap-2 overflow-x-auto no-scrollbar">
+          <span className="text-[11px] font-bold text-emerald-800 font-mono uppercase tracking-wider whitespace-nowrap">
             Photo Type:
           </span>
           {[
@@ -395,8 +395,8 @@ export const GeoCameraModal: React.FC<Props> = ({
               onClick={() => setPhotoCategory(tab.id)}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer ${
                 photoCategory === tab.id
-                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
-                  : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800'
+                  ? 'bg-emerald-700 text-white shadow-sm'
+                  : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200'
               }`}
             >
               {tab.label}
@@ -515,7 +515,7 @@ export const GeoCameraModal: React.FC<Props> = ({
         />
 
         {/* Controls Footer */}
-        <div className="p-4 bg-slate-850 border-t border-slate-800 space-y-3">
+        <div className="p-4 bg-slate-50 border-t border-slate-200 space-y-3">
           
           {/* Caption Input */}
           <div className="flex items-center gap-2">
@@ -524,7 +524,7 @@ export const GeoCameraModal: React.FC<Props> = ({
               placeholder="Add optional note or landmark (e.g. Near north irrigation canal)..."
               value={customCaption}
               onChange={e => setCustomCaption(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-750 rounded-xl px-3 py-2 text-white text-xs outline-none focus:border-emerald-500"
+              className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-900 text-xs outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
             />
           </div>
 
@@ -534,10 +534,10 @@ export const GeoCameraModal: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
                 title="Upload photo from disk or gallery and apply verified geotag"
               >
-                <Upload className="w-3.5 h-3.5 text-cyan-400" />
+                <Upload className="w-3.5 h-3.5 text-emerald-700" />
                 <span className="hidden sm:inline">Upload Photo File</span>
               </button>
 
@@ -549,10 +549,10 @@ export const GeoCameraModal: React.FC<Props> = ({
                     setCurrentDeviceId(nextDev.deviceId);
                     startCamera(nextDev.deviceId);
                   }}
-                  className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition cursor-pointer"
+                  className="px-3 py-2 rounded-xl bg-white hover:bg-slate-100 text-emerald-800 text-xs font-bold border border-slate-200 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
                   title="Switch front/rear camera"
                 >
-                  <RefreshCw className="w-3.5 h-3.5 text-cyan-400" />
+                  <RefreshCw className="w-3.5 h-3.5 text-emerald-700" />
                   <span className="hidden sm:inline">Switch Lens</span>
                 </button>
               )}
@@ -567,13 +567,13 @@ export const GeoCameraModal: React.FC<Props> = ({
                       setPreviewImage(null);
                       startCamera(currentDeviceId);
                     }}
-                    className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition cursor-pointer"
+                    className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition cursor-pointer shadow-sm"
                   >
                     Retake
                   </button>
                   <button
                     onClick={handleAcceptPhoto}
-                    className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-emerald-600/30 transition cursor-pointer"
+                    className="px-5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition cursor-pointer"
                   >
                     <Check className="w-4 h-4" />
                     <span>Add to Claim Evidence</span>
@@ -583,7 +583,7 @@ export const GeoCameraModal: React.FC<Props> = ({
                 <button
                   onClick={handleSnapPhoto}
                   disabled={!cameraActive || isProcessing}
-                  className="px-6 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all transform active:scale-95 cursor-pointer"
+                  className="px-6 py-2.5 rounded-2xl bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all transform active:scale-95 cursor-pointer"
                 >
                   <Camera className="w-4 h-4 text-white" />
                   <span>📸 Snap & Geotag Photo</span>

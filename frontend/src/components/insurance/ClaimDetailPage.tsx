@@ -29,28 +29,28 @@ export const ClaimDetailPage: React.FC<Props> = ({
   return (
     <div className="space-y-6">
       {/* Top Navigation & Action Banner */}
-      <div className="bg-slate-900 rounded-3xl border border-slate-800 p-6 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 backdrop-blur-md">
+      <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <button
             onClick={onBack}
-            className="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition cursor-pointer"
+            className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition cursor-pointer"
             title="Return to Queue"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold text-cyan-400 bg-cyan-950/60 px-2.5 py-0.5 rounded-full border border-cyan-500/30">
+              <span className="text-xs font-mono font-bold text-blue-800 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
                 {claim.claim_number}
               </span>
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-slate-500">
                 Filed on {claim.created_at.slice(0, 10)}
               </span>
             </div>
-            <h1 className="text-2xl font-black text-white mt-1">
+            <h1 className="text-2xl font-extrabold text-slate-900 mt-1">
               {claim.farmer.name} • {claim.crop.crop_name} Claim Adjudication
             </h1>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               {claim.farmer.village}, {claim.farmer.district}, {claim.farmer.state} • Land Parcel: {claim.land.land_parcel_id} (Survey {claim.land.survey_number})
             </p>
           </div>
@@ -60,15 +60,15 @@ export const ClaimDetailPage: React.FC<Props> = ({
         <div className="flex flex-wrap items-center gap-2.5">
           <button
             onClick={() => onOpenReport(claim)}
-            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl flex items-center gap-2 transition"
+            className="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-300 shadow-xs flex items-center gap-2 transition cursor-pointer"
           >
-            <FileText className="w-4 h-4 text-emerald-400" />
+            <FileText className="w-4 h-4 text-emerald-700" />
             <span>View Full Report</span>
           </button>
 
           <button
             onClick={() => setShowReviewModal(true)}
-            className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white text-xs font-extrabold rounded-xl shadow-lg shadow-cyan-600/30 flex items-center gap-2 transition transform hover:-translate-y-0.5 cursor-pointer"
+            className="px-5 py-2.5 bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold rounded-xl shadow-xs hover:shadow flex items-center gap-2 transition cursor-pointer"
           >
             <ShieldCheck className="w-4 h-4" />
             <span>Adjudicate / Review Decision</span>
@@ -78,53 +78,53 @@ export const ClaimDetailPage: React.FC<Props> = ({
 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-slate-900 rounded-2xl border border-slate-800 p-4">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Farmer Declared Loss</span>
-          <span className="text-xl font-black text-white font-mono mt-1 block">
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">Farmer Declared Loss</span>
+          <span className="text-xl font-black text-slate-900 font-mono mt-1 block">
             ₹{claim.farmer_reported_loss.toLocaleString('en-IN')}
           </span>
           <span className="text-[10px] text-slate-500">Out of pocket estimate</span>
         </div>
 
-        <div className="bg-slate-900 rounded-2xl border border-slate-800 p-4">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Indicative Payout</span>
-          <span className="text-xl font-black text-emerald-400 font-mono mt-1 block">
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+          <span className="text-[10px] uppercase font-bold text-emerald-800 block">Indicative Payout</span>
+          <span className="text-xl font-black text-emerald-700 font-mono mt-1 block">
             ₹{claim.estimated_payout.toLocaleString('en-IN')}
           </span>
-          <span className="text-[10px] text-emerald-500">Scale of finance capped</span>
+          <span className="text-[10px] text-emerald-700 font-medium">Scale of finance capped</span>
         </div>
 
-        <div className="bg-slate-900 rounded-2xl border border-slate-800 p-4">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Evidence Confidence</span>
-          <span className="text-xl font-black text-cyan-400 font-mono mt-1 block">
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+          <span className="text-[10px] uppercase font-bold text-blue-800 block">Evidence Confidence</span>
+          <span className="text-xl font-black text-blue-700 font-mono mt-1 block">
             {claim.evidence_confidence_score}%
           </span>
-          <span className="text-[10px] text-cyan-400">Sentinel & radar coherence</span>
+          <span className="text-[10px] text-blue-700 font-medium">Sentinel & radar coherence</span>
         </div>
 
-        <div className={`bg-slate-900 rounded-2xl border p-4 ${
-          claim.current_status === 'Flagged Fraud' ? 'border-red-500/60 bg-red-950/30' : 'border-slate-800'
+        <div className={`rounded-2xl border p-4 shadow-xs ${
+          claim.current_status === 'Flagged Fraud' ? 'border-red-400 bg-red-50/60' : 'bg-white border-slate-200'
         }`}>
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Current Status</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">Current Status</span>
           <span className={`text-sm font-black uppercase mt-1 block ${
-            claim.current_status === 'Flagged Fraud' ? 'text-red-400 animate-pulse' : 'text-amber-400'
+            claim.current_status === 'Flagged Fraud' ? 'text-red-700 animate-pulse' : 'text-amber-700'
           }`}>
             {claim.current_status}
           </span>
-          <span className="text-[10px] text-slate-500">
+          <span className="text-[10px] text-slate-500 font-medium">
             {claim.current_status === 'Flagged Fraud' ? '🚨 Intercepted by AI Swarm' : 'Human adjudication pending'}
           </span>
         </div>
       </div>
 
       {/* Detail Tabs Navigation */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveTab('twin')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer ${
             activeTab === 'twin'
-              ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/20'
-              : 'text-slate-400 hover:text-white bg-slate-900'
+              ? 'bg-blue-700 text-white shadow-xs'
+              : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200'
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -133,10 +133,10 @@ export const ClaimDetailPage: React.FC<Props> = ({
 
         <button
           onClick={() => setActiveTab('agents')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer ${
             activeTab === 'agents'
-              ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/20'
-              : 'text-slate-400 hover:text-white bg-slate-900'
+              ? 'bg-blue-700 text-white shadow-xs'
+              : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200'
           }`}
         >
           <Sparkles className="w-4 h-4" />
@@ -145,10 +145,10 @@ export const ClaimDetailPage: React.FC<Props> = ({
 
         <button
           onClick={() => setActiveTab('graph')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer ${
             activeTab === 'graph'
-              ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/20'
-              : 'text-slate-400 hover:text-white bg-slate-900'
+              ? 'bg-blue-700 text-white shadow-xs'
+              : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200'
           }`}
         >
           <span>🌐</span>
@@ -157,10 +157,10 @@ export const ClaimDetailPage: React.FC<Props> = ({
 
         <button
           onClick={() => setActiveTab('copilot')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer ${
             activeTab === 'copilot'
-              ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/20'
-              : 'text-slate-400 hover:text-white bg-slate-900'
+              ? 'bg-blue-700 text-white shadow-xs'
+              : 'text-slate-700 hover:text-slate-900 bg-white border border-slate-200'
           }`}
         >
           <Bot className="w-4 h-4" />
@@ -176,36 +176,36 @@ export const ClaimDetailPage: React.FC<Props> = ({
           {/* Meteorological and Ground Truth Gallery Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Meteorological Profile */}
-            <div className="bg-slate-900 rounded-3xl border border-slate-800 p-6">
+            <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                   <span>🌧️</span>
                   <span>Open-Meteo & IMD Rainfall Radar</span>
                 </h4>
-                <span className="text-[10px] text-red-400 font-mono font-bold bg-red-950/60 px-2.5 py-0.5 rounded-full border border-red-500/30">
+                <span className="text-[10px] text-red-800 font-mono font-bold bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
                   {claim.weather.anomaly_ratio}x Normal August
                 </span>
               </div>
 
               <div className="space-y-3 text-xs">
-                <div className="flex justify-between py-2 border-b border-slate-800">
-                  <span className="text-slate-400">Peak Precipitation (Disaster Day)</span>
-                  <span className="text-white font-mono font-bold">{claim.weather.rainfall_disaster_day_mm} mm</span>
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <span className="text-slate-500">Peak Precipitation (Disaster Day)</span>
+                  <span className="text-slate-900 font-mono font-bold">{claim.weather.rainfall_disaster_day_mm} mm</span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-slate-800">
-                  <span className="text-slate-400">7-Day Cumulative Runoff</span>
-                  <span className="text-white font-mono font-bold">{claim.weather.rainfall_7day_cumulative_mm} mm</span>
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <span className="text-slate-500">7-Day Cumulative Runoff</span>
+                  <span className="text-slate-900 font-mono font-bold">{claim.weather.rainfall_7day_cumulative_mm} mm</span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-slate-800">
-                  <span className="text-slate-400">Soil Saturation Threshold</span>
-                  <span className="text-cyan-400 font-mono font-bold">{claim.weather.soil_saturation_pct}% (Supersaturated)</span>
+                <div className="flex justify-between py-2 border-b border-slate-100">
+                  <span className="text-slate-500">Soil Saturation Threshold</span>
+                  <span className="text-blue-700 font-mono font-bold">{claim.weather.soil_saturation_pct}% (Supersaturated)</span>
                 </div>
                 <div className="flex justify-between py-2">
-                  <span className="text-slate-400">Meteorological Corroboration</span>
+                  <span className="text-slate-500">Meteorological Corroboration</span>
                   <span className={`font-bold ${
                     claim.weather.rainfall_disaster_day_mm < 5.0 && claim.disaster.damage_percentage_reported > 30.0
-                      ? 'text-red-400'
-                      : 'text-emerald-400'
+                      ? 'text-red-700'
+                      : 'text-emerald-700'
                   }`}>
                     {claim.weather.rainfall_disaster_day_mm < 5.0 && claim.disaster.damage_percentage_reported > 30.0
                       ? '🚨 Contradiction: Dry Week (1.2 mm)'
@@ -216,18 +216,18 @@ export const ClaimDetailPage: React.FC<Props> = ({
             </div>
 
             {/* Farmer Photos Evidence Gallery */}
-            <div className="bg-slate-900 rounded-3xl border border-slate-800 p-6">
+            <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-xs">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                   <span>📸</span>
                   <span>Geotagged Farmer Evidence Photos</span>
                 </h4>
                 {claim.photos.some(p => !p.metadata_verified) ? (
-                  <span className="text-[10px] text-red-400 font-mono font-bold bg-red-950/60 px-2 py-0.5 rounded-full border border-red-500/50 animate-pulse">
+                  <span className="text-[10px] text-red-800 font-mono font-bold bg-red-50 px-2 py-0.5 rounded-full border border-red-200 animate-pulse">
                     🚨 EXIF Spoofed / Geofence Breach
                   </span>
                 ) : (
-                  <span className="text-[10px] text-emerald-400 font-mono font-bold bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                  <span className="text-[10px] text-emerald-800 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                     ✓ EXIF Validated
                   </span>
                 )}
@@ -238,12 +238,12 @@ export const ClaimDetailPage: React.FC<Props> = ({
                   <div
                     key={idx}
                     onClick={() => setExpandedPhoto(p)}
-                    className="bg-slate-950 rounded-xl p-2 border border-slate-800 text-center hover:border-emerald-500/60 cursor-pointer transition transform hover:scale-[1.02]"
+                    className="bg-slate-50 rounded-xl p-2 border border-slate-200 text-center hover:border-emerald-500 cursor-pointer transition transform hover:scale-[1.02]"
                     title="Click to view full forensic photograph"
                   >
                     <img src={p.photo_url} alt="Photo" className="w-full h-24 object-cover rounded-lg mb-1.5" />
-                    <span className="text-[10px] text-slate-300 font-semibold block capitalize truncate">{p.photo_type.replace('_', ' ')}</span>
-                    <span className="text-[9px] text-emerald-400 font-mono block">✓ {p.latitude.toFixed(4)}°N (Click to zoom)</span>
+                    <span className="text-[10px] text-slate-800 font-semibold block capitalize truncate">{p.photo_type.replace('_', ' ')}</span>
+                    <span className="text-[9px] text-emerald-700 font-mono font-medium block">✓ {p.latitude.toFixed(4)}°N</span>
                   </div>
                 ))}
               </div>
@@ -266,25 +266,25 @@ export const ClaimDetailPage: React.FC<Props> = ({
 
       {/* Enlarged Forensic Photo Viewer Modal */}
       {expandedPhoto && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
-          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-5 max-w-2xl w-full shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white border border-slate-200 rounded-3xl p-5 max-w-2xl w-full shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
               <div className="flex items-center gap-2">
                 <span className="text-base">📸</span>
-                <span className="font-bold text-white capitalize">{expandedPhoto.photo_type.replace('_', ' ')}</span>
-                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-mono">
+                <span className="font-bold text-slate-900 capitalize">{expandedPhoto.photo_type.replace('_', ' ')}</span>
+                <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-mono font-bold">
                   GPS & EXIF MATCHED
                 </span>
               </div>
               <button
                 onClick={() => setExpandedPhoto(null)}
-                className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition cursor-pointer"
+                className="p-1.5 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="rounded-2xl overflow-hidden border border-slate-800 mb-3 bg-black">
+            <div className="rounded-2xl overflow-hidden border border-slate-200 mb-3 bg-slate-950">
               <img
                 src={expandedPhoto.photo_url}
                 alt="Enlarged forensic photo"
@@ -292,16 +292,16 @@ export const ClaimDetailPage: React.FC<Props> = ({
               />
             </div>
 
-            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-300 flex items-center justify-between">
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700 flex items-center justify-between">
               <div>
-                <p className="font-semibold text-white">{expandedPhoto.caption}</p>
-                <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                <p className="font-semibold text-slate-900">{expandedPhoto.caption}</p>
+                <p className="text-[11px] text-slate-500 font-mono mt-0.5">
                   Centroid: {expandedPhoto.latitude.toFixed(4)}°N, {expandedPhoto.longitude.toFixed(4)}°E • Timestamp: {expandedPhoto.timestamp.replace('T', ' ')}
                 </p>
               </div>
               <button
                 onClick={() => setExpandedPhoto(null)}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold cursor-pointer"
+                className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold cursor-pointer"
               >
                 Close
               </button>

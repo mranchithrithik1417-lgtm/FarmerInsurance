@@ -495,23 +495,23 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-700/80 rounded-2xl overflow-hidden shadow-2xl">
+    <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-sm">
       {/* Top Header & Map Controls */}
-      <div className="p-3.5 bg-slate-850 border-b border-slate-700 flex flex-wrap items-center justify-between gap-2">
+      <div className="p-3.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400">
-            <Layers className="w-4 h-4" />
+          <div className="p-1.5 rounded-lg bg-emerald-100 text-emerald-800">
+            <Layers className="w-4 h-4 text-emerald-700" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-white uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                 Live Satellite Plot Boundary Selector
               </span>
-              <span className="text-[10px] bg-cyan-500/20 text-cyan-300 font-mono px-2 py-0.5 rounded-full border border-cyan-500/30">
+              <span className="text-[10px] bg-emerald-50 text-emerald-800 font-mono px-2 py-0.5 rounded-full border border-emerald-200 font-bold">
                 LIVE SATELLITE TILES • ZOOM LEVEL 18
               </span>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-600">
               Drag green pins (P1–P4) directly onto your real farm parcel visible from space.
             </p>
           </div>
@@ -523,42 +523,42 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
             type="button"
             onClick={handleAddPoint}
             disabled={coords.length >= 8}
-            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200 text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-700 transition cursor-pointer"
+            className="px-2.5 py-1 bg-white hover:bg-slate-100 disabled:opacity-40 text-slate-700 text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-200 transition cursor-pointer shadow-sm"
             title="Add boundary corner point"
           >
-            <Plus className="w-3.5 h-3.5 text-emerald-400" />
+            <Plus className="w-3.5 h-3.5 text-emerald-700" />
             <span>Add Corner</span>
           </button>
 
           <button
             type="button"
             onClick={handleRecenter}
-            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-700 transition cursor-pointer"
+            className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-200 transition cursor-pointer shadow-sm"
             title="Recenter view on plot"
           >
-            <LocateFixed className="w-3.5 h-3.5 text-cyan-400" />
+            <LocateFixed className="w-3.5 h-3.5 text-emerald-700" />
             <span>Recenter</span>
           </button>
 
           <button
             type="button"
             onClick={handleReset}
-            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-700 transition cursor-pointer"
+            className="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 text-[11px] font-semibold rounded-lg flex items-center gap-1 border border-slate-200 transition cursor-pointer shadow-sm"
             title="Reset to survey standard boundary"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+            <RotateCcw className="w-3.5 h-3.5 text-amber-600" />
             <span>Reset</span>
           </button>
 
           {/* Satellite Layer Provider Switcher */}
-          <div className="flex items-center bg-slate-950 p-0.5 rounded-lg border border-slate-700 text-[11px]">
+          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[11px]">
             <button
               type="button"
               onClick={() => setSatelliteProvider('esri')}
               className={`px-2 py-0.5 rounded-md font-bold transition cursor-pointer ${
                 satelliteProvider === 'esri'
-                  ? 'bg-emerald-600 text-white'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-emerald-700 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Esri Satellite
@@ -568,8 +568,8 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
               onClick={() => setSatelliteProvider('google')}
               className={`px-2 py-0.5 rounded-md font-bold transition cursor-pointer ${
                 satelliteProvider === 'google'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-sky-700 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Google Hybrid
@@ -583,20 +583,20 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
         <div ref={mapContainerRef} className="w-full h-full z-0 cursor-crosshair" />
 
         {/* Top-Left Cadastral HUD Overlay */}
-        <div className="absolute top-2.5 left-2.5 bg-slate-950/90 backdrop-blur-md border border-slate-800 px-3 py-1.5 rounded-xl z-10 text-[10px] space-y-0.5 shadow-xl pointer-events-none">
-          <div className="flex items-center gap-1.5 font-bold text-white">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+        <div className="absolute top-2.5 left-2.5 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl z-10 text-[10px] space-y-0.5 shadow-md pointer-events-none">
+          <div className="flex items-center gap-1.5 font-bold text-slate-900">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>Cadastral Survey #{surveyNumber}</span>
-            <span className="text-emerald-300 font-mono">({liveAreaAcres} ac)</span>
+            <span className="text-emerald-700 font-mono font-bold">({liveAreaAcres} ac)</span>
           </div>
-          <div className="text-slate-400 font-mono text-[9px]">
+          <div className="text-slate-600 font-mono text-[9px]">
             GPS: {liveCentroid[0].toFixed(5)}°N, {liveCentroid[1].toFixed(5)}°E
           </div>
         </div>
 
         {/* Top-Right Drag Status Pill */}
-        <div className="absolute top-2.5 right-12 bg-slate-950/90 backdrop-blur-md border border-slate-800 px-2.5 py-1 rounded-xl z-10 text-[10px] flex items-center gap-1.5 shadow-xl pointer-events-none">
-          <span className="text-cyan-300 font-medium">
+        <div className="absolute top-2.5 right-12 bg-white/95 backdrop-blur-md border border-slate-200 px-2.5 py-1 rounded-xl z-10 text-[10px] flex items-center gap-1.5 shadow-md pointer-events-none">
+          <span className="text-emerald-800 font-medium">
             {activeCornerIdx !== null
               ? `Dragging Corner P${activeCornerIdx + 1}...`
               : 'Drag pins P1–P4 to align with farm bunds'}
@@ -604,41 +604,41 @@ export const LandPlotMapSelector: React.FC<LandPlotMapSelectorProps> = ({
         </div>
 
         {/* Bottom Real-Time Telemetry Bar */}
-        <div className="absolute bottom-2 left-2 right-2 bg-slate-950/92 backdrop-blur-md border border-slate-800 px-3 py-2 rounded-xl z-10 flex flex-wrap items-center justify-between gap-2 text-xs shadow-2xl">
+        <div className="absolute bottom-2 left-2 right-2 bg-white/95 backdrop-blur-md border border-slate-200 px-3 py-2 rounded-xl z-10 flex flex-wrap items-center justify-between gap-2 text-xs shadow-lg">
           <div className="flex items-center gap-3">
             <div>
-              <span className="text-[10px] text-slate-400 block font-medium">Marked Land Area</span>
-              <span className="font-extrabold text-emerald-400 font-mono text-sm">
+              <span className="text-[10px] text-slate-500 block font-medium">Marked Land Area</span>
+              <span className="font-extrabold text-emerald-800 font-mono text-sm">
                 {liveAreaAcres} Acres
               </span>
             </div>
-            <div className="h-6 w-px bg-slate-800" />
+            <div className="h-6 w-px bg-slate-200" />
             <div>
-              <span className="text-[10px] text-slate-400 block font-medium">Perimeter Bunds</span>
-              <span className="font-mono text-slate-200 text-[11px]">
+              <span className="text-[10px] text-slate-500 block font-medium">Perimeter Bunds</span>
+              <span className="font-mono text-slate-800 text-[11px] font-semibold">
                 {livePerimeterMeters}m ({coords.length} corners)
               </span>
             </div>
-            <div className="h-6 w-px bg-slate-800" />
+            <div className="h-6 w-px bg-slate-200" />
             <div>
-              <span className="text-[10px] text-slate-400 block font-medium">National DIGIPIN</span>
-              <span className="font-mono text-cyan-300 font-bold text-[11px]">
+              <span className="text-[10px] text-slate-500 block font-medium">National DIGIPIN</span>
+              <span className="font-mono text-emerald-800 font-bold text-[11px]">
                 {liveDigipin}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 text-emerald-400 text-[11px] font-semibold bg-emerald-950/70 border border-emerald-500/30 px-2.5 py-1 rounded-lg">
-            <CheckCircle2 className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-1.5 text-emerald-800 text-[11px] font-semibold bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
             <span>4m×4m National Grid Cell Locked</span>
           </div>
         </div>
       </div>
 
       {/* Guidance Footer */}
-      <div className="p-3 bg-slate-950/80 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+      <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
         <div className="flex items-center gap-1.5">
-          <Info className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+          <Info className="w-4 h-4 text-emerald-700 flex-shrink-0" />
           <span>
             Click and drag pins P1–P4 along the visible physical field bunds to define your exact farm parcel boundary.
           </span>

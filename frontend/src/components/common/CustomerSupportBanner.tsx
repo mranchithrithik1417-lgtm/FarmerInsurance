@@ -23,26 +23,26 @@ export const CustomerSupportBanner: React.FC<Props> = ({
 
   return (
     <>
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-950/90 via-slate-900 to-teal-950/80 border border-emerald-500/40 p-3 sm:p-4 shadow-lg">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-50 via-white to-teal-50/70 border border-emerald-200/90 p-3 sm:p-4 shadow-sm">
         <div className="absolute top-0 right-0 -mt-6 -mr-6 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-3">
           {/* Left: Support Call Center Icon & Text */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-slate-950 flex items-center justify-center font-black shadow-md shadow-emerald-500/20 shrink-0">
-              <PhoneCall className="w-5 h-5 animate-pulse text-slate-950" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-black shadow-sm shrink-0">
+              <PhoneCall className="w-5 h-5 animate-pulse text-white" />
             </div>
 
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm font-black text-white tracking-tight flex items-center gap-1.5">
+                <span className="text-xs sm:text-sm font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
                   <span>{language === 'kn' ? 'ರೈತರ ಗ್ರಾಹಕ ಸಹಾಯವಾಣಿ' : 'Farmer Customer Support Helpline'}</span>
                 </span>
-                <span className="text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full whitespace-nowrap">
+                <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full whitespace-nowrap">
                   24/7 HELPDESK
                 </span>
               </div>
-              <p className="text-xs text-slate-300/90 mt-0.5">
+              <p className="text-xs text-slate-600 mt-0.5">
                 {contextText ||
                   (language === 'kn'
                     ? 'ಯಾವುದೇ ಹಂತದಲ್ಲಿ ಸಹಾಯ ಬೇಕಾದಲ್ಲಿ ನೇರವಾಗಿ ಕರೆ ಮಾಡಿ ಅಥವಾ WhatsApp ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ.'
@@ -56,7 +56,7 @@ export const CustomerSupportBanner: React.FC<Props> = ({
             {/* Direct Dial Button */}
             <a
               href={`tel:${supportNumber}`}
-              className="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white rounded-xl text-xs font-black flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition transform hover:-translate-y-0.5 cursor-pointer"
+              className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm transition transform hover:-translate-y-0.5 cursor-pointer"
               title="Click to dial customer support immediately"
             >
               <Phone className="w-3.5 h-3.5" />
@@ -67,11 +67,11 @@ export const CustomerSupportBanner: React.FC<Props> = ({
             <button
               type="button"
               onClick={() => setShowModal(true)}
-              className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/30 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+              className="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-sm"
             >
-              <HelpCircle className="w-3.5 h-3.5" />
+              <HelpCircle className="w-3.5 h-3.5 text-emerald-700" />
               <span>Help & FAQ</span>
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
             </button>
           </div>
         </div>

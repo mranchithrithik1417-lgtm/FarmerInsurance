@@ -40,29 +40,29 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete }) => {
   const isDone = currentStageIdx >= stages.length - 1;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl">
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-emerald-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+      <div className="relative w-full max-w-2xl bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden flex flex-col">
         {/* Top Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-200">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-2xl border border-emerald-500/30 animate-pulse">
-              <Cpu className="w-6 h-6" />
+            <div className="p-3 bg-emerald-100 text-emerald-800 rounded-2xl border border-emerald-200 animate-pulse">
+              <Cpu className="w-6 h-6 text-emerald-800" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                 Automatic Evidence Verification Engine
-                <span className="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/40 font-mono">
+                <span className="text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-200 font-mono font-bold">
                   LIVE PIPELINE
                 </span>
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-600">
                 Fusing Sentinel-2 satellite passes, Open-Meteo radar, and farmer ground evidence
               </p>
             </div>
           </div>
 
           <div className="text-right">
-            <span className="text-2xl font-black text-emerald-400 font-mono">
+            <span className="text-2xl font-black text-emerald-700 font-mono">
               {Math.round(((currentStageIdx + 1) / stages.length) * 100)}%
             </span>
           </div>
@@ -80,27 +80,27 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete }) => {
                 key={idx}
                 className={`p-3 rounded-xl border transition-all flex items-center justify-between text-xs ${
                   isCurrent
-                    ? 'bg-emerald-950/60 border-emerald-500/60 shadow-lg shadow-emerald-500/10'
+                    ? 'bg-emerald-50 border-emerald-500 shadow-sm ring-1 ring-emerald-500'
                     : isCompleted
-                    ? 'bg-slate-900/60 border-slate-800 text-slate-300'
-                    : 'bg-slate-950/30 border-slate-900 text-slate-600'
+                    ? 'bg-slate-50 border-slate-200 text-slate-800'
+                    : 'bg-white border-slate-200 text-slate-400'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   {isCompleted ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-700 flex-shrink-0" />
                   ) : isCurrent ? (
-                    <Loader2 className="w-4 h-4 text-cyan-400 animate-spin flex-shrink-0" />
+                    <Loader2 className="w-4 h-4 text-emerald-700 animate-spin flex-shrink-0" />
                   ) : (
-                    <div className="w-4 h-4 rounded-full border border-slate-700 flex-shrink-0" />
+                    <div className="w-4 h-4 rounded-full border border-slate-300 flex-shrink-0" />
                   )}
 
                   <div>
-                    <div className={`font-semibold ${isCurrent ? 'text-white' : isCompleted ? 'text-slate-200' : 'text-slate-500'}`}>
+                    <div className={`font-semibold ${isCurrent ? 'text-slate-900' : isCompleted ? 'text-slate-800' : 'text-slate-400'}`}>
                       {idx + 1}. {st.name}
                     </div>
-                    <div className="text-[10px] text-slate-400 flex items-center gap-1.5 mt-0.5">
-                      <span className="text-emerald-500 font-mono">[{st.source}]</span>
+                    <div className="text-[10px] text-slate-600 flex items-center gap-1.5 mt-0.5">
+                      <span className="text-emerald-700 font-mono font-medium">[{st.source}]</span>
                       <span>{st.desc}</span>
                     </div>
                   </div>
@@ -108,11 +108,11 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete }) => {
 
                 <div className="text-right font-mono text-[11px] font-bold">
                   {isCompleted ? (
-                    <span className="text-emerald-400">{st.result}</span>
+                    <span className="text-emerald-700">{st.result}</span>
                   ) : isCurrent ? (
-                    <span className="text-cyan-400 animate-pulse">Processing...</span>
+                    <span className="text-emerald-700 animate-pulse">Processing...</span>
                   ) : (
-                    <span className="text-slate-700">Waiting</span>
+                    <span className="text-slate-400">Waiting</span>
                   )}
                 </div>
               </div>
@@ -121,9 +121,9 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete }) => {
         </div>
 
         {/* Action Button */}
-        <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-          <div className="text-xs text-slate-400 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
+        <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
+          <div className="text-xs text-slate-600 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-emerald-700" />
             <span>Deterministic evidence scoring calibrated for PMFBY guidelines</span>
           </div>
 
@@ -132,8 +132,8 @@ export const EvidenceAnalysisProgress: React.FC<Props> = ({ onComplete }) => {
             onClick={onComplete}
             className={`px-6 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
               isDone
-                ? 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-xl shadow-emerald-600/30 cursor-pointer'
-                : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                ? 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-md cursor-pointer'
+                : 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
             }`}
           >
             <span>{isDone ? 'View Generated Claim & Dossier' : 'Synthesizing Evidence...'}</span>

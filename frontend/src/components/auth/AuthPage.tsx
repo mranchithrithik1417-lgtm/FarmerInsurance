@@ -8,12 +8,11 @@ import {
   Sparkles,
   AlertCircle,
   CheckCircle2,
-  Lock,
   RefreshCw,
   Send,
-  UserCheck,
   Globe,
-  Check
+  Check,
+  Layers
 } from 'lucide-react';
 import { UserSession } from '../../types';
 import {
@@ -99,42 +98,43 @@ export const AuthPage: React.FC<Props> = ({
       setFarmerSuccessMsg(res.message || `OTP dispatched to +91 XXXXXX${cleanMob.slice(-4)}`);
       if (res.demo_otp) {
         setFarmerDemoOtp(res.demo_otp);
-        // Pre-fill for reviewer test convenience
         setFarmerOtp(res.demo_otp);
       }
-      setFarmerTimer(60);
+      setFarmerTimer(30);
     } catch (err: any) {
-      setFarmerError(err.message || 'Failed to send OTP. Please check your network.');
+      setFarmerError(err.message || 'Failed to dispatch OTP. Please verify mobile number.');
     } finally {
       setFarmerSendingOtp(false);
     }
   };
 
-  const handleFarmerVerifyOTP = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleFarmerVerifyOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
     setFarmerError(null);
+    setFarmerSuccessMsg(null);
 
     const cleanMob = farmerMobile.trim().replace(/\D/g, '');
     const cleanOtp = farmerOtp.trim();
 
     if (cleanMob.length !== 10) {
-      setFarmerError('Please enter a valid 10-digit Indian mobile number.');
+      setFarmerError('Please enter a valid 10-digit mobile number.');
       return;
     }
-    if (!cleanOtp || cleanOtp.length < 4) {
-      setFarmerError('Please enter the 4-digit verification OTP received on your mobile.');
+
+    if (!cleanOtp) {
+      setFarmerError('Please enter the verification OTP.');
       return;
     }
 
     setFarmerVerifyingOtp(true);
     try {
       const session = await verifyFarmerOTP(cleanMob, cleanOtp);
-      setFarmerSuccessMsg('Verification successful! Entering Farmer ULPIN Dashboard...');
+      setFarmerSuccessMsg('OTP verified successfully! Redirecting to Land Identification...');
       setTimeout(() => {
         onLoginSuccess(session);
       }, 400);
     } catch (err: any) {
-      setFarmerError(err.message || 'Invalid OTP entered. Please check and try again.');
+      setFarmerError(err.message || 'Invalid or expired OTP. Please try again.');
     } finally {
       setFarmerVerifyingOtp(false);
     }
@@ -151,12 +151,13 @@ export const AuthPage: React.FC<Props> = ({
     const cid = companyId.trim().toUpperCase();
     const cleanMob = insurerMobile.trim().replace(/\D/g, '');
 
-    if (!cid || cid.length < 3) {
-      setInsurerError('Please enter your authorized Insurance Company ID (e.g. AGRI-INS-409).');
+    if (!cid) {
+      setInsurerError('Please enter your authorized Insurance Company ID.');
       return;
     }
+
     if (cleanMob.length !== 10) {
-      setInsurerError('Please enter the officer registered 10-digit mobile number.');
+      setInsurerError('Please enter a valid 10-digit officer mobile number.');
       return;
     }
 
@@ -164,37 +165,40 @@ export const AuthPage: React.FC<Props> = ({
     try {
       const res = await sendInsurerOTP(cid, cleanMob);
       setInsurerOtpSent(true);
-      setInsurerSuccessMsg(res.message || `Authorization OTP sent to +91 XXXXXX${cleanMob.slice(-4)}`);
+      setInsurerSuccessMsg(res.message || `Officer OTP sent for ${cid}`);
       if (res.demo_otp) {
         setInsurerDemoOtp(res.demo_otp);
         setInsurerOtp(res.demo_otp);
       }
-      setInsurerTimer(60);
+      setInsurerTimer(30);
     } catch (err: any) {
-      setInsurerError(err.message || 'Failed to send officer OTP. Verify your Company ID.');
+      setInsurerError(err.message || 'Failed to dispatch officer OTP. Verify credentials.');
     } finally {
       setInsurerSendingOtp(false);
     }
   };
 
-  const handleInsurerVerifyOTP = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleInsurerVerifyOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
     setInsurerError(null);
+    setInsurerSuccessMsg(null);
 
     const cid = companyId.trim().toUpperCase();
     const cleanMob = insurerMobile.trim().replace(/\D/g, '');
     const cleanOtp = insurerOtp.trim();
 
-    if (!cid || cid.length < 3) {
+    if (!cid) {
       setInsurerError('Company ID is required.');
       return;
     }
+
     if (cleanMob.length !== 10) {
       setInsurerError('Please enter a valid 10-digit mobile number.');
       return;
     }
-    if (!cleanOtp || cleanOtp.length < 4) {
-      setInsurerError('Please enter the 4-digit officer authorization OTP.');
+
+    if (!cleanOtp) {
+      setInsurerError('Please enter the officer verification OTP.');
       return;
     }
 
@@ -213,46 +217,46 @@ export const AuthPage: React.FC<Props> = ({
   };
 
   return (
-    <div className="min-h-screen bg-black text-slate-100 flex flex-col justify-between selection:bg-emerald-500 selection:text-black relative overflow-hidden font-sans">
-      {/* Background Futuristic Neon Grid and Ambient Glows */}
-      <div className="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:32px_32px] opacity-15 pointer-events-none" />
-      <div className="absolute -top-40 left-1/4 w-96 h-96 bg-emerald-500/15 rounded-full blur-[128px] pointer-events-none" />
-      <div className="absolute -bottom-40 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[128px] pointer-events-none" />
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between selection:bg-emerald-600 selection:text-white relative overflow-hidden font-sans">
+      {/* Subtle organic background mesh for Indian AgriTech feel */}
+      <div className="absolute inset-0 bg-[radial-gradient(#16a34a_0.75px,transparent_0.75px)] [background-size:24px_24px] opacity-[0.07] pointer-events-none" />
+      <div className="absolute -top-32 left-1/3 w-96 h-96 bg-emerald-100/60 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 right-1/4 w-96 h-96 bg-amber-100/50 rounded-full blur-3xl pointer-events-none" />
 
       {/* ============================================================== */}
-      {/* 1. TOP PROMINENT HEADER WITH OFFICIAL KISANCLAIM LOGO           */}
+      {/* 1. TOP HEADER WITH OFFICIAL KISANCLAIM LOGO                    */}
       {/* ============================================================== */}
-      <header className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 pt-6 pb-2 flex items-center justify-between">
+      <header className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 pt-6 pb-3 flex items-center justify-between">
         <div className="flex items-center gap-3.5">
           {/* Official Logo Symbol */}
-          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-green-400 to-teal-300 text-slate-950 shadow-[0_0_25px_rgba(16,185,129,0.5)] text-2xl font-black">
+          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-800 via-emerald-700 to-green-600 text-white shadow-md text-2xl font-black">
             🌾
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-black tracking-tight text-white">
-                Kisan<span className="text-emerald-400">Claim</span>
+              <span className="text-2xl font-black tracking-tight text-slate-900">
+                Kisan<span className="text-emerald-700">Claim</span>
               </span>
-              <span className="text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full font-mono">
-                AI TELEMETRY
+              <span className="text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full font-mono">
+                PMFBY TELEMETRY
               </span>
             </div>
-            <p className="text-xs text-slate-400 font-medium">
-              National Crop Damage Evidence Intelligence & Claim Verification Platform
+            <p className="text-xs text-slate-600 font-medium">
+              National AI-Powered Crop Damage Evidence & Insurance Verification
             </p>
           </div>
         </div>
 
         {/* Language Selector Toggle */}
-        <div className="flex items-center gap-2 bg-slate-900/90 border border-slate-800 rounded-2xl p-1.5 shadow-lg">
-          <Globe className="w-4 h-4 text-emerald-400 ml-1.5" />
+        <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-2xl p-1 shadow-xs">
+          <Globe className="w-4 h-4 text-emerald-700 ml-1.5" />
           <button
             type="button"
             onClick={() => onLanguageChange('en')}
             className={`px-3 py-1 rounded-xl text-xs font-bold transition cursor-pointer ${
               language === 'en'
-                ? 'bg-emerald-500 text-black shadow-md shadow-emerald-500/25'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-emerald-700 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             English
@@ -262,8 +266,8 @@ export const AuthPage: React.FC<Props> = ({
             onClick={() => onLanguageChange('kn')}
             className={`px-3 py-1 rounded-xl text-xs font-bold transition cursor-pointer ${
               language === 'kn'
-                ? 'bg-emerald-500 text-black shadow-md shadow-emerald-500/25'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-emerald-700 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             ಕನ್ನಡ
@@ -275,17 +279,16 @@ export const AuthPage: React.FC<Props> = ({
       {/* 2. MAIN LOGIN CONTAINER: TWO SEPARATE CARDS ON THE SAME PAGE   */}
       {/* ============================================================== */}
       <main className="relative z-10 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 flex-1 flex flex-col justify-center">
-        
         {/* Banner Tagline */}
         <div className="text-center max-w-2xl mx-auto mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold mb-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
             <span>Secure Role-Based Agricultural Insurance Access</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
             Sign In to KisanClaim
-          </h2>
-          <p className="text-sm text-slate-400 mt-2">
+          </h1>
+          <p className="text-sm text-slate-600 mt-2 leading-relaxed">
             Select your portal below. Farmers authenticate via Mobile OTP to access the ULPIN Cadastral Dashboard.
             Insurers authenticate via Company ID & Officer OTP to access the Claim Adjudication Console.
           </p>
@@ -293,23 +296,22 @@ export const AuthPage: React.FC<Props> = ({
 
         {/* TWO SEPARATED CARDS ON THE SAME PAGE */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-          
           {/* ============================================================ */}
           {/* CARD 1: FARMER LOGIN                                         */}
           {/* ============================================================ */}
-          <div className="relative rounded-3xl bg-slate-900/90 border-2 border-emerald-500/50 p-6 sm:p-8 flex flex-col justify-between shadow-[0_0_40px_rgba(16,185,129,0.15)] hover:border-emerald-400 transition-all duration-300">
+          <div className="relative rounded-3xl bg-white border-2 border-emerald-500/70 p-6 sm:p-8 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-200">
             {/* Card Header Badge */}
-            <div className="flex items-center justify-between pb-4 border-b border-emerald-500/20 mb-6">
+            <div className="flex items-center justify-between pb-4 border-b border-emerald-100 mb-6">
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-2xl border border-emerald-500/30">
+                <div className="p-3 bg-emerald-50 text-emerald-700 rounded-2xl border border-emerald-200">
                   <span className="text-2xl">🌾</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-white">Farmer Login</h3>
-                  <p className="text-xs text-emerald-400 font-mono">Bhu-Aadhaar & ULPIN Portal</p>
+                  <h2 className="text-xl font-extrabold text-slate-900">Farmer Login</h2>
+                  <p className="text-xs text-emerald-700 font-medium">Bhu-Aadhaar & ULPIN Portal</p>
                 </div>
               </div>
-              <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-extrabold uppercase tracking-wider border border-emerald-500/40">
+              <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold uppercase tracking-wider border border-emerald-300">
                 ROLE: FARMER
               </span>
             </div>
@@ -319,20 +321,23 @@ export const AuthPage: React.FC<Props> = ({
               <div className="space-y-4">
                 {/* Mobile Number Input Field */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between mb-1.5">
+                  <label htmlFor="farmer-mobile" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between mb-1.5">
                     <span className="flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                      <Phone className="w-3.5 h-3.5 text-emerald-700" />
                       <span>Mobile Number</span>
                     </span>
-                    <span className="text-[10px] text-emerald-400 font-mono font-bold">10 DIGITS</span>
+                    <span className="text-[10px] text-emerald-700 font-mono font-bold">10 DIGITS</span>
                   </label>
                   <div className="flex gap-2">
                     <div className="relative flex-1">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 font-mono text-sm">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 font-mono text-sm font-semibold">
                         +91
                       </div>
                       <input
+                        id="farmer-mobile"
                         type="tel"
+                        inputMode="numeric"
+                        autoComplete="tel"
                         maxLength={10}
                         required
                         value={farmerMobile}
@@ -341,7 +346,7 @@ export const AuthPage: React.FC<Props> = ({
                           setFarmerError(null);
                         }}
                         placeholder="9876543210"
-                        className="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-2xl pl-12 pr-4 py-3 text-white text-sm font-mono tracking-wider focus:outline-none focus:ring-4 focus:ring-emerald-500/20 transition"
+                        className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-12 pr-4 py-2.5 sm:py-3 text-slate-900 text-sm font-mono tracking-wider transition outline-none"
                       />
                     </div>
 
@@ -350,7 +355,7 @@ export const AuthPage: React.FC<Props> = ({
                       type="button"
                       disabled={farmerSendingOtp || farmerMobile.trim().length !== 10 || farmerTimer > 0}
                       onClick={handleFarmerSendOTP}
-                      className="px-4 py-3 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-extrabold text-xs rounded-2xl flex items-center gap-1.5 transition shadow-md shadow-emerald-600/30 cursor-pointer shrink-0"
+                      className="px-4 py-2.5 sm:py-3 bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition shadow-xs cursor-pointer shrink-0"
                     >
                       {farmerSendingOtp ? (
                         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -365,18 +370,21 @@ export const AuthPage: React.FC<Props> = ({
                 {/* OTP Input Field */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                      <KeyRound className="w-3.5 h-3.5 text-emerald-400" />
+                    <label htmlFor="farmer-otp" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                      <KeyRound className="w-3.5 h-3.5 text-emerald-700" />
                       <span>Enter OTP Code</span>
                     </label>
                     {farmerDemoOtp && (
-                      <span className="text-[11px] font-mono text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/30">
+                      <span className="text-[11px] font-mono text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                         ⚡ Demo OTP: {farmerDemoOtp}
                       </span>
                     )}
                   </div>
                   <input
+                    id="farmer-otp"
                     type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
                     maxLength={6}
                     required
                     value={farmerOtp}
@@ -384,8 +392,8 @@ export const AuthPage: React.FC<Props> = ({
                       setFarmerOtp(e.target.value.replace(/\D/g, ''));
                       setFarmerError(null);
                     }}
-                    placeholder="Enter 4-digit OTP"
-                    className="w-full bg-slate-950 border border-slate-700 focus:border-emerald-400 rounded-2xl px-4 py-3 text-white text-sm font-mono tracking-widest text-center text-lg placeholder:text-sm placeholder:tracking-normal focus:outline-none focus:ring-4 focus:ring-emerald-500/20 transition"
+                    placeholder="Enter 4 or 6 digit OTP"
+                    className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-4 py-2.5 sm:py-3 text-slate-900 text-base font-mono tracking-widest text-center placeholder:text-sm placeholder:tracking-normal transition outline-none"
                   />
                 </div>
 
@@ -397,7 +405,7 @@ export const AuthPage: React.FC<Props> = ({
                       setFarmerMobile('9876543210');
                       setFarmerError(null);
                     }}
-                    className="text-[11px] text-emerald-400 hover:text-emerald-300 font-mono underline flex items-center gap-1 cursor-pointer"
+                    className="text-[11px] text-emerald-700 hover:text-emerald-800 font-medium underline flex items-center gap-1 cursor-pointer"
                   >
                     <span>⚡ Quick-fill: 9876543210 (Ravi Kumar - Karnataka)</span>
                   </button>
@@ -405,16 +413,16 @@ export const AuthPage: React.FC<Props> = ({
 
                 {/* Error Banner */}
                 {farmerError && (
-                  <div className="p-3 bg-rose-950/70 border border-rose-500/50 rounded-2xl text-rose-300 text-xs flex items-center gap-2 animate-shake">
-                    <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs flex items-center gap-2 animate-shake">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
                     <span>{farmerError}</span>
                   </div>
                 )}
 
                 {/* Success Banner */}
                 {farmerSuccessMsg && (
-                  <div className="p-3 bg-emerald-950/70 border border-emerald-500/50 rounded-2xl text-emerald-300 text-xs flex items-center gap-2 animate-fadeIn">
-                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs flex items-center gap-2 animate-fadeIn">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-700" />
                     <span>{farmerSuccessMsg}</span>
                   </div>
                 )}
@@ -425,7 +433,7 @@ export const AuthPage: React.FC<Props> = ({
                 <button
                   type="submit"
                   disabled={farmerVerifyingOtp || !farmerOtp}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-emerald-500/30 flex items-center justify-center gap-2 transition cursor-pointer"
+                  className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm tracking-wide shadow-xs hover:shadow flex items-center justify-center gap-2 transition cursor-pointer"
                 >
                   {farmerVerifyingOtp ? (
                     <>
@@ -434,7 +442,7 @@ export const AuthPage: React.FC<Props> = ({
                     </>
                   ) : (
                     <>
-                      <span>Verify OTP & Open Farmer ULPIN Dashboard</span>
+                      <span>Verify OTP & Open Farmer Dashboard</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -449,19 +457,19 @@ export const AuthPage: React.FC<Props> = ({
           {/* ============================================================ */}
           {/* CARD 2: INSURER LOGIN                                        */}
           {/* ============================================================ */}
-          <div className="relative rounded-3xl bg-slate-900/90 border-2 border-cyan-500/40 p-6 sm:p-8 flex flex-col justify-between shadow-[0_0_40px_rgba(6,182,212,0.12)] hover:border-cyan-400 transition-all duration-300">
+          <div className="relative rounded-3xl bg-white border-2 border-blue-500/70 p-6 sm:p-8 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-200">
             {/* Card Header Badge */}
-            <div className="flex items-center justify-between pb-4 border-b border-cyan-500/20 mb-6">
+            <div className="flex items-center justify-between pb-4 border-b border-blue-100 mb-6">
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-cyan-500/20 text-cyan-400 rounded-2xl border border-cyan-500/30">
+                <div className="p-3 bg-blue-50 text-blue-700 rounded-2xl border border-blue-200">
                   <Building2 className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-white">Insurer Login</h3>
-                  <p className="text-xs text-cyan-400 font-mono">PMFBY Adjudication Console</p>
+                  <h2 className="text-xl font-extrabold text-slate-900">Insurer Login</h2>
+                  <p className="text-xs text-blue-700 font-medium">PMFBY Adjudication Console</p>
                 </div>
               </div>
-              <span className="px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-extrabold uppercase tracking-wider border border-cyan-500/40">
+              <span className="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 text-[10px] font-extrabold uppercase tracking-wider border border-blue-300">
                 ROLE: INSURER
               </span>
             </div>
@@ -471,14 +479,15 @@ export const AuthPage: React.FC<Props> = ({
               <div className="space-y-4">
                 {/* Company ID Input Field */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between mb-1.5">
+                  <label htmlFor="company-id" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between mb-1.5">
                     <span className="flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                      <ShieldCheck className="w-3.5 h-3.5 text-blue-700" />
                       <span>Company ID</span>
                     </span>
-                    <span className="text-[10px] text-cyan-400 font-mono font-bold">OFFICIAL ID</span>
+                    <span className="text-[10px] text-blue-700 font-mono font-bold">OFFICIAL ID</span>
                   </label>
                   <input
+                    id="company-id"
                     type="text"
                     required
                     value={companyId}
@@ -487,26 +496,29 @@ export const AuthPage: React.FC<Props> = ({
                       setInsurerError(null);
                     }}
                     placeholder="e.g. AGRI-INS-409"
-                    className="w-full bg-slate-950 border border-slate-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-white text-sm font-mono tracking-wider focus:outline-none focus:ring-4 focus:ring-cyan-500/20 transition"
+                    className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 rounded-xl px-4 py-2.5 sm:py-3 text-slate-900 text-sm font-mono tracking-wider transition outline-none"
                   />
                 </div>
 
                 {/* Mobile Number Input Field */}
                 <div>
-                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between mb-1.5">
+                  <label htmlFor="insurer-mobile" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between mb-1.5">
                     <span className="flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-cyan-400" />
+                      <Phone className="w-3.5 h-3.5 text-blue-700" />
                       <span>Officer Mobile Number</span>
                     </span>
-                    <span className="text-[10px] text-slate-400 font-mono">10 DIGITS</span>
+                    <span className="text-[10px] text-slate-500 font-mono">10 DIGITS</span>
                   </label>
                   <div className="flex gap-2">
                     <div className="relative flex-1">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 font-mono text-sm">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 font-mono text-sm font-semibold">
                         +91
                       </div>
                       <input
+                        id="insurer-mobile"
                         type="tel"
+                        inputMode="numeric"
+                        autoComplete="tel"
                         maxLength={10}
                         required
                         value={insurerMobile}
@@ -515,7 +527,7 @@ export const AuthPage: React.FC<Props> = ({
                           setInsurerError(null);
                         }}
                         placeholder="9812345678"
-                        className="w-full bg-slate-950 border border-slate-700 focus:border-cyan-400 rounded-2xl pl-12 pr-4 py-3 text-white text-sm font-mono tracking-wider focus:outline-none focus:ring-4 focus:ring-cyan-500/20 transition"
+                        className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 rounded-xl pl-12 pr-4 py-2.5 sm:py-3 text-slate-900 text-sm font-mono tracking-wider transition outline-none"
                       />
                     </div>
 
@@ -524,7 +536,7 @@ export const AuthPage: React.FC<Props> = ({
                       type="button"
                       disabled={insurerSendingOtp || insurerMobile.trim().length !== 10 || insurerTimer > 0}
                       onClick={handleInsurerSendOTP}
-                      className="px-4 py-3 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-extrabold text-xs rounded-2xl flex items-center gap-1.5 transition shadow-md shadow-cyan-600/30 cursor-pointer shrink-0"
+                      className="px-4 py-2.5 sm:py-3 bg-blue-700 hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition shadow-xs cursor-pointer shrink-0"
                     >
                       {insurerSendingOtp ? (
                         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -539,18 +551,21 @@ export const AuthPage: React.FC<Props> = ({
                 {/* OTP Input Field */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                      <KeyRound className="w-3.5 h-3.5 text-cyan-400" />
+                    <label htmlFor="insurer-otp" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                      <KeyRound className="w-3.5 h-3.5 text-blue-700" />
                       <span>Officer Authorization OTP</span>
                     </label>
                     {insurerDemoOtp && (
-                      <span className="text-[11px] font-mono text-cyan-400 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-500/30">
+                      <span className="text-[11px] font-mono text-blue-800 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
                         ⚡ Demo OTP: {insurerDemoOtp}
                       </span>
                     )}
                   </div>
                   <input
+                    id="insurer-otp"
                     type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
                     maxLength={6}
                     required
                     value={insurerOtp}
@@ -558,8 +573,8 @@ export const AuthPage: React.FC<Props> = ({
                       setInsurerOtp(e.target.value.replace(/\D/g, ''));
                       setInsurerError(null);
                     }}
-                    placeholder="Enter 4-digit officer OTP"
-                    className="w-full bg-slate-950 border border-slate-700 focus:border-cyan-400 rounded-2xl px-4 py-3 text-white text-sm font-mono tracking-widest text-center text-lg placeholder:text-sm placeholder:tracking-normal focus:outline-none focus:ring-4 focus:ring-cyan-500/20 transition"
+                    placeholder="Enter 4 or 6 digit officer OTP"
+                    className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 rounded-xl px-4 py-2.5 sm:py-3 text-slate-900 text-base font-mono tracking-widest text-center placeholder:text-sm placeholder:tracking-normal transition outline-none"
                   />
                 </div>
 
@@ -572,7 +587,7 @@ export const AuthPage: React.FC<Props> = ({
                       setInsurerMobile('9812345678');
                       setInsurerError(null);
                     }}
-                    className="text-[11px] text-cyan-400 hover:text-cyan-300 font-mono underline flex items-center gap-1 cursor-pointer"
+                    className="text-[11px] text-blue-700 hover:text-blue-800 font-medium underline flex items-center gap-1 cursor-pointer"
                   >
                     <span>⚡ Quick-fill: AGRI-INS-409 (Ananya Sharma - AIC PMFBY)</span>
                   </button>
@@ -580,16 +595,16 @@ export const AuthPage: React.FC<Props> = ({
 
                 {/* Error Banner */}
                 {insurerError && (
-                  <div className="p-3 bg-rose-950/70 border border-rose-500/50 rounded-2xl text-rose-300 text-xs flex items-center gap-2 animate-shake">
-                    <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs flex items-center gap-2 animate-shake">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
                     <span>{insurerError}</span>
                   </div>
                 )}
 
                 {/* Success Banner */}
                 {insurerSuccessMsg && (
-                  <div className="p-3 bg-cyan-950/70 border border-cyan-500/50 rounded-2xl text-cyan-300 text-xs flex items-center gap-2 animate-fadeIn">
-                    <CheckCircle2 className="w-4 h-4 shrink-0 text-cyan-400" />
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-blue-800 text-xs flex items-center gap-2 animate-fadeIn">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-blue-700" />
                     <span>{insurerSuccessMsg}</span>
                   </div>
                 )}
@@ -600,7 +615,7 @@ export const AuthPage: React.FC<Props> = ({
                 <button
                   type="submit"
                   disabled={insurerVerifyingOtp || !insurerOtp}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-cyan-500/30 flex items-center justify-center gap-2 transition cursor-pointer"
+                  className="w-full py-3.5 rounded-xl bg-blue-700 hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-sm tracking-wide shadow-xs hover:shadow flex items-center justify-center gap-2 transition cursor-pointer"
                 >
                   {insurerVerifyingOtp ? (
                     <>
@@ -620,21 +635,20 @@ export const AuthPage: React.FC<Props> = ({
               </div>
             </form>
           </div>
-
         </div>
       </main>
 
       {/* ============================================================== */}
       {/* 3. FOOTER                                                      */}
       {/* ============================================================== */}
-      <footer className="relative z-10 border-t border-slate-900 py-4 text-center text-xs text-slate-500">
+      <footer className="relative z-10 border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-600">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-400">KisanClaim</span>
-            <span>•</span>
+            <span className="font-extrabold text-slate-800">KisanClaim</span>
+            <span className="text-slate-400">•</span>
             <span>Government of India PMFBY Adjudication Standard</span>
           </div>
-          <div className="font-mono text-[11px] text-slate-600">
+          <div className="font-mono text-[11px] text-slate-500">
             Powered by Copernicus Sentinel-2 MSI • Open-Meteo • DoLR ULPIN Bhu-Aadhaar
           </div>
         </div>
