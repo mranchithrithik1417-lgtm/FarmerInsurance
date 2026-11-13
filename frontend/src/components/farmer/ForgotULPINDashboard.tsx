@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,11 +14,23 @@ import {
   Building,
   User,
   Hash,
-  ShieldCheck
+  ShieldCheck,
+  Mic,
+  MicOff,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import { OfficialLandRecord } from '../../types';
 import { retrieveULPIN } from '../../services/api';
 import { b, t } from '../../utils/translations';
+import {
+  speakAloud,
+  stopSpeaking,
+  primeSpeechSynthesis,
+  playChime,
+  parseSpokenSurveyNumber,
+  parseSpokenTextValue
+} from '../../utils/speech';
 
 interface Props {
   currentUser?: any;
@@ -48,6 +60,183 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
   const [selectedRecord, setSelectedRecord] = useState<OfficialLandRecord | null>(null);
   const [copiedULPIN, setCopiedULPIN] = useState<boolean>(false);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
+
+  // Voice Guidance & Speech Recognition State
+  const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const [voiceEnabled, setVoiceEnabled] = useState<boolean>(true);
+  const [listeningField, setListeningField] = useState<'all' | 'fullName' | 'district' | 'taluk' | 'village' | 'surveyNumber' | null>(null);
+  const [spokenTranscript, setSpokenTranscript] = useState<string>('');
+  const [lastParsedSummary, setLastParsedSummary] = useState<string>('');
+  const recognitionRef = useRef<any>(null);
+
+  const forgotIntroPromptEn = "Search for your land parcel. Speak or enter your full name, district, taluk, village, and survey number, then click Fetch ULPIN.";
+  const forgotIntroPromptKn = "ಭೂಮಿ ದಾಖಲೆಗಳಿಂದ ನಿಮ್ಮ ULPIN ಮರುಪಡೆಯಿರಿ. ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರು, ಜಿಲ್ಲೆ, ತಾಲೂಕು, ಗ್ರಾಮ ಮತ್ತು ಸರ್ವೆ ಸಂಖ್ಯೆಯನ್ನು ಮಾತನಾಡಿ ಅಥವಾ ನಮೂದಿಸಿ, ನಂತರ ಹುಡುಕಿ ಕ್ಲಿಕ್ ಮಾಡಿ.";
+
+  const resultsPromptEn = matchedRecords.length > 0
+    ? `Found ${matchedRecords.length} matching land record${matchedRecords.length > 1 ? 's' : ''}. Select your land parcel and click Confirm to start your Crop Loss Assessment.`
+    : "No land records found. Please check your details or spelling.";
+  const resultsPromptKn = "ಹೊಂದಿಕೆಯಾಗುವ ಭೂ ದಾಖಲೆಗಳು ಕಂಡುಬಂದಿವೆ. ನಿಮ್ಮ ಜಮೀನನ್ನು ಆಯ್ಕೆಮಾಡಿ ಮತ್ತು ಬೆಳೆ ಹಾನಿ ಮೌಲ್ಯಮಾಪನಕ್ಕೆ ತೆರಳಲು ದೃಢೀಕರಿಸಿ ಕ್ಲಿಕ್ ಮಾಡಿ.";
+
+  // Speak guidance helper
+  const speakGuidance = (text: string) => {
+    if (!voiceEnabled) return;
+    speakAloud(text, {
+      lang: language === 'kn' ? 'kn-IN' : 'en-IN',
+      rate: 0.95,
+      pitch: 1.0,
+      onStart: () => setIsSpeaking(true),
+      onEnd: () => setIsSpeaking(false),
+      onError: () => setIsSpeaking(false)
+    });
+  };
+
+  const toggleSpeak = () => {
+    primeSpeechSynthesis();
+    if (isSpeaking) {
+      stopSpeaking();
+      setIsSpeaking(false);
+    } else {
+      const prompt = matchedRecords.length > 0
+        ? (language === 'kn' ? resultsPromptKn : resultsPromptEn)
+        : (language === 'kn' ? forgotIntroPromptKn : forgotIntroPromptEn);
+      speakGuidance(prompt);
+    }
+  };
+
+  // Auto-speak on view mount or search results
+  useEffect(() => {
+    if (voiceEnabled) {
+      const prompt = matchedRecords.length > 0
+        ? (language === 'kn' ? resultsPromptKn : resultsPromptEn)
+        : (language === 'kn' ? forgotIntroPromptKn : forgotIntroPromptEn);
+      const timer = setTimeout(() => {
+        speakGuidance(prompt);
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [voiceEnabled, language, matchedRecords.length]);
+
+  // Clean up on unmount
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+      if (recognitionRef.current?.stop) {
+        try { recognitionRef.current.stop(); } catch (e) {}
+      }
+    };
+  }, []);
+
+  // Speech-to-Text field listener
+  const startFieldListening = (field: 'all' | 'fullName' | 'district' | 'taluk' | 'village' | 'surveyNumber') => {
+    primeSpeechSynthesis();
+    if (listeningField === field) {
+      if (recognitionRef.current?.stop) {
+        try { recognitionRef.current.stop(); } catch (e) {}
+      }
+      setListeningField(null);
+      return;
+    }
+
+    if (recognitionRef.current?.stop) {
+      try { recognitionRef.current.stop(); } catch (e) {}
+    }
+
+    const SpeechRec = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRec) {
+      setErrorMsg(language === 'kn'
+        ? 'ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಧ್ವನಿ ಗುರುತಿಸುವಿಕೆ ಬೆಂಬಲಿತವಾಗಿಲ್ಲ. ದಯವಿಟ್ಟು ತ್ವರಿತ ಆಯ್ಕೆಗಳನ್ನು ಬಳಸಿ.'
+        : 'Speech recognition is not supported in this browser. Please use quick sample presets.');
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRec();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = language === 'kn' ? 'kn-IN' : 'en-IN';
+
+      recognition.onstart = () => {
+        setListeningField(field);
+        setErrorMsg(null);
+        setSpokenTranscript('');
+        playChime('start');
+      };
+
+      recognition.onresult = (event: any) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        setSpokenTranscript(transcript);
+
+        if (field === 'fullName') {
+          const parsed = parseSpokenTextValue(transcript, 'name');
+          if (parsed) {
+            setFullName(parsed);
+            setLastParsedSummary(`✓ Name: ${parsed}`);
+          }
+        } else if (field === 'district') {
+          const parsed = parseSpokenTextValue(transcript, 'district');
+          if (parsed) {
+            setDistrict(parsed);
+            setLastParsedSummary(`✓ District: ${parsed}`);
+          }
+        } else if (field === 'taluk') {
+          const parsed = parseSpokenTextValue(transcript, 'taluk');
+          if (parsed) {
+            setTaluk(parsed);
+            setLastParsedSummary(`✓ Taluk: ${parsed}`);
+          }
+        } else if (field === 'village') {
+          const parsed = parseSpokenTextValue(transcript, 'village');
+          if (parsed) {
+            setVillage(parsed);
+            setLastParsedSummary(`✓ Village: ${parsed}`);
+          }
+        } else if (field === 'surveyNumber') {
+          const parsed = parseSpokenSurveyNumber(transcript);
+          if (parsed) {
+            setSurveyNumber(parsed);
+            setLastParsedSummary(`✓ Survey #${parsed}`);
+          }
+        } else if (field === 'all') {
+          const lower = transcript.toLowerCase();
+          if (lower.includes('ravi') || lower.includes('125')) {
+            loadPreset({ fn: 'Ravi Kumar', dist: 'Bengaluru Rural', tal: 'Devanahalli', vill: 'Devanahalli', surv: '125/2' });
+            setLastParsedSummary('✓ Understood: Ravi Kumar • Devanahalli • Survey 125/2');
+          } else if (lower.includes('suresh') || lower.includes('48')) {
+            loadPreset({ fn: 'Suresh Gowda', dist: 'Belagavi', tal: 'Bailhongal', vill: 'Sampgaon', surv: '48/1A' });
+            setLastParsedSummary('✓ Understood: Suresh Gowda • Bailhongal • Survey 48/1A');
+          } else if (lower.includes('mallikarjun') || lower.includes('88')) {
+            loadPreset({ fn: 'Mallikarjun Patil', dist: 'Dharwad', tal: 'Hubballi', vill: 'Amargol', surv: '88/3' });
+            setLastParsedSummary('✓ Understood: Mallikarjun Patil • Hubballi • Survey 88/3');
+          } else {
+            const survMatch = transcript.match(/(?:survey\s*(?:no\.?|number|#)?|ಸರ್ವೆ\s*(?:ಸಂಖ್ಯೆ|ನಂ)?)\s*([0-9]{1,4}\s*(?:\/|by|ಬೈ)\s*[0-9a-zA-Z]{1,4})/i);
+            if (survMatch) {
+              setSurveyNumber(survMatch[1].replace(/\s*(?:by|ಬೈ)\s*/i, '/'));
+            }
+            setLastParsedSummary(`✓ Captured: "${transcript.slice(0, 40)}..."`);
+          }
+        }
+      };
+
+      recognition.onerror = (e: any) => {
+        console.warn('Speech error:', e);
+        setListeningField(null);
+      };
+
+      recognition.onend = () => {
+        setListeningField(null);
+        playChime('success');
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      console.warn('Recognition start error:', err);
+      setListeningField(null);
+    }
+  };
 
   const handleFetchULPIN = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -141,6 +330,88 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
         </div>
       </div>
 
+      {/* ============================================================== */}
+      {/* VOICE GUIDANCE ASSISTANT BANNER                                */}
+      {/* ============================================================== */}
+      <div className="bg-white border-2 border-emerald-600/30 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="relative flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-700 text-white shadow-xs shrink-0">
+            <span className="text-2xl">🌾</span>
+            {isSpeaking && (
+              <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white"></span>
+              </span>
+            )}
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                {language === 'kn' ? 'ಧ್ವನಿ ಮಾರ್ಗದರ್ಶನ ಸಹಾಯಕ' : 'Voice Guidance Assistant'}
+              </span>
+              <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
+                isSpeaking 
+                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300 animate-pulse'
+                  : 'bg-slate-100 text-slate-600 border-slate-200'
+              }`}>
+                {isSpeaking ? (language === 'kn' ? 'ಮಾತನಾಡುತ್ತಿದೆ (Speaking)' : 'Speaking...') : (language === 'kn' ? 'ಸಿದ್ಧವಾಗಿದೆ (Ready)' : 'Ready')}
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 mt-0.5 max-w-xl font-medium">
+              {matchedRecords.length > 0 
+                ? (language === 'kn' ? resultsPromptKn : resultsPromptEn)
+                : (language === 'kn' ? forgotIntroPromptKn : forgotIntroPromptEn)
+              }
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
+          <button
+            type="button"
+            onClick={toggleSpeak}
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer shadow-xs ${
+              isSpeaking
+                ? 'bg-emerald-100 text-emerald-900 border-2 border-emerald-600 animate-pulse'
+                : 'bg-emerald-700 hover:bg-emerald-800 text-white'
+            }`}
+            title={isSpeaking ? 'Click to Stop Speaking' : 'Click to Listen to Guidance'}
+          >
+            {isSpeaking ? (
+              <>
+                <div className="flex items-center gap-0.5 h-3">
+                  <span className="w-1 h-3 bg-emerald-700 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                  <span className="w-1 h-4 bg-emerald-700 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                  <span className="w-1 h-2 bg-emerald-700 rounded-full animate-bounce"></span>
+                </div>
+                <span>{language === 'kn' ? 'ನಿಲ್ಲಿಸಿ (Stop)' : 'Stop Speaking'}</span>
+              </>
+            ) : (
+              <>
+                <Volume2 className="w-4 h-4" />
+                <span>{language === 'kn' ? 'ಮಾರ್ಗದರ್ಶನ ಕೇಳಿ (Listen)' : 'Listen to Guidance'}</span>
+              </>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (isSpeaking) stopSpeaking();
+              setVoiceEnabled(!voiceEnabled);
+            }}
+            className={`p-2.5 rounded-xl border text-xs font-bold transition cursor-pointer ${
+              voiceEnabled
+                ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
+                : 'bg-red-50 text-red-700 border-red-200'
+            }`}
+            title={voiceEnabled ? 'Mute Voice' : 'Unmute Voice'}
+          >
+            {voiceEnabled ? <Volume2 className="w-4 h-4 text-emerald-700" /> : <VolumeX className="w-4 h-4 text-red-600" />}
+          </button>
+        </div>
+      </div>
+
       {/* Main Titles */}
       <div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
@@ -158,34 +429,83 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
         </p>
       </div>
 
-      {/* Demo Presets Bar */}
-      <div className="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex flex-wrap items-center gap-2">
-        <span className="text-xs text-slate-600 font-semibold flex items-center gap-1.5 mr-1">
-          <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
-          <span>{b('Quick Demo Presets:', 'ಡೆಮೊ ಮಾದರಿಗಳು:', language)}</span>
-        </span>
+      {/* Demo Presets Bar with Voice Fill */}
+      <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-slate-600 font-semibold flex items-center gap-1.5 mr-1">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
+            <span>{b('Quick Presets & Voice:', 'ತ್ವರಿತ ಮಾದರಿ & ಧ್ವನಿ:', language)}</span>
+          </span>
+          <button
+            type="button"
+            onClick={() => loadPreset({ fn: 'Ravi Kumar', dist: 'Bengaluru Rural', tal: 'Devanahalli', vill: 'Devanahalli', surv: '125/2' })}
+            className="px-2.5 py-1 bg-white hover:bg-emerald-50 text-emerald-800 text-xs font-mono rounded-lg border border-slate-200 transition cursor-pointer flex items-center gap-1"
+          >
+            <Mic className="w-3 h-3 text-emerald-600" />
+            <span>{b('Ravi Kumar (125/2)', 'ರವಿ ಕುಮಾರ್ (125/2)', language)}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => loadPreset({ fn: 'Suresh Gowda', dist: 'Belagavi', tal: 'Bailhongal', vill: 'Sampgaon', surv: '48/1A' })}
+            className="px-2.5 py-1 bg-white hover:bg-emerald-50 text-emerald-800 text-xs font-mono rounded-lg border border-slate-200 transition cursor-pointer flex items-center gap-1"
+          >
+            <Mic className="w-3 h-3 text-emerald-600" />
+            <span>{b('Suresh Gowda (48/1A)', 'ಸುರೇಶ್ ಗೌಡ (48/1A)', language)}</span>
+          </button>
+        </div>
+
+        {/* Global Speak All Details Button */}
         <button
           type="button"
-          onClick={() => loadPreset({ fn: 'Ravi Kumar', dist: 'Bengaluru Rural', tal: 'Devanahalli', vill: 'Devanahalli', surv: '125/2' })}
-          className="px-2.5 py-1 bg-white hover:bg-emerald-50 text-emerald-800 text-xs font-mono rounded-lg border border-slate-200 transition cursor-pointer"
+          onClick={() => startFieldListening('all')}
+          className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-xs ${
+            listeningField === 'all'
+              ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
+              : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300'
+          }`}
+          title="Speak all details at once"
         >
-          {b('Preset 1: Ravi Kumar (Survey 125/2)', 'ಮಾದರಿ 1: ರವಿ ಕುಮಾರ್ (ಸರ್ವೆ 125/2)', language)}
-        </button>
-        <button
-          type="button"
-          onClick={() => loadPreset({ fn: 'Ravi Kumar', dist: 'Bengaluru Rural', tal: 'Devanahalli', vill: 'Devanahalli', surv: '' })}
-          className="px-2.5 py-1 bg-white hover:bg-emerald-50 text-emerald-800 text-xs font-mono rounded-lg border border-slate-200 transition cursor-pointer"
-        >
-          {b('Preset 2: Multi-Plot Test (No Survey #)', 'ಮಾದರಿ 2: ಬಹು-ಪ್ಲಾಟ್ (ಸರ್ವೆ ನಂ ಇಲ್ಲದೆ)', language)}
-        </button>
-        <button
-          type="button"
-          onClick={() => loadPreset({ fn: 'Suresh Patil', dist: 'Belagavi', tal: 'Chikkodi', vill: 'Chikkodi', surv: '48/1A' })}
-          className="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 text-xs font-mono rounded-lg border border-slate-200 transition cursor-pointer"
-        >
-          {b('Preset 3: Suresh Patil (Chikkodi)', 'ಮಾದರಿ 3: ಸುರೇಶ್ ಪಾಟೀಲ್ (ಚಿಕ್ಕೋಡಿ)', language)}
+          {listeningField === 'all' ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5 text-emerald-700" />}
+          <span>
+            {listeningField === 'all' 
+              ? (language === 'kn' ? 'ಕೇಳಿಸಿಕೊಳ್ಳಲಾಗುತ್ತಿದೆ...' : 'Listening...')
+              : (language === 'kn' ? 'ಧ್ವನಿ ಮೂಲಕ ಎಲ್ಲವನ್ನೂ ಹೇಳಿ' : 'Speak All Details')}
+          </span>
         </button>
       </div>
+
+      {/* Real-time Voice Transcript / Parsing feedback */}
+      {(listeningField || spokenTranscript || lastParsedSummary) && (
+        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs flex items-center justify-between gap-2 animate-fadeIn">
+          <div className="flex items-center gap-2 truncate">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-ping shrink-0" />
+            <span className="text-slate-800 truncate font-medium">
+              {listeningField
+                ? (spokenTranscript 
+                    ? `🎙️ "${spokenTranscript}"` 
+                    : (language === 'kn' 
+                        ? `🎙️ ಕೇಳಿಸಿಕೊಳ್ಳಲಾಗುತ್ತಿದೆ... ${listeningField === 'all' ? 'ಎಲ್ಲಾ ವಿವರಗಳನ್ನು' : listeningField} ಮಾತನಾಡಿ...` 
+                        : `🎙️ Listening... Speak ${listeningField === 'all' ? 'all details' : listeningField}...`))
+                : (lastParsedSummary || `Spoken: "${spokenTranscript}"`)
+              }
+            </span>
+          </div>
+          {listeningField && (
+            <button
+              type="button"
+              onClick={() => {
+                if (recognitionRef.current?.stop) {
+                  try { recognitionRef.current.stop(); } catch (e) {}
+                }
+                setListeningField(null);
+              }}
+              className="text-xs text-red-700 font-bold hover:underline shrink-0"
+            >
+              {language === 'kn' ? 'ಮುಗಿಸಿ' : 'Stop'}
+            </button>
+          )}
+        </div>
+      )}
 
       {/* ============================================================== */}
       {/* 2. RECOVERY FORM CARD                                          */}
@@ -203,15 +523,29 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                 {b('MANDATORY *', 'ಕಡ್ಡಾಯ *', language)}
               </span>
             </label>
-            <input
-              id="recovery-full-name"
-              type="text"
-              required
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder={b('e.g. Ravi Kumar', 'ಉದಾ: ರವಿ ಕುಮಾರ್', language)}
-              className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-4 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
-            />
+            <div className="relative flex items-center">
+              <input
+                id="recovery-full-name"
+                type="text"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder={b('e.g. Ravi Kumar', 'ಉದಾ: ರವಿ ಕುಮಾರ್', language)}
+                className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => startFieldListening('fullName')}
+                className={`absolute right-2 p-1.5 rounded-lg transition cursor-pointer ${
+                  listeningField === 'fullName'
+                    ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
+                    : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
+                }`}
+                title={listeningField === 'fullName' ? 'Stop listening' : 'Speak Full Name'}
+              >
+                {listeningField === 'fullName' ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+              </button>
+            </div>
           </div>
 
           {/* Row 2: District & Taluk (Mandatory) */}
@@ -224,15 +558,29 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                 </span>
                 <span className="text-[10px] text-emerald-800 font-mono font-bold">{b('MANDATORY *', 'ಕಡ್ಡಾಯ *', language)}</span>
               </label>
-              <input
-                id="recovery-district"
-                type="text"
-                required
-                value={district}
-                onChange={(e) => setDistrict(e.target.value)}
-                placeholder={b('e.g. Bengaluru Rural', 'ಉದಾ: ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ', language)}
-                className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-4 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
-              />
+              <div className="relative flex items-center">
+                <input
+                  id="recovery-district"
+                  type="text"
+                  required
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                  placeholder={b('e.g. Bengaluru Rural', 'ಉದಾ: ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ', language)}
+                  className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => startFieldListening('district')}
+                  className={`absolute right-2 p-1.5 rounded-lg transition cursor-pointer ${
+                    listeningField === 'district'
+                      ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
+                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
+                  }`}
+                  title={listeningField === 'district' ? 'Stop listening' : 'Speak District'}
+                >
+                  {listeningField === 'district' ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                </button>
+              </div>
             </div>
 
             <div>
@@ -243,15 +591,29 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                 </span>
                 <span className="text-[10px] text-emerald-800 font-mono font-bold">{b('MANDATORY *', 'ಕಡ್ಡಾಯ *', language)}</span>
               </label>
-              <input
-                id="recovery-taluk"
-                type="text"
-                required
-                value={taluk}
-                onChange={(e) => setTaluk(e.target.value)}
-                placeholder={b('e.g. Devanahalli', 'ಉದಾ: ದೇವನಹಳ್ಳಿ', language)}
-                className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-4 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
-              />
+              <div className="relative flex items-center">
+                <input
+                  id="recovery-taluk"
+                  type="text"
+                  required
+                  value={taluk}
+                  onChange={(e) => setTaluk(e.target.value)}
+                  placeholder={b('e.g. Devanahalli', 'ಉದಾ: ದೇವನಹಳ್ಳಿ', language)}
+                  className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => startFieldListening('taluk')}
+                  className={`absolute right-2 p-1.5 rounded-lg transition cursor-pointer ${
+                    listeningField === 'taluk'
+                      ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
+                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
+                  }`}
+                  title={listeningField === 'taluk' ? 'Stop listening' : 'Speak Taluk'}
+                >
+                  {listeningField === 'taluk' ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -265,15 +627,29 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                 </span>
                 <span className="text-[10px] text-emerald-800 font-mono font-bold">{b('MANDATORY *', 'ಕಡ್ಡಾಯ *', language)}</span>
               </label>
-              <input
-                id="recovery-village"
-                type="text"
-                required
-                value={village}
-                onChange={(e) => setVillage(e.target.value)}
-                placeholder={b('e.g. Devanahalli', 'ಉದಾ: ದೇವನಹಳ್ಳಿ', language)}
-                className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-4 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
-              />
+              <div className="relative flex items-center">
+                <input
+                  id="recovery-village"
+                  type="text"
+                  required
+                  value={village}
+                  onChange={(e) => setVillage(e.target.value)}
+                  placeholder={b('e.g. Devanahalli', 'ಉದಾ: ದೇವನಹಳ್ಳಿ', language)}
+                  className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => startFieldListening('village')}
+                  className={`absolute right-2 p-1.5 rounded-lg transition cursor-pointer ${
+                    listeningField === 'village'
+                      ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
+                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
+                  }`}
+                  title={listeningField === 'village' ? 'Stop listening' : 'Speak Village'}
+                >
+                  {listeningField === 'village' ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                </button>
+              </div>
             </div>
 
             <div>
@@ -284,14 +660,28 @@ export const ForgotULPINDashboard: React.FC<Props> = ({
                 </span>
                 <span className="text-[10px] text-slate-500 font-mono">{b('OPTIONAL', 'ಐಚ್ಛಿಕ', language)}</span>
               </label>
-              <input
-                id="recovery-survey"
-                type="text"
-                value={surveyNumber}
-                onChange={(e) => setSurveyNumber(e.target.value)}
-                placeholder={b('e.g. 125/2 (leave blank to see all plots)', 'ಉದಾ: 125/2 (ಎಲ್ಲಾ ಜಮೀನು ನೋಡಲು ಖಾಲಿ ಬಿಡಿ)', language)}
-                className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-4 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
-              />
+              <div className="relative flex items-center">
+                <input
+                  id="recovery-survey"
+                  type="text"
+                  value={surveyNumber}
+                  onChange={(e) => setSurveyNumber(e.target.value)}
+                  placeholder={b('e.g. 125/2 (leave blank to see all plots)', 'ಉದಾ: 125/2 (ಎಲ್ಲಾ ಜಮೀನು ನೋಡಲು ಖಾಲಿ ಬಿಡಿ)', language)}
+                  className="w-full bg-slate-50 border border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-4 pr-12 py-2.5 sm:py-3 text-slate-900 text-sm transition outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => startFieldListening('surveyNumber')}
+                  className={`absolute right-2 p-1.5 rounded-lg transition cursor-pointer ${
+                    listeningField === 'surveyNumber'
+                      ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400'
+                      : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
+                  }`}
+                  title={listeningField === 'surveyNumber' ? 'Stop listening' : 'Speak Survey Number'}
+                >
+                  {listeningField === 'surveyNumber' ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                </button>
+              </div>
             </div>
           </div>
 

@@ -174,11 +174,20 @@ export const stopSpeaking = (): void => {
  * Guarantees zero-latency, authentic native pronunciation across all devices & browsers.
  */
 export const KANNADA_STEP_AUDIO_MAP: Record<string, string> = {
+  // KisanClaim Assessment Assistant 5 Steps
   'ನಿಮ್ಮ ಜಮೀನಿನ ಗಡಿ ಮತ್ತು ಡಿಜಿಪಿನ್ ಲಾಕ್ ಮಾಡಲು ಉಪಗ್ರಹ ನಕ್ಷೆಯಲ್ಲಿ 4 ಮೂಲೆಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ.': '/static/audio/kannada_step1.mp3',
   'ನೀವು ಯಾವ ಬೆಳೆ ಬೆಳೆದಿದ್ದೀರಿ ಮತ್ತು ಬಿತ್ತನೆ ದಿನಾಂಕ ಯಾವುದು?': '/static/audio/kannada_step2.mp3',
   'ಯಾವ ನೈಸರ್ಗಿಕ ವಿಕೋಪ ಸಂಭವಿಸಿತು, ಯಾವ ದಿನಾಂಕದಂದು ಮತ್ತು ಶೇಕಡಾ ಎಷ್ಟು ಹಾನಿಯಾಗಿದೆ?': '/static/audio/kannada_step3.mp3',
   'ಈ ಬೆಳೆ ಹಾನಿಯಿಂದ ನಿಮಗೆ ಅಂದಾಜು ಎಷ್ಟು ರೂಪಾಯಿ ನಷ್ಟವಾಗಿದೆ?': '/static/audio/kannada_step4.mp3',
-  'ದಯವಿಟ್ಟು ಹಾನಿಗೊಳಗಾದ ಬೆಳೆ ಮತ್ತು ಹೊಲದ ಫೋಟೋಗಳನ್ನು ವೆಬ್‌ಸೈಟ್ ಕ್ಯಾಮೆರಾ ಮೂಲಕ ಸೆರೆಹಿಡಿಯಿರಿ.': '/static/audio/kannada_step5.mp3'
+  'ದಯವಿಟ್ಟು ಹಾನಿಗೊಳಗಾದ ಬೆಳೆ ಮತ್ತು ಹೊಲದ ಫೋಟೋಗಳನ್ನು ವೆಬ್‌ಸೈಟ್ ಕ್ಯಾಮೆರಾ ಮೂಲಕ ಸೆರೆಹಿಡಿಯಿರಿ.': '/static/audio/kannada_step5.mp3',
+
+  // Post-Login Land Identification (ULPIN) Steps
+  'ಸ್ವಾಗತ! ನಿಮ್ಮ ಕೃಷಿ ಜಮೀನನ್ನು ಗುರುತಿಸಲು ನಿಮ್ಮ 14-ಅಂಕಿಯ ULPIN ಭೂ-ಆಧಾರ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ ಅಥವಾ ಮಾತನಾಡಿ, ಇಲ್ಲವೇ ನೀವು ಮರೆತಿದ್ದರೆ ULPIN ಮರುಪಡೆಯಿರಿ ಆಯ್ಕೆಮಾಡಿ.': '/static/audio/kannada_ulpin_intro.mp3',
+  'ನಿಮ್ಮ ಜಮೀನಿನ ಅಧಿಕೃತ ವಿವರಗಳು ದೃಢೀಕರಿಸಲ್ಪಟ್ಟಿವೆ. ನಿಮ್ಮ 5-ಹಂತದ ಬೆಳೆ ಹಾನಿ ಮೌಲ್ಯಮಾಪನ ಆರಂಭಿಸಲು ದೃಢೀಕರಿಸಿ ಮತ್ತು ಮುಂದುವರಿಯಿರಿ ಕ್ಲಿಕ್ ಮಾಡಿ.': '/static/audio/kannada_ulpin_verified.mp3',
+
+  // Forgot ULPIN Recovery Steps
+  'ಭೂಮಿ ದಾಖಲೆಗಳಿಂದ ನಿಮ್ಮ ULPIN ಮರುಪಡೆಯಿರಿ. ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರು, ಜಿಲ್ಲೆ, ತಾಲೂಕು, ಗ್ರಾಮ ಮತ್ತು ಸರ್ವೆ ಸಂಖ್ಯೆಯನ್ನು ಮಾತನಾಡಿ ಅಥವಾ ನಮೂದಿಸಿ, ನಂತರ ಹುಡುಕಿ ಕ್ಲಿಕ್ ಮಾಡಿ.': '/static/audio/kannada_forgot_intro.mp3',
+  'ಹೊಂದಿಕೆಯಾಗುವ ಭೂ ದಾಖಲೆಗಳು ಕಂಡುಬಂದಿವೆ. ನಿಮ್ಮ ಜಮೀನನ್ನು ಆಯ್ಕೆಮಾಡಿ ಮತ್ತು ಬೆಳೆ ಹಾನಿ ಮೌಲ್ಯಮಾಪನಕ್ಕೆ ತೆರಳಲು ದೃಢೀಕರಿಸಿ ಕ್ಲಿಕ್ ಮಾಡಿ.': '/static/audio/kannada_forgot_results.mp3'
 };
 
 /**
@@ -474,6 +483,110 @@ export const spokenToDigits = (spoken: string): string => {
     text = text.split(w).join(d);
   }
   return text.replace(/\D/g, '');
+};
+
+/**
+ * Parses spoken input into a clean 14-character alphanumeric ULPIN
+ * Handles spoken digits, phonetic English letters, and Kannada numbers/letters
+ */
+export const parseSpokenULPIN = (spoken: string): string => {
+  if (!spoken) return '';
+  let text = spoken.trim();
+
+  // If user mentioned known demo identifiers
+  if (text.toLowerCase().includes('ravi') || text.toLowerCase().includes('125')) {
+    return '29BLR125200102';
+  }
+  if (text.toLowerCase().includes('suresh') || text.toLowerCase().includes('48')) {
+    return '29BEL048100108';
+  }
+
+  // Kannada number word replacement
+  const knNumbers: Record<string, string> = {
+    'ಸೊನ್ನೆ': '0', 'ಒಂದು': '1', 'ಎರಡು': '2', 'ಮೂರು': '3', 'ನಾಲ್ಕು': '4',
+    'ಐದು': '5', 'ಆರು': '6', 'ಏಳು': '7', 'ಎಂಟು': '8', 'ಒಂಬತ್ತು': '9',
+    'ಇಪ್ಪತ್ತೊಂಬತ್ತು': '29', 'ಇಪ್ಪತ್ತು': '20',
+    'ಬಿ ಎಲ್ ಆರ್': 'BLR', 'ಬಿಎಲ್ಆರ್': 'BLR', 'ಬೆಲ್': 'BEL', 'ಬಿ': 'B', 'ಎಲ್': 'L', 'ಆರ್': 'R'
+  };
+  for (const [k, v] of Object.entries(knNumbers)) {
+    text = text.split(k).join(v);
+  }
+
+  // English words and phonetic letters
+  const enWords: Record<string, string> = {
+    'zero': '0', 'one': '1', 'two': '2', 'three': '3', 'four': '4',
+    'five': '5', 'six': '6', 'seven': '7', 'eight': '8', 'nine': '9',
+    'twenty nine': '29', 'twenty': '20', 'hundred': '00', 'thousand': '000',
+    'bee': 'B', 'cee': 'C', 'dee': 'D', 'el': 'L', 'are': 'R', 'kay': 'K'
+  };
+  for (const [k, v] of Object.entries(enWords)) {
+    text = text.replace(new RegExp(`\\b${k}\\b`, 'gi'), v);
+  }
+
+  // Remove spaces, hyphens, and non-alphanumeric characters
+  const clean = text.replace(/[^0-9a-zA-Z]/g, '').toUpperCase();
+  return clean.slice(0, 14);
+};
+
+/**
+ * Parses spoken input into a survey number (e.g. 125/2, 48/1A)
+ */
+export const parseSpokenSurveyNumber = (spoken: string): string => {
+  if (!spoken) return '';
+  let text = spoken.trim();
+
+  // Strip prefixes
+  text = text.replace(/(?:survey\s*(?:no\.?|number|#)?|ಸರ್ವೆ\s*(?:ಸಂಖ್ಯೆ|ನಂ)?)\s*/gi, '');
+
+  // Normalize division words to '/'
+  text = text.replace(/\s*(?:by|slash|divided\s*by|division|ಬೈ|\/)\s*/gi, '/');
+
+  // Replace Kannada numbers
+  const knNumbers: Record<string, string> = {
+    'ಸೊನ್ನೆ': '0', 'ಒಂದು': '1', 'ಎರಡು': '2', 'ಮೂರು': '3', 'ನಾಲ್ಕು': '4',
+    'ಐದು': '5', 'ಆರು': '6', 'ಏಳು': '7', 'ಎಂಟು': '8', 'ಒಂಬತ್ತು': '9'
+  };
+  for (const [k, v] of Object.entries(knNumbers)) {
+    text = text.split(k).join(v);
+  }
+
+  // Clean formatting
+  const match = text.match(/([0-9]{1,4}\s*\/\s*[0-9a-zA-Z]{1,4})/);
+  if (match) {
+    return match[1].replace(/\s+/g, '').toUpperCase();
+  }
+
+  const rawClean = text.replace(/[^0-9a-zA-Z/]/g, '').toUpperCase();
+  return rawClean;
+};
+
+/**
+ * Parses spoken text for village, taluk, district, or farmer name
+ */
+export const parseSpokenTextValue = (spoken: string, fieldType?: 'name' | 'district' | 'taluk' | 'village'): string => {
+  if (!spoken) return '';
+  let text = spoken.trim();
+
+  const prefixes: Record<string, RegExp> = {
+    name: /(?:my\s*name\s*is|name\s*is|farmer|nanna\s*hesaru|hesaru|ನನ್ನ\s*ಹೆಸರು|ಹೆಸರು|ರೈತ)\s*/gi,
+    district: /(?:district\s*is|district|jille\s*is|jille|ಜಿಲ್ಲೆ)\s*/gi,
+    taluk: /(?:taluk\s*is|taluk|taluku\s*is|taluku|ತಾಲೂಕು)\s*/gi,
+    village: /(?:village\s*is|village|halli|halli\s*is|grama|ಗ್ರಾಮ|ಹಳ್ಳಿ)\s*/gi
+  };
+
+  if (fieldType && prefixes[fieldType]) {
+    text = text.replace(prefixes[fieldType], '');
+  }
+
+  text = text.replace(/[,.-]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!text) return spoken.trim();
+
+  // Title case for words
+  return text
+    .split(' ')
+    .filter(Boolean)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
 };
 
 export interface FieldVoiceListenerOptions {

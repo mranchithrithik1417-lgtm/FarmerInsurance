@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Compass,
   ArrowRight,
@@ -10,11 +10,22 @@ import {
   Sparkles,
   ShieldCheck,
   Check,
-  RefreshCw
+  RefreshCw,
+  Mic,
+  MicOff,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import { OfficialLandRecord } from '../../types';
 import { validateULPIN } from '../../services/api';
 import { t, b } from '../../utils/translations';
+import {
+  speakAloud,
+  stopSpeaking,
+  primeSpeechSynthesis,
+  playChime,
+  parseSpokenULPIN
+} from '../../utils/speech';
 
 interface Props {
   currentUser?: any;
@@ -38,7 +49,73 @@ export const FarmerULPINDashboard: React.FC<Props> = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [verifiedLand, setVerifiedLand] = useState<OfficialLandRecord | null>(null);
 
+  // Voice Guidance & Speech Recognition State
+  const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const [voiceEnabled, setVoiceEnabled] = useState<boolean>(true);
+  const [isListening, setIsListening] = useState<boolean>(false);
+  const [spokenTranscript, setSpokenTranscript] = useState<string>('');
+  const [lastParsedSummary, setLastParsedSummary] = useState<string>('');
+  const recognitionRef = useRef<any>(null);
+
   const farmerName = currentUser?.name || 'Ravi Kumar';
+
+  // Guidance texts
+  const introPromptEn = "Welcome to KisanClaim! To begin, please enter or speak your 14-character ULPIN Bhu-Aadhaar number, or select Retrieve ULPIN if you forgot it.";
+  const introPromptKn = "ಸ್ವಾಗತ! ನಿಮ್ಮ ಕೃಷಿ ಜಮೀನನ್ನು ಗುರುತಿಸಲು ನಿಮ್ಮ 14-ಅಂಕಿಯ ULPIN ಭೂ-ಆಧಾರ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ ಅಥವಾ ಮಾತನಾಡಿ, ಇಲ್ಲವೇ ನೀವು ಮರೆತಿದ್ದರೆ ULPIN ಮರುಪಡೆಯಿರಿ ಆಯ್ಕೆಮಾಡಿ.";
+
+  const verifiedPromptEn = verifiedLand
+    ? `Land details confirmed for ${verifiedLand.farmer_name}, Survey Number ${verifiedLand.survey_number}, in ${verifiedLand.village}, ${verifiedLand.district}. Click Confirm and Continue to begin your 5-step Crop Loss Assessment.`
+    : "Your land details have been verified. Click Confirm and Continue to proceed to Crop Loss Assessment.";
+  const verifiedPromptKn = "ನಿಮ್ಮ ಜಮೀನಿನ ಅಧಿಕೃತ ವಿವರಗಳು ದೃಢೀಕರಿಸಲ್ಪಟ್ಟಿವೆ. ನಿಮ್ಮ 5-ಹಂತದ ಬೆಳೆ ಹಾನಿ ಮೌಲ್ಯಮಾಪನ ಆರಂಭಿಸಲು ದೃಢೀಕರಿಸಿ ಮತ್ತು ಮುಂದುವರಿಯಿರಿ ಕ್ಲಿಕ್ ಮಾಡಿ.";
+
+  // Speak guidance helper
+  const speakGuidance = (text: string) => {
+    if (!voiceEnabled) return;
+    speakAloud(text, {
+      lang: language === 'kn' ? 'kn-IN' : 'en-IN',
+      rate: 0.95,
+      pitch: 1.0,
+      onStart: () => setIsSpeaking(true),
+      onEnd: () => setIsSpeaking(false),
+      onError: () => setIsSpeaking(false)
+    });
+  };
+
+  const toggleSpeak = () => {
+    primeSpeechSynthesis();
+    if (isSpeaking) {
+      stopSpeaking();
+      setIsSpeaking(false);
+    } else {
+      const prompt = verifiedLand
+        ? (language === 'kn' ? verifiedPromptKn : verifiedPromptEn)
+        : (language === 'kn' ? introPromptKn : introPromptEn);
+      speakGuidance(prompt);
+    }
+  };
+
+  // Auto-speak guidance when landing or when verifiedLand updates
+  useEffect(() => {
+    if (voiceEnabled) {
+      const prompt = verifiedLand
+        ? (language === 'kn' ? verifiedPromptKn : verifiedPromptEn)
+        : (language === 'kn' ? introPromptKn : introPromptEn);
+      const timer = setTimeout(() => {
+        speakGuidance(prompt);
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [voiceEnabled, language, verifiedLand]);
+
+  // Clean up speech on unmount
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+      if (recognitionRef.current?.stop) {
+        try { recognitionRef.current.stop(); } catch (e) {}
+      }
+    };
+  }, []);
 
   // Format validation: 14 uppercase alphanumeric chars
   const cleanInput = ulpinInput.trim().replace(/[^0-9a-zA-Z]/g, '').toUpperCase();
@@ -72,6 +149,7 @@ export const FarmerULPINDashboard: React.FC<Props> = ({
       const res = await validateULPIN(cleanInput);
       if (res.valid && res.land) {
         setVerifiedLand(res.land);
+        playChime('success');
       } else {
         setErrorMsg(res.message || (language === 'kn' ? 'ಈ ULPIN ಗೆ ಯಾವುದೇ ಭೂಮಿ ದಾಖಲೆ ಕಂಡುಬಂದಿಲ್ಲ.' : 'No cadastral land record found for this ULPIN.'));
       }
@@ -82,10 +160,86 @@ export const FarmerULPINDashboard: React.FC<Props> = ({
     }
   };
 
+  // Speech Recognition Handler for ULPIN
+  const toggleListening = () => {
+    primeSpeechSynthesis();
+    if (isListening) {
+      if (recognitionRef.current?.stop) {
+        try { recognitionRef.current.stop(); } catch (e) {}
+      }
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRec = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRec) {
+      setErrorMsg(language === 'kn' 
+        ? 'ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಧ್ವನಿ ಗುರುತಿಸುವಿಕೆ ಬೆಂಬಲಿತವಾಗಿಲ್ಲ. ದಯವಿಟ್ಟು ಡೆಮೊ ಬಟನ್ ಬಳಸಿ.' 
+        : 'Speech recognition is not supported in this browser. Please use quick sample buttons.');
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRec();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = language === 'kn' ? 'kn-IN' : 'en-IN';
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        setErrorMsg(null);
+        setSpokenTranscript('');
+        playChime('start');
+      };
+
+      recognition.onresult = (event: any) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        setSpokenTranscript(transcript);
+
+        const parsed = parseSpokenULPIN(transcript);
+        if (parsed) {
+          setUlpinInput(parsed);
+          setLastParsedSummary(`✓ Spoken ULPIN: ${parsed}`);
+        }
+      };
+
+      recognition.onerror = (e: any) => {
+        console.warn('Speech error:', e);
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+        playChime('success');
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      console.warn('Recognition start error:', err);
+      setIsListening(false);
+    }
+  };
+
   const handleUseDemo = (demoCode: string) => {
     setUlpinInput(demoCode);
     setErrorMsg(null);
     setVerifiedLand(null);
+    setLastParsedSummary(`✓ Selected Demo ULPIN: ${demoCode}`);
+    playChime('success');
+  };
+
+  const handleQuickVoiceAnswer = (sampleText: string, sampleUlpin: string) => {
+    primeSpeechSynthesis();
+    setSpokenTranscript(sampleText);
+    setUlpinInput(sampleUlpin);
+    setErrorMsg(null);
+    setVerifiedLand(null);
+    setLastParsedSummary(`✓ Voice Fill: ${sampleUlpin}`);
+    playChime('success');
   };
 
   return (
@@ -173,6 +327,88 @@ export const FarmerULPINDashboard: React.FC<Props> = ({
       </div>
 
       {/* ============================================================== */}
+      {/* VOICE GUIDANCE ASSISTANT BANNER                                */}
+      {/* ============================================================== */}
+      <div className="bg-white border-2 border-emerald-600/30 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="relative flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-700 text-white shadow-xs shrink-0">
+            <span className="text-2xl">🌾</span>
+            {isSpeaking && (
+              <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white"></span>
+              </span>
+            )}
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                {language === 'kn' ? 'ಧ್ವನಿ ಮಾರ್ಗದರ್ಶನ ಸಹಾಯಕ' : 'Voice Guidance Assistant'}
+              </span>
+              <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
+                isSpeaking 
+                  ? 'bg-emerald-100 text-emerald-800 border-emerald-300 animate-pulse'
+                  : 'bg-slate-100 text-slate-600 border-slate-200'
+              }`}>
+                {isSpeaking ? (language === 'kn' ? 'ಮಾತನಾಡುತ್ತಿದೆ (Speaking)' : 'Speaking...') : (language === 'kn' ? 'ಸಿದ್ಧವಾಗಿದೆ (Ready)' : 'Ready')}
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 mt-0.5 max-w-xl font-medium">
+              {verifiedLand 
+                ? (language === 'kn' ? verifiedPromptKn : verifiedPromptEn)
+                : (language === 'kn' ? introPromptKn : introPromptEn)
+              }
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
+          <button
+            type="button"
+            onClick={toggleSpeak}
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer shadow-xs ${
+              isSpeaking
+                ? 'bg-emerald-100 text-emerald-900 border-2 border-emerald-600 animate-pulse'
+                : 'bg-emerald-700 hover:bg-emerald-800 text-white'
+            }`}
+            title={isSpeaking ? 'Click to Stop Speaking' : 'Click to Listen to Guidance'}
+          >
+            {isSpeaking ? (
+              <>
+                <div className="flex items-center gap-0.5 h-3">
+                  <span className="w-1 h-3 bg-emerald-700 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                  <span className="w-1 h-4 bg-emerald-700 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                  <span className="w-1 h-2 bg-emerald-700 rounded-full animate-bounce"></span>
+                </div>
+                <span>{language === 'kn' ? 'ನಿಲ್ಲಿಸಿ (Stop)' : 'Stop Speaking'}</span>
+              </>
+            ) : (
+              <>
+                <Volume2 className="w-4 h-4" />
+                <span>{language === 'kn' ? 'ಮಾರ್ಗದರ್ಶನ ಕೇಳಿ (Listen)' : 'Listen to Guidance'}</span>
+              </>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (isSpeaking) stopSpeaking();
+              setVoiceEnabled(!voiceEnabled);
+            }}
+            className={`p-2.5 rounded-xl border text-xs font-bold transition cursor-pointer ${
+              voiceEnabled
+                ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
+                : 'bg-red-50 text-red-700 border-red-200'
+            }`}
+            title={voiceEnabled ? 'Mute Voice' : 'Unmute Voice'}
+          >
+            {voiceEnabled ? <Volume2 className="w-4 h-4 text-emerald-700" /> : <VolumeX className="w-4 h-4 text-red-600" />}
+          </button>
+        </div>
+      </div>
+
+      {/* ============================================================== */}
       {/* 2. TWO PROMINENT OPTIONS IN SEPARATE CARDS                     */}
       {/* ============================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
@@ -222,7 +458,7 @@ export const FarmerULPINDashboard: React.FC<Props> = ({
                   </span>
                 </div>
 
-                <div className="relative">
+                <div className="relative flex items-center">
                   <input
                     id="ulpin-input-field"
                     type="text"
@@ -234,35 +470,88 @@ export const FarmerULPINDashboard: React.FC<Props> = ({
                       setVerifiedLand(null);
                     }}
                     placeholder="e.g. 29BLR125200102"
-                    className="w-full bg-slate-50 border-2 border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-4 py-3 text-slate-900 font-mono text-base tracking-widest placeholder:text-slate-400 transition outline-none"
+                    className="w-full bg-slate-50 border-2 border-slate-300 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 rounded-xl pl-4 pr-24 py-3 text-slate-900 font-mono text-base tracking-widest placeholder:text-slate-400 transition outline-none"
                   />
-                  {isFormatValid && (
-                    <div className="absolute right-3.5 top-3 p-1 bg-emerald-100 text-emerald-800 rounded-lg">
-                      <Check className="w-4 h-4" />
-                    </div>
-                  )}
+                  <div className="absolute right-2 flex items-center gap-1.5">
+                    {/* Microphone Speech to Text Button */}
+                    <button
+                      type="button"
+                      onClick={toggleListening}
+                      className={`p-2 rounded-lg transition cursor-pointer flex items-center gap-1 text-xs font-bold ${
+                        isListening
+                          ? 'bg-red-600 text-white animate-pulse shadow-md ring-2 ring-red-400'
+                          : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      }`}
+                      title={isListening ? 'Click to stop listening' : 'Click to speak ULPIN'}
+                    >
+                      {isListening ? (
+                        <>
+                          <MicOff className="w-4 h-4 text-white" />
+                          <span className="hidden sm:inline text-[11px] font-mono">Listening...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Mic className="w-4 h-4 text-emerald-700" />
+                          <span className="hidden sm:inline text-[11px]">Speak</span>
+                        </>
+                      )}
+                    </button>
+
+                    {isFormatValid && (
+                      <div className="p-1 bg-emerald-100 text-emerald-800 rounded-lg">
+                        <Check className="w-4 h-4" />
+                      </div>
+                    )}
+                  </div>
                 </div>
+
+                {/* Real-time Voice Transcript / Parsing feedback */}
+                {(isListening || spokenTranscript || lastParsedSummary) && (
+                  <div className="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs flex items-center justify-between gap-2 animate-fadeIn">
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping shrink-0" />
+                      <span className="text-slate-700 truncate font-medium">
+                        {isListening 
+                          ? (spokenTranscript ? `🎙️ "${spokenTranscript}"` : (language === 'kn' ? '🎙️ ಕೇಳಿಸಿಕೊಳ್ಳಲಾಗುತ್ತಿದೆ... ನಿಮ್ಮ 14-ಅಂಕಿಯ ULPIN ಮಾತನಾಡಿ...' : '🎙️ Listening... Speak your 14-character ULPIN...'))
+                          : (lastParsedSummary || `Spoken: "${spokenTranscript}"`)
+                        }
+                      </span>
+                    </div>
+                    {isListening && (
+                      <button
+                        type="button"
+                        onClick={toggleListening}
+                        className="text-[10px] text-red-700 font-bold hover:underline shrink-0"
+                      >
+                        {language === 'kn' ? 'ಮುಗಿಸಿ' : 'Done'}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Demo Pre-fill Chips for quick testing */}
               <div className="pt-1">
-                <div className="text-[11px] text-slate-500 mb-1.5 font-semibold">
-                  ⚡ {language === 'kn' ? 'ತ್ವರಿತ ಡೆಮೊ ಜಮೀನುಗಳು (Quick Demo Parcels):' : 'Quick Demo Parcels:'}
+                <div className="text-[11px] text-slate-500 mb-1.5 font-semibold flex items-center justify-between">
+                  <span>⚡ {language === 'kn' ? 'ಧ್ವನಿ ಮಾದರಿ ಅಥವಾ ಡೆಮೊ ಜಮೀನುಗಳು (Quick Voice & Demo):' : 'Quick Voice & Demo Parcels:'}</span>
+                  <span className="text-[10px] text-emerald-700 font-mono">1-Click Voice Fill</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={() => handleUseDemo('29BLR125200102')}
-                    className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-emerald-800 text-xs font-mono rounded-lg border border-slate-200 transition cursor-pointer"
+                    onClick={() => handleQuickVoiceAnswer('29BLR125200102 Ravi Kumar Survey 125/2', '29BLR125200102')}
+                    className="px-2.5 py-1 bg-slate-100 hover:bg-emerald-50 hover:border-emerald-300 text-emerald-900 text-xs font-mono rounded-lg border border-slate-200 transition cursor-pointer flex items-center gap-1.5"
                   >
-                    29BLR125200102 (Ravi - Survey 125/2)
+                    <Mic className="w-3 h-3 text-emerald-600" />
+                    <span>29BLR125200102 (Ravi - Survey 125/2)</span>
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleUseDemo('29BEL048100108')}
-                    className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-emerald-800 text-xs font-mono rounded-lg border border-slate-200 transition cursor-pointer"
+                    onClick={() => handleQuickVoiceAnswer('29BEL048100108 Suresh Gowda Survey 48/1A', '29BEL048100108')}
+                    className="px-2.5 py-1 bg-slate-100 hover:bg-emerald-50 hover:border-emerald-300 text-emerald-900 text-xs font-mono rounded-lg border border-slate-200 transition cursor-pointer flex items-center gap-1.5"
                   >
-                    29BEL048100108 (Suresh - 48/1A)
+                    <Mic className="w-3 h-3 text-emerald-600" />
+                    <span>29BEL048100108 (Suresh - 48/1A)</span>
                   </button>
                 </div>
               </div>
