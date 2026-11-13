@@ -47,7 +47,8 @@ def init_seed_data():
     land_1025 = LandParcel(
         id="land-ka-blr-1025",
         survey_number="125/2",
-        land_parcel_id="KA-BLR-1025",
+        land_parcel_id="29BLR125200102",
+        ulpin="29BLR125200102",
         digipin=encode_digipin(13.2456, 77.7123),
         latitude=13.2456,
         longitude=77.7123,

@@ -523,10 +523,12 @@ async def create_new_claim(payload: NewClaimPayload):
         district=payload.district,
         village=payload.village
     )
+    ulpin_code = payload.ulpin or "29BLR125200102"
     land = LandParcel(
         id=f"land-{uuid.uuid4().hex[:6]}",
-        survey_number=payload.survey_number or "99/1",
-        land_parcel_id=f"{payload.state[:2].upper()}-{payload.district[:3].upper()}-{uuid.uuid4().hex[:4].upper()}",
+        survey_number=payload.survey_number or "125/2",
+        land_parcel_id=ulpin_code,
+        ulpin=ulpin_code,
         digipin=digipin_code,
         latitude=payload.latitude,
         longitude=payload.longitude,

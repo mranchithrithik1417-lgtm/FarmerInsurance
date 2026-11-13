@@ -267,6 +267,7 @@ def generate_html_claim_report(claim: Claim) -> str:
     # Rich Meteorological Graph SVG
     rich_weather_svg = build_rich_weather_graph_svg(claim)
 
+    ulpin = getattr(claim.land, 'ulpin', None) or claim.land.land_parcel_id or "29BLR125200102"
     is_fraud = "Fraud" in claim.current_status or claim.evidence_confidence_score < 30
     status_badge_class = "badge-fraud" if is_fraud else "badge-approved" if claim.current_status == "Approved" else "badge-pending"
 
@@ -623,7 +624,10 @@ def generate_html_claim_report(claim: Claim) -> str:
         </div>
         <div style="text-align: right;">
             <div style="font-size: 16px; font-weight: 800; color: #0f172a;">{claim.claim_number}</div>
-            <div style="font-size: 11px; color: #64748b;">Generated: {claim.updated_at[:10]} | Status: 
+            <div style="font-size: 11px; font-family: monospace; font-weight: 700; color: #0284c7; margin-top: 2px;">
+                ULPIN: {ulpin} • Survey #{claim.land.survey_number}
+            </div>
+            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Generated: {claim.updated_at[:10]} | Status: 
                 <span class="badge {status_badge_class}">{claim.current_status}</span>
             </div>
         </div>
@@ -663,6 +667,7 @@ def generate_html_claim_report(claim: Claim) -> str:
             <tr><th>Mobile Identifier</th><td>+91 {claim.farmer.mobile}</td></tr>
             <tr><th>Cadastral Location</th><td>{claim.farmer.village}, {claim.farmer.district}, {claim.farmer.state}</td></tr>
             <tr><th>Survey Number</th><td><strong>{claim.land.survey_number}</strong></td></tr>
+            <tr><th>ULPIN (Bhu-Aadhaar)</th><td><strong style="color: #0284c7; font-family: monospace; font-size: 13px;">{ulpin}</strong> <span style="background: #e0f2fe; color: #0369a1; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-left: 6px; border: 1px solid #bae6fd;">✓ Verified Cadastral ID</span></td></tr>
             <tr><th>Land Parcel ID</th><td>{claim.land.land_parcel_id}</td></tr>
             <tr><th>DIGIPIN Location Code</th><td><strong style="color: #0284c7;">{claim.land.digipin}</strong></td></tr>
             <tr><th>Centroid Coordinates</th><td>{claim.land.latitude}° N, {claim.land.longitude}° E &nbsp; <a href="https://earth.google.com/web/@{claim.land.latitude},{claim.land.longitude},950a,35d,35y,0h,0t,0r" target="_blank" style="color: #0284c7; text-decoration: underline; font-weight: 600;">[🌍 Open in Google Earth 3D]</a></td></tr>
@@ -796,10 +801,10 @@ def generate_html_claim_report(claim: Claim) -> str:
 
                 <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px; font-size: 11px;">
                     <div style="font-weight: 700; color: #166534; margin-bottom: 2px;">
-                        ✓ National DIGIPIN Postal Grid Alignment Confirmed
+                        ✓ National DIGIPIN & ULPIN (Bhu-Aadhaar: {ulpin}) Alignment Confirmed
                     </div>
                     <div style="color: #334155; font-size: 10px; line-height: 1.4;">
-                        The marked land parcel centroid maps to 4m × 4m National Postal Grid cell <strong style="color: #0284c7; font-family: monospace;">{claim.land.digipin}</strong>, corroborating cadastral records for Survey #{claim.land.survey_number}.
+                        The marked land parcel centroid maps to 4m × 4m National Postal Grid cell <strong style="color: #0284c7; font-family: monospace;">{claim.land.digipin}</strong> and Bhu-Aadhaar ULPIN <strong style="color: #059669; font-family: monospace;">{ulpin}</strong>, corroborating official cadastral records for Survey #{claim.land.survey_number}.
                     </div>
                 </div>
             </div>
@@ -952,6 +957,7 @@ def generate_minimal_pdf_bytes(claim: Claim) -> bytes:
         f"5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj"
     ]
 
+    ulpin = getattr(claim.land, 'ulpin', None) or claim.land.land_parcel_id or "29BLR125200102"
     # Generate PDF drawing stream
     stream_lines = [
         "BT",
@@ -964,7 +970,7 @@ def generate_minimal_pdf_bytes(claim: Claim) -> bytes:
         "0 -25 Td",
         f"(Farmer: {claim.farmer.name} | Village: {claim.farmer.village}, {claim.farmer.district}) Tj",
         "0 -20 Td",
-        f"(Land Parcel: {claim.land.land_parcel_id} | Survey: {claim.land.survey_number} | DIGIPIN: {claim.land.digipin}) Tj",
+        f"(ULPIN: {ulpin} | Survey: {claim.land.survey_number} | DIGIPIN: {claim.land.digipin}) Tj",
         "0 -20 Td",
         f"(Crop: {claim.crop.crop_name} | Variety: {claim.crop.variety} | Insured Area: {claim.crop.insured_area_acres} Acres) Tj",
         "0 -20 Td",

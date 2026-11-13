@@ -15,6 +15,7 @@ class LandParcel(BaseModel):
     id: str
     survey_number: str = "125/2"
     land_parcel_id: str = "KA-BLR-1025"
+    ulpin: Optional[str] = "29BLR125200102"
     digipin: str = "562C-8F29-KM"
     latitude: float = 13.2456
     longitude: float = 77.7123
