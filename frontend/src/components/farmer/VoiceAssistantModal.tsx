@@ -71,7 +71,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
   const [locationMode, setLocationMode] = useState<'map' | 'autofetch' | 'manual'>('map');
   const [isLocating, setIsLocating] = useState<boolean>(false);
   const [locationStatus, setLocationStatus] = useState<string>(
-    'Select and adjust boundary points on satellite map, or use auto-fetch GPS'
+    'Click 4 corners of your land parcel on the satellite map to lock boundary & DIGIPIN'
   );
 
   // Form State
@@ -87,7 +87,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
     landAreaAcres: 2.5,
     latitude: 13.2456,
     longitude: 77.7123,
-    polygonCoordinates: generateDefaultParcelCoordinates(13.2456, 77.7123),
+    polygonCoordinates: [] as [number, number][],
     cropName: 'Ragi',
     variety: 'GPU-28',
     sowingDate: '2026-06-15',
@@ -135,10 +135,10 @@ export const VoiceAssistantModal: React.FC<Props> = ({
   const questions = [
     {
       step: 1,
-      title: language === 'kn' ? 'ಭೂಮಿ ಗುರುತಿಸುವಿಕೆ' : 'Step 1 — Land Identification & GPS Satellite Map',
-      questionEn: 'Please verify your survey number, area, and adjust your parcel boundaries on the satellite map.',
-      questionKn: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಭೂಮಿಯ ಸರ್ವೆ ಸಂಖ್ಯೆ ಮತ್ತು ವಿಸ್ತೀರ್ಣವನ್ನು ಪರಿಶೀಲಿಸಿ.',
-      subtext: 'We automatically fetch your GPS latitude, longitude, and 4m×4m National DIGIPIN code.'
+      title: language === 'kn' ? 'ಹಂತ 1 — ಭೂಮಿ ಗುರುತಿಸುವಿಕೆ & 4 ಮೂಲೆಗಳ ಆಯ್ಕೆ' : 'Step 1 — Land Identification & GPS Satellite Map',
+      questionEn: 'Please click 4 corners of your land parcel on the satellite map to automatically form the boundary and lock your DIGIPIN.',
+      questionKn: 'ನಿಮ್ಮ ಜಮೀನಿನ ಗಡಿ ಮತ್ತು ಡಿಜಿಪಿನ್ ಲಾಕ್ ಮಾಡಲು ಉಪಗ್ರಹ ನಕ್ಷೆಯಲ್ಲಿ 4 ಮೂಲೆಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ.',
+      subtext: 'Click 4 corners on satellite view. The boundary polygon and official 4m×4m National DIGIPIN code will form automatically.'
     },
     {
       step: 2,
@@ -265,12 +265,11 @@ export const VoiceAssistantModal: React.FC<Props> = ({
         latitude: initialLandData.latitude || prev.latitude,
         longitude: initialLandData.longitude || prev.longitude,
         polygonCoordinates:
-          initialLandData.polygon_coords ||
-          initialLandData.polygonCoordinates ||
-          generateDefaultParcelCoordinates(
-            initialLandData.latitude || prev.latitude,
-            initialLandData.longitude || prev.longitude
-          )
+          (initialLandData.polygon_coords && initialLandData.polygon_coords.length === 4)
+            ? initialLandData.polygon_coords
+            : (initialLandData.polygonCoordinates && initialLandData.polygonCoordinates.length === 4)
+            ? initialLandData.polygonCoordinates
+            : []
       }));
     }
   }, [initialLandData, isOpen]);
@@ -715,7 +714,7 @@ export const VoiceAssistantModal: React.FC<Props> = ({
                       }`}
                     >
                       <Layers className="w-3 h-3" />
-                      <span>{b('Option 1: Drag on Satellite Map (Recommended)', 'ಆಯ್ಕೆ 1: ಉಪಗ್ರಹ ನಕ್ಷೆಯಲ್ಲಿ ಎಳೆಯಿರಿ (ಶಿಫಾರಸು)', language)}</span>
+                      <span>{b('Option 1: Click 4 Points on Satellite Map (Recommended)', 'ಆಯ್ಕೆ 1: ಉಪಗ್ರಹ ನಕ್ಷೆಯಲ್ಲಿ 4 ಬಿಂದುಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ (ಶಿಫಾರಸು)', language)}</span>
                     </button>
 
                     <button

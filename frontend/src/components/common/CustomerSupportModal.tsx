@@ -97,16 +97,18 @@ export const CustomerSupportModal: React.FC<Props> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 id="customer-support-title" className="text-base sm:text-lg font-black text-white">
-                  {language === 'kn' ? 'ರೈತ ಗ್ರಾಹಕ ಸಹಾಯವಾಣಿ' : 'Farmer Customer Support'}
+                  {b('Farmer Customer Support', 'ರೈತ ಗ್ರಾಹಕ ಸಹಾಯವಾಣಿ', language)}
                 </h3>
                 <span className="text-[10px] font-mono font-bold bg-white/20 text-emerald-100 border border-white/30 px-2 py-0.5 rounded-full">
                   24/7 ACTIVE
                 </span>
               </div>
               <p className="text-[11px] sm:text-xs text-emerald-100">
-                {language === 'kn'
-                  ? 'ಯಾವುದೇ ಸಹಾಯಕ್ಕಾಗಿ ನಮ್ಮ ತಾಂತ್ರಿಕ ತಂಡ ಲಭ್ಯವಿದೆ'
-                  : 'Official PMFBY & Bhoomi Land Records Helpdesk'}
+                {b(
+                  'Official PMFBY & Bhoomi Land Records Helpdesk',
+                  'ಅಧಿಕೃತ PMFBY ಮತ್ತು ಭೂಮಿ ದಾಖಲೆಗಳ ಸಹಾಯ ಕೇಂದ್ರ',
+                  language
+                )}
               </p>
             </div>
           </div>
