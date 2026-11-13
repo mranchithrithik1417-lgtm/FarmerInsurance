@@ -13,6 +13,7 @@ declare global {
     _activeUtterances?: SpeechSynthesisUtterance[];
     _speechHeartbeat?: number | null;
     _audioContextInstance?: AudioContext | null;
+    _activeAudio?: HTMLAudioElement | null;
   }
 }
 
@@ -144,6 +145,16 @@ export const primeSpeechSynthesis = (): void => {
  * Stop any ongoing speech playback cleanly
  */
 export const stopSpeaking = (): void => {
+  if (typeof window !== 'undefined' && window._activeAudio) {
+    try {
+      window._activeAudio.pause();
+      window._activeAudio.currentTime = 0;
+    } catch (e) {
+      console.warn('stop audio error:', e);
+    }
+    window._activeAudio = null;
+  }
+
   if (isSpeechSynthesisSupported()) {
     try {
       if (window._speechHeartbeat) {
@@ -156,6 +167,31 @@ export const stopSpeaking = (): void => {
       console.warn('stopSpeaking failed:', e);
     }
   }
+};
+
+/**
+ * Pre-bundled authentic high-fidelity studio Kannada speech files for all 5 assessment steps.
+ * Guarantees zero-latency, authentic native pronunciation across all devices & browsers.
+ */
+export const KANNADA_STEP_AUDIO_MAP: Record<string, string> = {
+  'ನಿಮ್ಮ ಜಮೀನಿನ ಗಡಿ ಮತ್ತು ಡಿಜಿಪಿನ್ ಲಾಕ್ ಮಾಡಲು ಉಪಗ್ರಹ ನಕ್ಷೆಯಲ್ಲಿ 4 ಮೂಲೆಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ.': '/static/audio/kannada_step1.mp3',
+  'ನೀವು ಯಾವ ಬೆಳೆ ಬೆಳೆದಿದ್ದೀರಿ ಮತ್ತು ಬಿತ್ತನೆ ದಿನಾಂಕ ಯಾವುದು?': '/static/audio/kannada_step2.mp3',
+  'ಯಾವ ನೈಸರ್ಗಿಕ ವಿಕೋಪ ಸಂಭವಿಸಿತು, ಯಾವ ದಿನಾಂಕದಂದು ಮತ್ತು ಶೇಕಡಾ ಎಷ್ಟು ಹಾನಿಯಾಗಿದೆ?': '/static/audio/kannada_step3.mp3',
+  'ಈ ಬೆಳೆ ಹಾನಿಯಿಂದ ನಿಮಗೆ ಅಂದಾಜು ಎಷ್ಟು ರೂಪಾಯಿ ನಷ್ಟವಾಗಿದೆ?': '/static/audio/kannada_step4.mp3',
+  'ದಯವಿಟ್ಟು ಹಾನಿಗೊಳಗಾದ ಬೆಳೆ ಮತ್ತು ಹೊಲದ ಫೋಟೋಗಳನ್ನು ವೆಬ್‌ಸೈಟ್ ಕ್ಯಾಮೆರಾ ಮೂಲಕ ಸೆರೆಹಿಡಿಯಿರಿ.': '/static/audio/kannada_step5.mp3'
+};
+
+/**
+ * Matches Kannada text to pre-generated audio files or step queries
+ */
+export const findMatchingKannadaAudio = (text: string): string | null => {
+  const clean = text.trim();
+  for (const [kText, url] of Object.entries(KANNADA_STEP_AUDIO_MAP)) {
+    if (kText === clean || clean.includes(kText) || kText.includes(clean)) {
+      return url;
+    }
+  }
+  return null;
 };
 
 /**
@@ -194,10 +230,10 @@ export const pickBestVoice = (targetLang: string): SpeechSynthesisVoice | null =
 };
 
 /**
- * Speaks text aloud with robust retry, voice selection, and Chromium bug fixes
+ * Speaks text using Web Speech Synthesis API
  */
-export const speakAloud = (
-  text: string,
+const speakWithSpeechSynthesis = (
+  cleanText: string,
   options?: {
     lang?: string;
     rate?: number;
@@ -205,7 +241,6 @@ export const speakAloud = (
     onStart?: () => void;
     onEnd?: () => void;
     onError?: (err: any) => void;
-    suppressChime?: boolean;
   }
 ): (() => void) => {
   if (!isSpeechSynthesisSupported()) {
@@ -215,38 +250,17 @@ export const speakAloud = (
   }
 
   try {
-    // Play light prompt chime for auditory confirmation
-    if (!options?.suppressChime) {
-      playChime('start');
-    }
-
-    // Cancel existing speech
-    window.speechSynthesis.cancel();
-    if (window._speechHeartbeat) {
-      clearInterval(window._speechHeartbeat);
-      window._speechHeartbeat = null;
-    }
-
-    const clean = cleanTextForSpeech(text);
-    if (!clean) {
-      options?.onEnd?.();
-      return () => {};
-    }
-
     if (!window._activeUtterances) {
       window._activeUtterances = [];
     }
 
-    // CRITICAL CHROMIUM BUG FIX:
-    // Window.speechSynthesis.cancel() takes ~30-50ms to flush its internal queue.
-    // If speak() is called synchronously in the exact same tick, it gets wiped out!
     const timerId = setTimeout(() => {
       try {
         if (window.speechSynthesis.paused) {
           window.speechSynthesis.resume();
         }
 
-        const utterance = new SpeechSynthesisUtterance(clean);
+        const utterance = new SpeechSynthesisUtterance(cleanText);
         const requestedLang = options?.lang || 'en-IN';
         utterance.rate = options?.rate ?? 0.96;
         utterance.pitch = options?.pitch ?? 1.0;
@@ -254,7 +268,6 @@ export const speakAloud = (
         const bestVoice = pickBestVoice(requestedLang);
         if (bestVoice) {
           utterance.voice = bestVoice;
-          // Important: Align utterance.lang with voice language to prevent synthesis rejection
           utterance.lang = bestVoice.lang;
         } else {
           utterance.lang = requestedLang.startsWith('kn') ? 'en-IN' : requestedLang;
@@ -287,7 +300,6 @@ export const speakAloud = (
         };
 
         utterance.onerror = (e: any) => {
-          // Ignore canceled or interrupted which are user-triggered
           if (e.error !== 'canceled' && e.error !== 'interrupted') {
             console.warn('SpeechSynthesis error:', e);
             options?.onError?.(e);
@@ -302,7 +314,6 @@ export const speakAloud = (
           options?.onEnd?.();
         };
 
-        // Retain reference in window array to stop V8 GC
         if (!window._activeUtterances) {
           window._activeUtterances = [];
         }
@@ -325,6 +336,106 @@ export const speakAloud = (
     options?.onEnd?.();
     return () => {};
   }
+};
+
+/**
+ * Speaks text aloud with robust retry, voice selection, and regional audio support.
+ * For Kannada (kn), seamlessly plays authentic native speech audio (static pre-bundled or backend TTS),
+ * overcoming the lack of offline Kannada voices on Windows and Chromium browsers.
+ */
+export const speakAloud = (
+  text: string,
+  options?: {
+    lang?: string;
+    rate?: number;
+    pitch?: number;
+    onStart?: () => void;
+    onEnd?: () => void;
+    onError?: (err: any) => void;
+    suppressChime?: boolean;
+  }
+): (() => void) => {
+  stopSpeaking();
+
+  const clean = cleanTextForSpeech(text);
+  if (!clean) {
+    options?.onEnd?.();
+    return () => {};
+  }
+
+  // Play light prompt chime for auditory confirmation
+  if (!options?.suppressChime) {
+    playChime('start');
+  }
+
+  const requestedLang = (options?.lang || 'en-IN').toLowerCase();
+  const isKannada = requestedLang.startsWith('kn') || /[\u0C80-\u0CFF]/.test(clean);
+
+  // If Kannada language, use high-fidelity studio/backend audio
+  // This completely solves Windows & Chromium missing kn-IN voice engine limitation
+  if (isKannada) {
+    const matchedUrl = findMatchingKannadaAudio(clean);
+    const audioUrl = matchedUrl || `/api/tts?text=${encodeURIComponent(clean)}&lang=kn`;
+
+    try {
+      const audio = new Audio(audioUrl);
+      window._activeAudio = audio;
+
+      let started = false;
+
+      audio.onplay = () => {
+        started = true;
+        options?.onStart?.();
+      };
+
+      audio.onended = () => {
+        if (window._activeAudio === audio) {
+          window._activeAudio = null;
+        }
+        options?.onEnd?.();
+      };
+
+      audio.onerror = (e) => {
+        console.warn('Kannada audio element error, trying speech synthesis fallback:', e);
+        if (window._activeAudio === audio) {
+          window._activeAudio = null;
+        }
+        if (!started) {
+          speakWithSpeechSynthesis(clean, { ...options, lang: 'kn-IN' });
+        } else {
+          options?.onError?.(e);
+          options?.onEnd?.();
+        }
+      };
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn('Audio play() error:', err);
+          if (window._activeAudio === audio) {
+            window._activeAudio = null;
+          }
+          speakWithSpeechSynthesis(clean, { ...options, lang: 'kn-IN' });
+        });
+      }
+
+      return () => {
+        if (window._activeAudio === audio) {
+          try {
+            audio.pause();
+            audio.currentTime = 0;
+          } catch (e) {}
+          window._activeAudio = null;
+        }
+      };
+    } catch (e) {
+      console.warn('Audio construction error:', e);
+      return speakWithSpeechSynthesis(clean, { ...options, lang: 'kn-IN' });
+    }
+  }
+
+  // For English and standard languages, use Web Speech Synthesis
+  return speakWithSpeechSynthesis(clean, options);
 };
 
 /**

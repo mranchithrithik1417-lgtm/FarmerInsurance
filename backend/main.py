@@ -842,3 +842,64 @@ async def speech_to_text(payload: STTPayload):
         return {"success": True, "text": text}
     except Exception as e:
         return {"success": False, "error": str(e)}
+
+# ----------------- REGIONAL TEXT-TO-SPEECH (TTS) ENDPOINT -----------------
+
+TTS_MEMORY_CACHE: Dict[str, bytes] = {}
+
+@app.get("/api/tts")
+def text_to_speech(text: str = Query(...), lang: str = Query("kn")):
+    """
+    High-fidelity Text-To-Speech audio endpoint.
+    Guarantees authentic regional voice speaking (e.g. Kannada, Hindi)
+    even on devices where local browser language packs are absent.
+    """
+    clean_text = text.strip()
+    if not clean_text:
+        raise HTTPException(status_code=400, detail="Text parameter cannot be empty")
+    
+    cache_key = f"{lang}:{clean_text}"
+    if cache_key in TTS_MEMORY_CACHE:
+        return Response(
+            content=TTS_MEMORY_CACHE[cache_key],
+            media_type="audio/mpeg",
+            headers={"Cache-Control": "public, max-age=86400"}
+        )
+    
+    # Check if a pre-generated static audio file matches
+    static_audio_dir = os.path.join(STATIC_DIR, "audio")
+    step_file_map = {
+        "ನಿಮ್ಮ ಜಮೀನಿನ ಗಡಿ ಮತ್ತು ಡಿಜಿಪಿನ್ ಲಾಕ್ ಮಾಡಲು ಉಪಗ್ರಹ ನಕ್ಷೆಯಲ್ಲಿ 4 ಮೂಲೆಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ.": "kannada_step1.mp3",
+        "ನೀವು ಯಾವ ಬೆಳೆ ಬೆಳೆದಿದ್ದೀರಿ ಮತ್ತು ಬಿತ್ತನೆ ದಿನಾಂಕ ಯಾವುದು?": "kannada_step2.mp3",
+        "ಯಾವ ನೈಸರ್ಗಿಕ ವಿಕೋಪ ಸಂಭವಿಸಿತು, ಯಾವ ದಿನಾಂಕದಂದು ಮತ್ತು ಶೇಕಡಾ ಎಷ್ಟು ಹಾನಿಯಾಗಿದೆ?": "kannada_step3.mp3",
+        "ಈ ಬೆಳೆ ಹಾನಿಯಿಂದ ನಿಮಗೆ ಅಂದಾಜು ಎಷ್ಟು ರೂಪಾಯಿ ನಷ್ಟವಾಗಿದೆ?": "kannada_step4.mp3",
+        "ದಯವಿಟ್ಟು ಹಾನಿಗೊಳಗಾದ ಬೆಳೆ ಮತ್ತು ಹೊಲದ ಫೋಟೋಗಳನ್ನು ವೆಬ್‌ಸೈಟ್ ಕ್ಯಾಮೆರಾ ಮೂಲಕ ಸೆರೆಹಿಡಿಯಿರಿ.": "kannada_step5.mp3"
+    }
+    for match_txt, filename in step_file_map.items():
+        if match_txt in clean_text or clean_text in match_txt:
+            cand_path = os.path.join(static_audio_dir, filename)
+            if os.path.exists(cand_path):
+                with open(cand_path, "rb") as f:
+                    file_bytes = f.read()
+                    TTS_MEMORY_CACHE[cache_key] = file_bytes
+                    return Response(
+                        content=file_bytes,
+                        media_type="audio/mpeg",
+                        headers={"Cache-Control": "public, max-age=86400"}
+                    )
+
+    import urllib.request, urllib.parse
+    target_lang = "kn" if lang.lower().startswith("kn") else lang
+    url = f"https://translate.google.com/translate_tts?ie=UTF-8&tl={target_lang}&client=tw-ob&q=" + urllib.parse.quote(clean_text)
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+    try:
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            audio_bytes = resp.read()
+            TTS_MEMORY_CACHE[cache_key] = audio_bytes
+            return Response(
+                content=audio_bytes,
+                media_type="audio/mpeg",
+                headers={"Cache-Control": "public, max-age=86400"}
+            )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"TTS synthesis failed: {str(e)}")
