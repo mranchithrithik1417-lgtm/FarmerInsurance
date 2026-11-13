@@ -1,271 +1,173 @@
+import { Claim, NotificationItem, StatsKPI, UserSession } from '../types';
+
 const API_BASE = '/api';
 
-export interface User {
-  id: number;
-  email: string;
-  full_name: string;
-  phone?: string;
-  role: 'farmer' | 'officer' | 'admin';
-  profile?: any;
+export async function loginFarmer(mobile: string, otp: string = '1234', name?: string): Promise<UserSession> {
+  const res = await fetch(`${API_BASE}/auth/farmer/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mobile, otp, name })
+  });
+  if (!res.ok) throw new Error('Farmer login failed');
+  return res.json();
 }
 
-export interface DigipinEncodeResponse {
-  digipin: string;
-  display_format: string;
-  latitude: number;
-  longitude: number;
-}
-
-export interface DigipinDecodeResponse {
-  valid: boolean;
-  digipin: string;
-  display_format: string;
-  center_lat: number;
-  center_lon: number;
-  min_lat: number;
-  max_lat: number;
-  min_lon: number;
-  max_lon: number;
-  cell_size_lat_deg: number;
-  cell_size_lon_deg: number;
-  cell_height_m_approx: number;
-  cell_width_m_approx: number;
-}
-
-export interface HierarchyLevel {
-  level: number;
-  title: string;
-  char: string;
-  row: number;
-  col: number;
-  accumulated_prefix: string;
-  grid_cells: Array<Array<{
-    char: string;
-    row: number;
-    col: number;
-    is_selected: boolean;
-    bounds: { min_lat: number; max_lat: number; min_lon: number; max_lon: number; }
-  }>>;
-  current_bounds: { min_lat: number; max_lat: number; min_lon: number; max_lon: number; };
-  selected_bounds: { min_lat: number; max_lat: number; min_lon: number; max_lon: number; };
-  lat_step_deg: number;
-  lon_step_deg: number;
-  explanation: string;
-}
-
-export interface DigipinHierarchyResponse {
-  digipin: string;
-  display_format: string;
-  target_lat: number;
-  target_lon: number;
-  levels: HierarchyLevel[];
-}
-
-export interface Farm {
-  id: number;
-  farmer_id: number;
+export async function registerFarmer(data: {
   name: string;
-  state: string;
-  district: string;
-  taluk: string;
-  village: string;
-  address?: string;
-  fields_count: number;
+  mobile: string;
+  state?: string;
+  district?: string;
+  village?: string;
+}): Promise<UserSession> {
+  const res = await fetch(`${API_BASE}/auth/farmer/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Farmer registration failed');
+  return res.json();
 }
 
-export interface Field {
-  id: number;
-  farm_id: number;
-  farm_name?: string;
-  name: string;
-  crop: string;
-  crop_variety?: string;
-  sowing_date?: string;
-  cultivation_season: string;
-  area_acres: number;
-  polygon_geojson: string;
-  centroid_lat: number;
-  centroid_lon: number;
-  digipin: string;
-  digipin_display: string;
+export async function loginInsurance(companyId: string, accessCode: string = 'claims2026'): Promise<UserSession> {
+  const res = await fetch(`${API_BASE}/auth/insurance/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ company_id: companyId, access_code: accessCode })
+  });
+  if (!res.ok) throw new Error('Insurance login failed');
+  return res.json();
 }
 
-export interface Claim {
-  id: number;
-  claim_number: string;
-  farmer_id: number;
-  farmer_name: string;
-  field_id: number;
-  field_name: string;
-  farm_name: string;
-  crop: string;
-  area_acres: number;
-  digipin: string;
-  digipin_display: string;
-  centroid_lat: number;
-  centroid_lon: number;
-  polygon_geojson: string;
-  disaster_type: string;
-  incident_date: string;
-  duration_days: number;
-  description?: string;
-  status: string;
-  created_at: string;
-  evidence: Array<{
-    id: number;
-    filename: string;
-    file_size_bytes: number;
-    sha256_hash: string;
-    exif_lat?: number;
-    exif_lon?: number;
-    exif_timestamp?: string;
-    exif_camera?: string;
-    distance_to_field_m?: number;
-  }>;
-  satellite?: {
-    pre_disaster_date: string;
-    post_disaster_date: string;
-    pre_ndvi: number;
-    post_ndvi: number;
-    ndvi_delta: number;
-    ndvi_change_pct: number;
-    valid_pixel_pct: number;
-    cloud_cover_pct: number;
-    provider: string;
-  };
-  weather?: {
-    start_date: string;
-    end_date: string;
-    total_rainfall_mm: number;
-    max_daily_rainfall_mm: number;
-    historical_avg_rainfall_mm: number;
-    rainfall_anomaly_pct: number;
-    daily_records: Array<{
-      date: string;
-      rainfall_mm: number;
-      temp_max_c: number;
-      temp_min_c: number;
-    }>;
-    provider: string;
-  };
-  assessment?: {
-    finding_category: string;
-    severity_score: number;
-    confidence_level: string;
-    summary: string;
-    rules_triggered: Array<{
-      rule_id: string;
-      name: string;
-      status: string;
-      details: string;
-    }>;
-    methodology_version: string;
-  };
-  report?: {
-    report_uuid: string;
-    sha256_hash: string;
-    verification_qr_data: string;
-    download_url: string;
-  };
-  reviews: Array<{
-    id: number;
-    officer_name: string;
-    decision: string;
-    remarks: string;
-    evidence_requested?: string;
-    created_at: string;
-  }>;
+export async function fetchStats(): Promise<StatsKPI> {
+  const res = await fetch(`${API_BASE}/stats`);
+  if (!res.ok) throw new Error('Failed to fetch stats');
+  return res.json();
 }
 
-export const api = {
-  getToken: () => localStorage.getItem('kisan_token'),
-  setToken: (t: string) => localStorage.setItem('kisan_token', t),
-  clearToken: () => localStorage.removeItem('kisan_token'),
+export async function fetchClaims(params?: {
+  status?: string;
+  crop?: string;
+  disaster?: string;
+  search?: string;
+}): Promise<Claim[]> {
+  const query = new URLSearchParams();
+  if (params?.status && params.status !== 'all') query.set('status', params.status);
+  if (params?.crop && params.crop !== 'all') query.set('crop', params.crop);
+  if (params?.disaster && params.disaster !== 'all') query.set('disaster', params.disaster);
+  if (params?.search) query.set('search', params.search);
 
-  async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const token = this.getToken();
-    const headers: Record<string, string> = {
-      ...(options.headers as Record<string, string> || {}),
-    };
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-    if (!(options.body instanceof FormData) && !headers['Content-Type']) {
-      headers['Content-Type'] = 'application/json';
-    }
+  const res = await fetch(`${API_BASE}/claims?${query.toString()}`);
+  if (!res.ok) throw new Error('Failed to fetch claims');
+  return res.json();
+}
 
-    const res = await fetch(`${API_BASE}${endpoint}`, {
-      ...options,
-      headers
-    });
+export async function fetchClaimById(id: string): Promise<Claim> {
+  const res = await fetch(`${API_BASE}/claims/${id}`);
+  if (!res.ok) throw new Error('Failed to fetch claim');
+  return res.json();
+}
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: res.statusText }));
-      throw new Error(err.detail || 'API request failed');
-    }
-
-    return res.json();
-  },
-
-  // Auth
-  login: (data: any) => api.request<{ access_token: string; user: User }>('/auth/login', {
+export async function createClaim(payload: any): Promise<Claim> {
+  const res = await fetch(`${API_BASE}/claims`, {
     method: 'POST',
-    body: JSON.stringify(data)
-  }),
-  register: (data: any) => api.request<{ access_token: string; user: User }>('/auth/register', {
-    method: 'POST',
-    body: JSON.stringify(data)
-  }),
-  getMe: () => api.request<User>('/auth/me'),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('Failed to create claim');
+  return res.json();
+}
 
-  // DIGIPIN
-  encodeDigipin: (lat: number, lon: number) => api.request<DigipinEncodeResponse>('/digipin/encode', {
+export async function submitReviewAction(
+  claimId: string,
+  payload: {
+    action: string;
+    reviewer_id?: string;
+    reviewer_name?: string;
+    comments?: string;
+    approved_amount?: number;
+    rejection_reason?: string;
+    requested_evidence?: string;
+  }
+): Promise<{ success: boolean; claim: Claim; notification: NotificationItem }> {
+  const res = await fetch(`${API_BASE}/claims/${claimId}/review`, {
     method: 'POST',
-    body: JSON.stringify({ latitude: lat, longitude: lon })
-  }),
-  decodeDigipin: (code: string) => api.request<DigipinDecodeResponse>('/digipin/decode', {
-    method: 'POST',
-    body: JSON.stringify({ digipin: code })
-  }),
-  getDigipinHierarchy: (lat: number, lon: number) => api.request<DigipinHierarchyResponse>(`/digipin/hierarchy?lat=${lat}&lon=${lon}`),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('Failed to submit review');
+  return res.json();
+}
 
-  // Farms & Fields
-  getFarms: () => api.request<Farm[]>('/farms'),
-  createFarm: (data: any) => api.request<Farm>('/farms', {
+export async function askCopilot(
+  claimId: string,
+  question: string
+): Promise<{ answer: string; grounded_facts: string[]; suggested_questions: string[] }> {
+  const res = await fetch(`${API_BASE}/claims/${claimId}/copilot`, {
     method: 'POST',
-    body: JSON.stringify(data)
-  }),
-  getFields: (farmId?: number) => api.request<Field[]>(farmId ? `/fields?farm_id=${farmId}` : '/fields'),
-  createField: (data: any) => api.request<Field>('/fields', {
-    method: 'POST',
-    body: JSON.stringify(data)
-  }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ claim_id: claimId, question })
+  });
+  if (!res.ok) throw new Error('Copilot inquiry failed');
+  return res.json();
+}
 
-  // Claims
-  getClaims: (status?: string) => api.request<Claim[]>(status ? `/claims?status_filter=${status}` : '/claims'),
-  getClaim: (id: number) => api.request<Claim>(`/claims/${id}`),
-  createClaim: (data: any) => api.request<Claim>('/claims', {
-    method: 'POST',
-    body: JSON.stringify(data)
-  }),
-  uploadEvidence: (claimId: number, file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    return api.request<any>(`/claims/${claimId}/evidence`, {
-      method: 'POST',
-      body: formData
-    });
-  },
-  generateReport: (claimId: number) => api.request<any>(`/claims/${claimId}/generate-report`, {
+export async function reRunAIAgents(claimId: string): Promise<{ success: boolean; ai_agents: any[] }> {
+  const res = await fetch(`${API_BASE}/claims/${claimId}/run-agents`, {
     method: 'POST'
-  }),
-  reviewClaim: (claimId: number, data: any) => api.request<any>(`/claims/${claimId}/review`, {
-    method: 'POST',
-    body: JSON.stringify(data)
-  }),
+  });
+  if (!res.ok) throw new Error('Failed to re-run AI agents');
+  return res.json();
+}
 
-  // Admin
-  getAdminStats: () => api.request<any>('/admin/stats'),
-  getAdminUsers: () => api.request<any[]>('/admin/users'),
-  getAdminLogs: () => api.request<any[]>('/admin/audit-logs'),
-};
+export async function fetchNotifications(farmerId = 'all'): Promise<NotificationItem[]> {
+  const res = await fetch(`${API_BASE}/notifications?farmer_id=${farmerId}`);
+  if (!res.ok) throw new Error('Failed to fetch notifications');
+  return res.json();
+}
+
+export async function fetchNDVIGrid(disasterType = 'Flood'): Promise<{
+  size: number;
+  pre_disaster_grid: number[][];
+  post_disaster_grid: number[][];
+  diff_grid: number[][];
+}> {
+  const res = await fetch(`${API_BASE}/geospatial/ndvi-grid?disaster_type=${disasterType}`);
+  if (!res.ok) throw new Error('Failed to fetch NDVI matrix');
+  return res.json();
+}
+
+export function subscribeToNotifications(onMessage: (data: any) => void): () => void {
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsUrl = `${protocol}//${window.location.host}/ws/notifications`;
+  let ws: WebSocket | null = null;
+  let interval: any = null;
+
+  try {
+    ws = new WebSocket(wsUrl);
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        onMessage(data);
+      } catch (err) {
+        console.error('WS Parse Error', err);
+      }
+    };
+    ws.onerror = (err) => {
+      console.warn('WebSocket connection error, fallback active', err);
+    };
+
+    // Heartbeat ping
+    interval = setInterval(() => {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send('ping');
+      }
+    }, 15000);
+  } catch (e) {
+    console.warn('WebSocket init failed', e);
+  }
+
+  return () => {
+    if (interval) clearInterval(interval);
+    if (ws) ws.close();
+  };
+}
