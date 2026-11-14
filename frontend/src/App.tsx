@@ -271,6 +271,8 @@ export function App() {
           <InsuranceDashboard
             claims={claims}
             stats={stats}
+            language={language}
+            currentUser={session.user}
             onOpenReport={setReportClaim}
             onRunAgents={handleRunAgents}
             onSubmitReviewAction={handleSubmitReviewAction}

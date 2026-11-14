@@ -23,6 +23,7 @@ interface Props {
   language?: 'en' | 'kn';
   farmerName?: string;
   farmerMobile?: string;
+  role?: 'farmer' | 'insurance';
 }
 
 export const CustomerSupportModal: React.FC<Props> = ({
@@ -30,7 +31,8 @@ export const CustomerSupportModal: React.FC<Props> = ({
   onClose,
   language = 'en',
   farmerName = 'Ravi Kumar',
-  farmerMobile = '9876543210'
+  farmerMobile = '9876543210',
+  role = 'farmer'
 }) => {
   const [callbackRequested, setCallbackRequested] = useState<boolean>(false);
   const supportNumber = '9019715931';
@@ -67,9 +69,11 @@ export const CustomerSupportModal: React.FC<Props> = ({
     }, 6000);
   };
 
-  const whatsappUrl = `https://wa.me/91${supportNumber}?text=${encodeURIComponent(
-    `Namaste KisanClaim Support! My name is ${farmerName} (Mobile: ${farmerMobile}). I need assistance with my PMFBY crop damage claim and land verification.`
-  )}`;
+  const whatsappMessage = role === 'insurance'
+    ? `Namaste KisanClaim Support! I am ${farmerName} (Insurance Claims Adjudicator & Reviewer). I need technical assistance with claims verification, satellite imagery telemetry, or agent consensus.`
+    : `Namaste KisanClaim Support! My name is ${farmerName} (Mobile: ${farmerMobile}). I need assistance with my PMFBY crop damage claim and land verification.`;
+
+  const whatsappUrl = `https://wa.me/91${supportNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
   const modalContent = (
     <div
@@ -96,16 +100,22 @@ export const CustomerSupportModal: React.FC<Props> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 id="customer-support-title" className="text-base sm:text-lg font-black text-white">
-                  {language === 'kn' ? 'ರೈತ ಗ್ರಾಹಕ ಸಹಾಯವಾಣಿ' : 'Farmer Customer Support'}
+                  {role === 'insurance'
+                    ? (language === 'kn' ? 'ವಿಮಾ ಮತ್ತು ಕ್ಲೈಮ್ ಸಹಾಯವಾಣಿ' : 'Insurance & Claims Support Desk')
+                    : (language === 'kn' ? 'ರೈತ ಗ್ರಾಹಕ ಸಹಾಯವಾಣಿ' : 'Farmer Customer Support')}
                 </h3>
                 <span className="text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full">
                   24/7 ACTIVE
                 </span>
               </div>
               <p className="text-[11px] sm:text-xs text-slate-400">
-                {language === 'kn'
-                  ? 'ಯಾವುದೇ ಸಹಾಯಕ್ಕಾಗಿ ನಮ್ಮ ತಾಂತ್ರಿಕ ತಂಡ ಲಭ್ಯವಿದೆ'
-                  : 'Official PMFBY & Bhoomi Land Records Helpdesk'}
+                {role === 'insurance'
+                  ? (language === 'kn'
+                      ? 'ಅಧಿಕೃತ PMFBY ಮತ್ತು ಕ್ಲೈಮ್ ಪರಿಶೀಲನಾ ಸಹಾಯವಾಣಿ'
+                      : 'Dedicated PMFBY Claims Verification & Adjudicator Helpdesk')
+                  : (language === 'kn'
+                      ? 'ಯಾವುದೇ ಸಹಾಯಕ್ಕಾಗಿ ನಮ್ಮ ತಾಂತ್ರಿಕ ತಂಡ ಲಭ್ಯವಿದೆ'
+                      : 'Official PMFBY & Bhoomi Land Records Helpdesk')}
               </p>
             </div>
           </div>
@@ -126,12 +136,14 @@ export const CustomerSupportModal: React.FC<Props> = ({
           <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-emerald-950/60 via-slate-950 to-slate-900 border-2 border-emerald-500/60 shadow-xl space-y-3 sm:space-y-4 text-center">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold font-mono">
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-              <span>DIRECT FARMER HELPLINE</span>
+              <span>{role === 'insurance' ? 'DIRECT CLAIMS & ADJUDICATOR HELPLINE' : 'DIRECT FARMER HELPLINE'}</span>
             </div>
 
             <div>
               <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
-                {language === 'kn' ? 'ನೇರ ಸಂಪರ್ಕ ಸಂಖ್ಯೆ' : 'Call Support Officer Directly'}
+                {language === 'kn'
+                  ? 'ನೇರ ಸಂಪರ್ಕ ಸಂಖ್ಯೆ'
+                  : (role === 'insurance' ? 'Call Technical Claims Officer Directly' : 'Call Support Officer Directly')}
               </div>
               <a
                 href={`tel:${supportNumber}`}
@@ -140,7 +152,9 @@ export const CustomerSupportModal: React.FC<Props> = ({
                 {supportNumberFormatted}
               </a>
               <div className="text-[11px] text-slate-400 mt-1">
-                Toll-free routing • Senior Agronomist on call
+                {role === 'insurance'
+                  ? 'Priority Adjudication Routing • Senior Agronomist Support'
+                  : 'Toll-free routing • Senior Agronomist on call'}
               </div>
             </div>
 
@@ -174,7 +188,9 @@ export const CustomerSupportModal: React.FC<Props> = ({
                 <span>Request Instant Officer Callback</span>
               </div>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                We will call your registered number (<strong className="text-slate-200">+91 {farmerMobile}</strong>) in 5 mins.
+                {role === 'insurance'
+                  ? <>We will connect you with a Senior Geospatial Agronomist in 5 mins.</>
+                  : <>We will call your registered number (<strong className="text-slate-200">+91 {farmerMobile}</strong>) in 5 mins.</>}
               </p>
             </div>
 
@@ -199,7 +215,7 @@ export const CustomerSupportModal: React.FC<Props> = ({
             </button>
           </div>
 
-          {/* Common Help Topics & FAQs for Farmers */}
+          {/* Common Help Topics & FAQs */}
           <div className="space-y-2.5">
             <div className="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono flex items-center gap-1.5">
               <HelpCircle className="w-3.5 h-3.5 text-emerald-400" />
@@ -207,37 +223,99 @@ export const CustomerSupportModal: React.FC<Props> = ({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                <div>
-                  <div className="font-bold text-white">Find Your ULPIN</div>
-                  <div className="text-[11px] text-slate-400">Search Bhoomi records by name, district, and village.</div>
-                </div>
-              </div>
+              {role === 'insurance' ? (
+                <>
+                  <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
+                    <Layers className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-white">
+                        {language === 'kn' ? 'ಉಪಗ್ರಹ ಟೆಲಿಮೆಟ್ರಿ ಮತ್ತು NDVI' : 'Satellite Telemetry & NDVI'}
+                      </div>
+                      <div className="text-[11px] text-slate-400">
+                        {language === 'kn'
+                          ? 'ಸೆಂಟಿನೆಲ್-2 ನಕ್ಷೆಗಳ ವಿಶ್ಲೇಷಣೆ ಮತ್ತು ಬೆಳೆ ನಷ್ಟದ ಶೇಕಡಾವಾರು ಪರಿಶೀಲನೆ.'
+                          : 'Sentinel-2 vegetation indices, flood masks, and pre/post disaster delta.'}
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
-                <Layers className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                <div>
-                  <div className="font-bold text-white">Satellite Land Map</div>
-                  <div className="text-[11px] text-slate-400">Help dragging corner pins to align with your farm bunds.</div>
-                </div>
-              </div>
+                  <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
+                    <Sparkles className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-white">
+                        {language === 'kn' ? 'AI ಮಲ್ಟಿ-ಏಜೆಂಟ್ ಸ್ವಾಮ್ ಸ್ಕೋರಿಂಗ್' : 'AI Multi-Agent Swarm'}
+                      </div>
+                      <div className="text-[11px] text-slate-400">
+                        {language === 'kn'
+                          ? 'ಅಗ್ರೋನಮಿಸ್ಟ್ ಮತ್ತು ಹವಾಮಾನ ಏಜೆಂಟ್‌ಗಳ ನಂಬಿಕಾರ್ಹತೆ ಸ್ಕೋರ್ ವಿವರಗಳು.'
+                          : 'Decisions calibrated across Geospatial, Agronomy, Weather, and Fraud Risk agents.'}
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
-                <Camera className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <div>
-                  <div className="font-bold text-white">GeoCamera Evidence</div>
-                  <div className="text-[11px] text-slate-400">Capturing geotagged photos of flooded or damaged crops.</div>
-                </div>
-              </div>
+                  <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
+                    <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-white">
+                        {language === 'kn' ? 'ಭೂಮಿ ಮತ್ತು ಡಿಜಿಪಿನ್ ಜಿಯೋಫೆನ್ಸಿಂಗ್' : 'Bhoomi & DIGIPIN Geofence'}
+                      </div>
+                      <div className="text-[11px] text-slate-400">
+                        {language === 'kn'
+                          ? 'ಕರ್ನಾಟಕ ಭೂಮಿ ಸರ್ವೇ ದಾಖಲೆಗಳ ಸಿಂಕ್ರೊನೈಸೇಶನ್ ಮತ್ತು ಜಮೀನು ಗಡಿ ಪರಿಶೀಲನೆ.'
+                          : 'Validating RTC survey records against 10-character open DIGIPIN lattices.'}
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
-                <FileText className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
-                <div>
-                  <div className="font-bold text-white">Claim Settlement</div>
-                  <div className="text-[11px] text-slate-400">PMFBY scale of finance and DBT payout tracking.</div>
-                </div>
-              </div>
+                  <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
+                    <FileText className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-white">
+                        {language === 'kn' ? 'ಕ್ಲೈಮ್ ತೀರ್ಪು ಮತ್ತು ಪರಿಹಾರ' : 'Adjudication & DBT Dispatch'}
+                      </div>
+                      <div className="text-[11px] text-slate-400">
+                        {language === 'kn'
+                          ? 'PMFBY ಸ್ಕೇಲ್ ಆಫ್ ಫೈನಾನ್ಸ್ ಆಧಾರಿತ ನೇರ ಬ್ಯಾಂಕ್ ವರ್ಗಾವಣೆ ಮಾರ್ಗಸೂಚಿಗಳು.'
+                          : 'Automated PMFBY scale of finance calculation and DBT payout confirmation.'}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
+                    <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-white">Find Your ULPIN</div>
+                      <div className="text-[11px] text-slate-400">Search Bhoomi records by name, district, and village.</div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
+                    <Layers className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-white">Satellite Land Map</div>
+                      <div className="text-[11px] text-slate-400">Help dragging corner pins to align with your farm bunds.</div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
+                    <Camera className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-white">GeoCamera Evidence</div>
+                      <div className="text-[11px] text-slate-400">Capturing geotagged photos of flooded or damaged crops.</div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 flex items-start gap-2.5">
+                    <FileText className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-white">Claim Settlement</div>
+                      <div className="text-[11px] text-slate-400">PMFBY scale of finance and DBT payout tracking.</div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

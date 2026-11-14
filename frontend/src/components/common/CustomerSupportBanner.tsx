@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Phone, PhoneCall, MessageSquare, HelpCircle, ShieldAlert, Sparkles, ChevronRight } from 'lucide-react';
+import { Phone, PhoneCall, HelpCircle, ChevronRight } from 'lucide-react';
 import { CustomerSupportModal } from './CustomerSupportModal';
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
   farmerMobile?: string;
   contextText?: string;
   compact?: boolean;
+  role?: 'farmer' | 'insurance';
 }
 
 export const CustomerSupportBanner: React.FC<Props> = ({
@@ -15,11 +16,11 @@ export const CustomerSupportBanner: React.FC<Props> = ({
   farmerName = 'Ravi Kumar',
   farmerMobile = '9876543210',
   contextText,
-  compact = false
+  compact = false,
+  role = 'farmer'
 }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const supportNumber = '9019715931';
-  const supportNumberFormatted = '+91 9019715931';
 
   return (
     <>
@@ -36,17 +37,25 @@ export const CustomerSupportBanner: React.FC<Props> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs sm:text-sm font-black text-white tracking-tight flex items-center gap-1.5">
-                  <span>{language === 'kn' ? 'ರೈತರ ಗ್ರಾಹಕ ಸಹಾಯವಾಣಿ' : 'Farmer Customer Support Helpline'}</span>
+                  <span>
+                    {role === 'insurance'
+                      ? (language === 'kn' ? 'ವಿಮಾ ಮತ್ತು ಕ್ಲೈಮ್ ಸಹಾಯವಾಣಿ' : 'Insurance & Claims Support Desk')
+                      : (language === 'kn' ? 'ರೈತರ ಗ್ರಾಹಕ ಸಹಾಯವಾಣಿ' : 'Farmer Customer Support Helpline')}
+                  </span>
                 </span>
                 <span className="text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full whitespace-nowrap">
-                  24/7 HELPDESK
+                  {role === 'insurance' ? '24/7 CLAIMS HELPDESK' : '24/7 HELPDESK'}
                 </span>
               </div>
               <p className="text-xs text-slate-300/90 mt-0.5">
                 {contextText ||
-                  (language === 'kn'
-                    ? 'ಯಾವುದೇ ಹಂತದಲ್ಲಿ ಸಹಾಯ ಬೇಕಾದಲ್ಲಿ ನೇರವಾಗಿ ಕರೆ ಮಾಡಿ ಅಥವಾ WhatsApp ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ.'
-                    : 'Need help with ULPIN recovery, satellite land boundary selection, or filing your damage claim?')}
+                  (role === 'insurance'
+                    ? (language === 'kn'
+                        ? 'ಕ್ಲೈಮ್ ಪರಿಶೀಲನೆ, ಉಪಗ್ರಹ ನಕ್ಷೆ ಅಥವಾ ತಾಂತ್ರಿಕ ವಿವರಗಳಿಗೆ ನೆರವು ಬೇಕಾದಲ್ಲಿ ಸಂಪರ್ಕಿಸಿ.'
+                        : 'Need technical assistance with satellite telemetry verification, AI agent confidence scoring, or claim escalation?')
+                    : (language === 'kn'
+                        ? 'ಯಾವುದೇ ಹಂತದಲ್ಲಿ ಸಹಾಯ ಬೇಕಾದಲ್ಲಿ ನೇರವಾಗಿ ಕರೆ ಮಾಡಿ ಅಥವಾ WhatsApp ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ.'
+                        : 'Need help with ULPIN recovery, satellite land boundary selection, or filing your damage claim?'))}
               </p>
             </div>
           </div>
@@ -84,6 +93,7 @@ export const CustomerSupportBanner: React.FC<Props> = ({
           language={language}
           farmerName={farmerName}
           farmerMobile={farmerMobile}
+          role={role}
         />
       )}
     </>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Bell, Globe, PhoneCall, HelpCircle, ArrowRightLeft, LogOut } from 'lucide-react';
+import { Bell, Globe, PhoneCall, HelpCircle, ArrowRightLeft, LogOut } from 'lucide-react';
 import { NotificationItem, UserSession } from '../types';
 import { CustomerSupportModal } from './common/CustomerSupportModal';
 
@@ -102,30 +102,28 @@ export const Navbar: React.FC<Props> = ({
             <span>{role === 'farmer' ? 'Insurance View' : 'Farmer View'}</span>
           </button>
 
-          {/* Farmer Customer Support Direct Helpline */}
-          {role === 'farmer' && (
-            <div className="flex items-center gap-1.5">
-              <a
-                href="tel:9019715931"
-                className="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-xs transition transform hover:-translate-y-0.5 cursor-pointer shrink-0"
-                title="Direct Farmer Customer Support Helpline"
-              >
-                <PhoneCall className="w-3.5 h-3.5 animate-pulse text-white" />
-                <span className="hidden md:inline">Support:</span>
-                <span className="font-mono tracking-tight font-extrabold">9019715931</span>
-              </a>
+          {/* Customer Support Direct Helpline (Available for both Farmer and Insurance) */}
+          <div className="flex items-center gap-1.5">
+            <a
+              href="tel:9019715931"
+              className="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-xs transition transform hover:-translate-y-0.5 cursor-pointer shrink-0"
+              title={role === 'insurance' ? 'Direct Insurance & Claims Support Helpline' : 'Direct Farmer Customer Support Helpline'}
+            >
+              <PhoneCall className="w-3.5 h-3.5 animate-pulse text-white" />
+              <span className="hidden md:inline">Support:</span>
+              <span className="font-mono tracking-tight font-extrabold">9019715931</span>
+            </a>
 
-              <button
-                type="button"
-                onClick={() => setShowSupportModal(true)}
-                className="px-2.5 py-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 rounded-xl border border-slate-200 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shrink-0 shadow-xs"
-                title="Customer Support Help & FAQs"
-              >
-                <HelpCircle className="w-4 h-4 text-emerald-700" />
-                <span className="hidden lg:inline text-xs font-semibold text-slate-700">Help & FAQs</span>
-              </button>
-            </div>
-          )}
+            <button
+              type="button"
+              onClick={() => setShowSupportModal(true)}
+              className="px-2.5 py-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 rounded-xl border border-slate-200 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shrink-0 shadow-xs"
+              title={role === 'insurance' ? 'Claims & Adjudicator Helpdesk' : 'Customer Support Help & FAQs'}
+            >
+              <HelpCircle className="w-4 h-4 text-emerald-700" />
+              <span className="hidden lg:inline text-xs font-semibold text-slate-700">Help & FAQs</span>
+            </button>
+          </div>
         </div>
 
         {/* Right Controls: Notifications, Language & Sign Out */}
@@ -202,7 +200,8 @@ export const Navbar: React.FC<Props> = ({
           onClose={() => setShowSupportModal(false)}
           language={language}
           farmerName={userName}
-          farmerMobile={userSession?.user?.mobile || '9876543210'}
+          farmerMobile={userSession?.user?.mobile || (role === 'insurance' ? '9019715931' : '9876543210')}
+          role={role}
         />
       )}
     </header>

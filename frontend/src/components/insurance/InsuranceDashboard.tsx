@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ShieldCheck, AlertTriangle, FileText, CheckCircle2, Clock, DollarSign, Activity, TrendingUp } from 'lucide-react';
+import { FileText, CheckCircle2, Clock, TrendingUp } from 'lucide-react';
 import { Claim, StatsKPI } from '../../types';
 import { ClaimQueueTable } from './ClaimQueueTable';
 import { ClaimDetailPage } from './ClaimDetailPage';
+import { CustomerSupportBanner } from '../common/CustomerSupportBanner';
 
 interface Props {
   claims: Claim[];
@@ -10,6 +11,8 @@ interface Props {
   onOpenReport: (claim: Claim) => void;
   onRunAgents: (claimId: string) => Promise<void>;
   onSubmitReviewAction: (claimId: string, payload: any) => Promise<void>;
+  language?: 'en' | 'kn';
+  currentUser?: any;
 }
 
 export const InsuranceDashboard: React.FC<Props> = ({
@@ -17,7 +20,9 @@ export const InsuranceDashboard: React.FC<Props> = ({
   stats,
   onOpenReport,
   onRunAgents,
-  onSubmitReviewAction
+  onSubmitReviewAction,
+  language = 'en',
+  currentUser
 }) => {
   const [selectedClaim, setSelectedClaim] = useState<Claim | null>(null);
 
@@ -60,6 +65,19 @@ export const InsuranceDashboard: React.FC<Props> = ({
           <span className="text-[10px] text-emerald-200/80 block">Across 6 monitored districts</span>
         </div>
       </div>
+
+      {/* Customer Support & Claims Helpdesk Banner */}
+      <CustomerSupportBanner
+        role="insurance"
+        language={language}
+        farmerName={currentUser?.name || 'Ananya Sharma'}
+        farmerMobile={currentUser?.mobile || '9019715931'}
+        contextText={
+          language === 'kn'
+            ? 'ಕ್ಲೈಮ್ ಪರಿಶೀಲನೆ, ಉಪಗ್ರಹ ನಕ್ಷೆ ಅಥವಾ ತಾಂತ್ರಿಕ ವಿವರಗಳಿಗೆ ನೆರವು ಬೇಕಾದಲ್ಲಿ 9019715931 ಗೆ ಕರೆ ಮಾಡಿ.'
+            : 'Need technical assistance with satellite telemetry, multi-agent AI verification, or PMFBY adjudication escalation?'
+        }
+      />
 
       {/* KPI Cards Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
