@@ -121,6 +121,11 @@ export function App() {
     return () => unsubscribe();
   }, []);
 
+  // Theme: green for farmers, blue for insurers (CSS variables swap in index.css)
+  useEffect(() => {
+    document.documentElement.dataset.role = session ? session.role : 'farmer';
+  }, [session]);
+
   // Clear toast after 5s
   useEffect(() => {
     if (toastAlert) {
@@ -236,7 +241,7 @@ export function App() {
 
       {/* Floating Live WebSocket Toast */}
       {toastAlert && (
-        <div className="fixed bottom-6 right-6 z-50 bg-white border border-emerald-300 text-slate-900 px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce">
+        <div className="fixed bottom-6 right-6 z-50 bg-white border border-emerald-300 text-slate-900 px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 animate-fadeIn">
           <div className="p-2 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-200">
             <Sparkles className="w-4 h-4 text-emerald-600" />
           </div>

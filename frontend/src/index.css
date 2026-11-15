@@ -1,74 +1,416 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
-@layer base {
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: #f8faf9;
-    color: #0f172a;
-    overflow-x: hidden;
-  }
+/* ==========================================================================
+   KisanClaim glass theme
+   Frosted-glass surfaces + soft pressed (inset) and raised shapes.
+   Re-tints the Tailwind palette, so every existing component picks it up
+   without any change to its logic or markup.
+   ========================================================================== */
+
+@theme {
+  --font-sans: "Figtree", "Noto Sans Kannada", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Slightly larger small text for readability */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.25rem;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.45rem;
+
+  /* Softer, rounder shapes */
+  --radius-xl: 1.125rem;
+  --radius-2xl: 1.375rem;
+  --radius-3xl: 1.75rem;
+
+  /* Green-tinted ink scale (same luminance order as slate) */
+  --color-slate-50: #f3f8f4;
+  --color-slate-100: #e6efe8;
+  --color-slate-200: #d3e2d8;
+  --color-slate-300: #b5cabb;
+  --color-slate-400: #5f7b6b;
+  --color-slate-500: #4a6757;
+  --color-slate-600: #3a5646;
+  --color-slate-700: #2c4a3a;
+  --color-slate-800: #1b3a2b;
+  --color-slate-900: #0e2a1e;
+  --color-slate-950: #08190f;
+
+  /* Leaf green */
+  --color-emerald-50: #ecf7f0;
+  --color-emerald-100: #d3edda;
+  --color-emerald-200: #a9dabb;
+  --color-emerald-300: #7fc99a;
+  --color-emerald-400: #3fae72;
+  --color-emerald-500: #1a9560;
+  --color-emerald-600: #0f8352;
+  --color-emerald-700: #0b6b42;
+  --color-emerald-800: #0a5636;
+  --color-emerald-900: #08432b;
+  --color-emerald-950: #04281a;
+
+  /* Insurer blue */
+  --color-blue-50: #eaf1fa;
+  --color-blue-100: #dce8f7;
+  --color-blue-200: #bcd2ee;
+  --color-blue-600: #235ba3;
+  --color-blue-700: #1b4b87;
+  --color-blue-800: #163d6e;
+
+  --shadow-xs: 0 2px 8px rgba(18, 72, 46, 0.08);
+  --shadow-sm: 0 4px 16px rgba(18, 72, 46, 0.1);
+  --shadow-md: 0 8px 26px rgba(18, 72, 46, 0.12);
+  --shadow-lg: 0 14px 40px rgba(18, 72, 46, 0.14);
+  --shadow-xl: 0 18px 50px rgba(18, 72, 46, 0.18);
+  --shadow-2xl: 0 24px 64px rgba(18, 72, 46, 0.22);
 }
 
-/* Custom clean scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Professional AgriTech Glass & Card utility classes */
-.agri-card {
-  background: #ffffff;
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+:root {
+  --kc-ink: #0e2a1e;
+  --kc-base: #e9f2e7;
+  --kc-inset: #e1ece3;
+  --kc-raised: #ebf4ed;
+  --kc-glass: rgba(255, 255, 255, 0.58);
+  --kc-glass-line: rgba(255, 255, 255, 0.85);
+  --kc-shadow: 0 12px 40px rgba(18, 72, 46, 0.13);
+  --kc-green-1: #0f8352;
+  --kc-green-2: #0b6b42;
+  --kc-blue-1: #235ba3;
+  --kc-blue-2: #1b4b87;
+  --kc-deep: rgba(10, 70, 46, 0.84);
 }
 
-.agri-card-elevated {
-  background: #ffffff;
-  border: 1px solid rgba(203, 213, 225, 0.8);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+/* Insurer console: swap the whole green palette for blue */
+html[data-role="insurance"] {
+  --color-emerald-50: #eaf1fa;
+  --color-emerald-100: #dce8f7;
+  --color-emerald-200: #bcd2ee;
+  --color-emerald-300: #8fb3e0;
+  --color-emerald-400: #5b8cc8;
+  --color-emerald-500: #2f6bb3;
+  --color-emerald-600: #235ba3;
+  --color-emerald-700: #1b4b87;
+  --color-emerald-800: #163d6e;
+  --color-emerald-900: #112f56;
+  --color-emerald-950: #0a1d36;
+  --color-teal-900: #112f56;
+  --kc-green-1: #235ba3;
+  --kc-green-2: #1b4b87;
+  --kc-deep: rgba(20, 58, 108, 0.86);
+  --kc-base: #e8eff3;
+}
+html[data-role="insurance"] body {
+  background:
+    radial-gradient(560px 460px at 6% 8%, rgba(169, 212, 232, 0.85), transparent 70%),
+    radial-gradient(600px 480px at 94% 6%, rgba(127, 201, 154, 0.5), transparent 70%),
+    radial-gradient(680px 540px at 80% 98%, rgba(169, 212, 232, 0.6), transparent 70%),
+    var(--kc-base);
+  background-attachment: fixed;
+}
+html[data-role="insurance"] button[class~="bg-emerald-700"],
+html[data-role="insurance"] a[class~="bg-emerald-700"],
+html[data-role="insurance"] button[class~="bg-emerald-600"] {
+  box-shadow: 0 10px 24px rgba(27, 75, 135, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-.glass-panel-light {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+* {
+  box-sizing: border-box;
 }
 
-/* Pulse animation for voice assistant and scanner */
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--kc-ink);
+  overflow-x: hidden;
+  background:
+    radial-gradient(560px 460px at 6% 8%, rgba(127, 201, 154, 0.72), transparent 70%),
+    radial-gradient(600px 480px at 94% 6%, rgba(169, 212, 232, 0.68), transparent 70%),
+    radial-gradient(680px 540px at 80% 98%, rgba(242, 212, 138, 0.6), transparent 70%),
+    radial-gradient(520px 440px at 12% 92%, rgba(127, 201, 154, 0.42), transparent 70%),
+    var(--kc-base);
+  background-attachment: fixed;
+}
+
+/* The app roots paint their own flat colours; let the glass ground show */
+#root > div {
+  background: transparent !important;
+}
+
+h1, h2, h3 {
+  font-family: "Bricolage Grotesque", var(--font-sans);
+  letter-spacing: -0.015em;
+}
+
+::selection {
+  background: #0f8352;
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(15, 131, 82, 0.55);
+  outline-offset: 2px;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.35); }
+::-webkit-scrollbar-thumb { background: rgba(28, 84, 56, 0.28); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(28, 84, 56, 0.45); }
+
+/* --------------------------------------------------------------------------
+   Glass surfaces: every white card / panel / modal / navbar
+   -------------------------------------------------------------------------- */
+.bg-white,
+[class*="bg-white/"] {
+  background: var(--kc-glass) !important;
+  backdrop-filter: blur(20px) saturate(165%);
+  -webkit-backdrop-filter: blur(20px) saturate(165%);
+  border-color: var(--kc-glass-line);
+  box-shadow: var(--kc-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Small white chips/knobs inside glass should not stack heavy shadows */
+.bg-white.rounded-full,
+.bg-white.rounded-lg,
+.bg-white.rounded-md {
+  box-shadow: 0 2px 8px rgba(18, 72, 46, 0.12);
+}
+
+/* All light borders become the translucent glass rim */
+[class*="border-slate-100"],
+[class*="border-slate-200"],
+[class*="border-slate-300"] {
+  border-color: rgba(255, 255, 255, 0.85) !important;
+}
+[class*="border-slate-200"][class*="border-b"],
+[class*="border-slate-200"][class*="border-t"] {
+  border-color: rgba(14, 42, 30, 0.1) !important;
+}
+.divide-slate-100 > :not(:last-child),
+.divide-slate-200 > :not(:last-child) {
+  border-color: rgba(14, 42, 30, 0.09) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Pressed (inset) fields and tiles — soft neumorphism
+   -------------------------------------------------------------------------- */
+[class~="bg-slate-50"],
+[class~="bg-slate-100"],
+[class*="bg-slate-50/"],
+[class*="bg-slate-100/"] {
+  background: var(--kc-inset);
+  box-shadow: inset 4px 4px 9px rgba(28, 84, 56, 0.15), inset -4px -4px 9px rgba(255, 255, 255, 0.9);
+  border-color: transparent !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+select,
+textarea {
+  background: var(--kc-inset) !important;
+  border-color: transparent !important;
+  box-shadow: inset 5px 5px 10px rgba(28, 84, 56, 0.16), inset -5px -5px 10px rgba(255, 255, 255, 0.95) !important;
+  border-radius: 18px;
+  color: var(--kc-ink);
+  min-height: 46px;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #5c7668;
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: inset 5px 5px 10px rgba(28, 84, 56, 0.16), inset -5px -5px 10px rgba(255, 255, 255, 0.95), 0 0 0 3px rgba(15, 131, 82, 0.45) !important;
+}
+input[type="range"] {
+  accent-color: #0b6b42;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+button,
+a[class*="px-"][class*="py-"] {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+button:not([class*="rounded-full"]):not([class*="p-1"]):not([class*="p-0"]) {
+  min-height: 42px;
+}
+button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+button:not(:disabled):active {
+  transform: translateY(1px);
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Primary (green) */
+button[class~="bg-emerald-700"],
+a[class~="bg-emerald-700"],
+button[class~="bg-emerald-600"],
+a[class~="bg-emerald-600"] {
+  background: linear-gradient(180deg, var(--kc-green-1), var(--kc-green-2)) !important;
+  color: #fff;
+  border-color: transparent !important;
+  box-shadow: 0 10px 24px rgba(11, 107, 66, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+/* Insurer (blue) */
+button[class~="bg-blue-700"],
+a[class~="bg-blue-700"],
+button[class~="bg-blue-600"] {
+  background: linear-gradient(180deg, var(--kc-blue-1), var(--kc-blue-2)) !important;
+  color: #fff;
+  border-color: transparent !important;
+  box-shadow: 0 10px 24px rgba(27, 75, 135, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+/* Reject / danger */
+button[class~="bg-red-600"],
+button[class~="bg-red-700"] {
+  background: linear-gradient(180deg, #b63a3a, #9b2c2c) !important;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(155, 44, 44, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+/* Soft raised keys (previously pale slate buttons) */
+button[class~="bg-slate-50"],
+button[class~="bg-slate-100"],
+a[class~="bg-slate-50"],
+a[class~="bg-slate-100"] {
+  background: var(--kc-raised);
+  box-shadow: 5px 5px 12px rgba(28, 84, 56, 0.15), -5px -5px 12px rgba(255, 255, 255, 0.92);
+}
+button[class~="bg-slate-50"]:hover,
+button[class~="bg-slate-100"]:hover {
+  box-shadow: 7px 7px 16px rgba(28, 84, 56, 0.18), -7px -7px 16px rgba(255, 255, 255, 0.95);
+}
+/* Tinted chips on pale green/blue/red stay as glassy tints */
+[class~="bg-emerald-50"],
+[class*="bg-emerald-50/"] {
+  background: rgba(15, 131, 82, 0.1);
+}
+[class~="bg-emerald-100"],
+[class*="bg-emerald-100/"] {
+  background: rgba(15, 131, 82, 0.16);
+}
+[class~="bg-blue-50"],
+[class*="bg-blue-50/"] {
+  background: rgba(27, 75, 135, 0.09);
+}
+[class~="bg-blue-100"],
+[class*="bg-blue-100/"] {
+  background: rgba(27, 75, 135, 0.15);
+}
+[class~="bg-amber-50"] {
+  background: rgba(242, 190, 80, 0.2);
+}
+[class~="bg-red-50"] {
+  background: rgba(190, 60, 60, 0.1);
+}
+
+/* --------------------------------------------------------------------------
+   Deep glass: hero banners that used dark green gradients
+   -------------------------------------------------------------------------- */
+[class*="from-emerald-800"],
+[class*="from-emerald-900"],
+[class*="from-emerald-950"] {
+  background: var(--kc-deep) !important;
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 18px 48px rgba(8, 50, 32, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Navbar */
+header.sticky {
+  margin: 12px auto 0;
+  max-width: 80rem;
+  width: calc(100% - 24px);
+  border-radius: 28px;
+  border: 1px solid var(--kc-glass-line);
+}
+header.sticky > div {
+  max-width: none;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+}
+thead.bg-slate-50,
+thead[class*="bg-slate-50"] {
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: none;
+}
+tbody tr:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   Larger micro-text for easier reading
+   -------------------------------------------------------------------------- */
+[class*="text-[9px]"] { font-size: 11px !important; }
+[class*="text-[10px]"] { font-size: 12px !important; }
+[class*="text-[11px]"] { font-size: 13px !important; }
+
+/* Mono labels (IDs, DIGIPIN, ULPIN) */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Leaflet keeps its own look but gets rounded glass corners */
+.leaflet-container {
+  border-radius: inherit;
+  font-family: var(--font-sans);
+}
+
+/* --------------------------------------------------------------------------
+   Animations (voice assistant, scanner, auth shake, fade)
+   -------------------------------------------------------------------------- */
 @keyframes scanning-beam {
   0% { transform: translateY(-100%); opacity: 0; }
   50% { opacity: 0.8; }
   100% { transform: translateY(400%); opacity: 0; }
 }
-
-.animate-scan {
-  animation: scanning-beam 3s ease-in-out infinite;
-}
+.animate-scan { animation: scanning-beam 3s ease-in-out infinite; }
 
 @keyframes voice-wave {
   0%, 100% { height: 12px; }
   50% { height: 36px; }
 }
-
 .animate-wave-1 { animation: voice-wave 1s ease-in-out infinite; }
 .animate-wave-2 { animation: voice-wave 1s ease-in-out infinite 0.2s; }
 .animate-wave-3 { animation: voice-wave 1s ease-in-out infinite 0.4s; }
 .animate-wave-4 { animation: voice-wave 1s ease-in-out infinite 0.1s; }
+
+@keyframes kc-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn { animation: kc-fade-in 0.35s ease both; }
+
+@keyframes kc-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+.animate-shake { animation: kc-shake 0.4s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Phones without good backdrop-filter support: solid, still readable */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .bg-white,
+  [class*="bg-white/"] {
+    background: rgba(255, 255, 255, 0.88) !important;
+  }
+}

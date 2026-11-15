@@ -13,7 +13,8 @@ import {
   Send,
   UserCheck,
   Globe,
-  Check
+  Check,
+  Sprout
 } from 'lucide-react';
 import { UserSession } from '../../types';
 import {
@@ -225,7 +226,7 @@ export const AuthPage: React.FC<Props> = ({
         <div className="flex items-center gap-3.5">
           {/* Official Logo Symbol */}
           <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-700 to-emerald-500 text-white shadow-md shadow-emerald-700/20 text-2xl font-bold">
-            🌾
+            <Sprout className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
